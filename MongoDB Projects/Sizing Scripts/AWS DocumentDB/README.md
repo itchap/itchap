@@ -8,7 +8,7 @@ This repository contains a MongoDB sizing script designed for AWS DocumentDB. Th
 
 ### Step 1: Download the Script
 
-Download the [getDocDBSizing.js](https://github.com/itchap/mongodb-guides/blob/main/Sizing%20Scripts/AWS%20DocumentDB/getDocDBSizing.js) script to a server that has network access to the DocumentDB cluster.
+Download the [getDocDBSizing.js](https://raw.githubusercontent.com/itchap/itchap/main/MongoDB%20Projects/Sizing%20Scripts/AWS%20DocumentDB/getDocDBSizing.js) script to a server that has network access to the DocumentDB cluster.
 
 ### Step 2: Connect to the DocumentDB Cluster
 
