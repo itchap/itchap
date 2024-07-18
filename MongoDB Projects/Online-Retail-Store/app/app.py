@@ -50,7 +50,7 @@ def get_products():
         filter_brand = request.args.get('brand', '')
         filter_on_sale = request.args.get('on_sale', 'false') == 'true'
         page = int(request.args.get('page', 1))
-        limit = 15
+        limit = 12
         skip = (page - 1) * limit
 
         must_clauses = []
