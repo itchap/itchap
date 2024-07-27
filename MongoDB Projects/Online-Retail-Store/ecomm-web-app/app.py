@@ -2,7 +2,7 @@
 import logging
 import time
 import requests
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template # type: ignore
 from pymongo import MongoClient, errors
 from bson import ObjectId
 from config import Config
