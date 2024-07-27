@@ -74,7 +74,7 @@
             </div>
             <!-- Product list section -->
             <div class="col-md-9">
-                <h4>Products</h4>
+                <h4 id="products-title">Products</h4>
                 <div class="row" id="products"></div>
                 <!-- Pagination controls -->
                 <nav aria-label="Page navigation">
@@ -82,6 +82,7 @@
                 </nav>
                 <!-- Product details section -->
                 <div id="product-details" class="mt-5" style="display: none;">
+                    <button class="btn btn-secondary" id="back-to-products">Back to Products</button>
                     <h4>Product Details</h4>
                     <div id="product-details-content"></div>
                     <!-- Talk to FashionBot button -->
@@ -105,8 +106,6 @@
                     <!-- Additional recommendations section -->
                     <h5 class="mt-4">Here are more suggestions for you</h5>
                     <div class="thumbnail-container" id="recommendations-thumbnails"></div>
-                    <!-- Back to Products button -->
-                    <button class="btn btn-secondary mt-4" id="back-to-products">Back to Products</button>
                 </div>
             </div>
         </div>

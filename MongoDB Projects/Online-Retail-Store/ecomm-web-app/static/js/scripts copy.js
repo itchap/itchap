@@ -56,7 +56,6 @@ $(document).ready(function () {
         $('#products-title').show(); // Show the Products title
         $('#pagination').show(); // Show pagination controls
         $('#talk-to-fashionbot').hide(); // Hide FashionBot button
-        window.scrollTo(0, 0); // Scroll to top
     });
 
     // Event listener for "Talk to FashionBot" button click
@@ -76,30 +75,6 @@ $(document).ready(function () {
     // Initial load of products
     loadProducts(1);
 });
-
-// Data for categories and brands
-const categories = {
-    'Women': {
-        'Clothing': ['Dresses', 'T-shirts & tops', 'Trousers', 'Jeans', 'Shirts & Blouses', 'Jackets & Blazers', 'Sweatshirts & Hoodies', 'Skirts', 'Coats'],
-        'Shoes': ['Sneakers', 'Sandals', 'Pumps', 'High heels', 'Flat shoes', 'Mules', 'Ankle boots', 'Ballerinas', 'Boots', 'Sports shoes', 'Beach shoes', 'Bridal shoes', 'House Shoes', 'Outdoor shoes'],
-        'Accessories': ['Bags & cases', 'Jewellery', 'Sunglasses', 'Hats & headscarves', 'Belts', 'Watches', 'Wallets & card holders', 'Scarves', 'Blue-light glasses', 'Gloves', 'Umbrellas']
-    },
-    'Men': {
-        'Clothing': ['T-shirts & Polos', 'Shirts', 'Sweatshirts & Hoodies', 'Trousers', 'Jeans', 'Shorts', 'Jackets', 'Suits & Tailoring', 'Coats'],
-        'Shoes': ['Sneakers', 'Open shoes', 'Lace-up shoes', 'Loafers', 'Business shoes', 'Boots', 'Sports shoes', 'Outdoor shoes', 'Slippers'],
-        'Accessories': ['Bags & cases', 'Jewellery', 'Sunglasses', 'Hats & headscarves', 'Belts', 'Watches', 'Wallets & card holders', 'Scarves', 'Blue-light glasses', 'Gloves', 'Umbrellas']
-    }
-};
-
-const brands = {
-    'Men': ['Carhartt', 'Polo Ralph Lauren', 'Armani', 'Calvin Klein', 'Diesel', 'G-Star', 'GAP', 'Helly Hansen', 'Hugo Boss', 'Lacoste', 'Levi\'s', 'Ted Baker', 'The North Face', 'Timberland', 'Tommy Hilfiger'],
-    'Women': ['Anna Field', 'Levi\'s®', 'The North Face', 'Hoka', 'Rapha', 'Ciele', 'Polo Ralph Lauren', 'ARKET', 'Missoni', 'Proenza Schouler', 'The Kooples', 'MM6 Maison Margiela']
-};
-
-const designer_brands = {
-    'Men': ['Dolce&Gabbana', 'Mont Blanc', 'Paul Smith', 'Prada', 'rag & bone', 'Versace', 'Vivienne Westwood'],
-    'Women': ['Alexander McQueen', 'Gucci', 'Loren Stewart', 'Victoria Beckham', 'Vivienne Westwood']
-};
 
 // Initialize filters by setting up event listeners for filter changes
 function initializeFilters() {
@@ -195,7 +170,6 @@ function loadProducts(page) {
             renderProducts(data.products); // Render the products
             setupPagination(data.current_page, data.total_pages); // Setup pagination
             showLoadingSpinner(false); // Hide loading spinner
-            window.scrollTo(0, 0); // Scroll to top
         },
         error: function (xhr, status, error) {
             showLoadingSpinner(false); // Hide loading spinner
@@ -299,7 +273,6 @@ function loadProductDetails(productId) {
             $('#talk-to-fashionbot').show();  // Show the FashionBot button here
             loadRecommendations(productId);
             showLoadingSpinner(false); // Hide loading spinner
-            window.scrollTo(0, 0); // Scroll to top
         },
         error: function (xhr, status, error) {
             showLoadingSpinner(false); // Hide loading spinner
