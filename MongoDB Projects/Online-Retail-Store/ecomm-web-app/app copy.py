@@ -2,7 +2,7 @@
 import logging
 import time
 import requests
-from flask import Flask, request, jsonify, render_template  # type: ignore
+from flask import Flask, request, jsonify, render_template # type: ignore
 from pymongo import MongoClient, errors
 from bson import ObjectId
 from config import Config
@@ -31,37 +31,16 @@ except errors.ConnectionError as e:
 # Define the home route
 @app.route('/')
 def index():
-    """
-    Render the home page template.
-    """
     return render_template('index.html')
 
 # Define the admin route
 @app.route('/admin')
 def admin():
-    """
-    Render the admin page template.
-    """
     return render_template('admin.html')
 
 # Define the route to get products with filters and pagination
 @app.route('/products', methods=['GET'])
 def get_products():
-    """
-    Fetch products based on search query and filters, with pagination support.
-
-    Parameters:
-        - q: Search query string
-        - category: Main category filter
-        - sub_category: Sub-category filter
-        - gender: Gender filter
-        - brand: Brand filter
-        - on_sale: On sale filter (boolean)
-        - page: Pagination page number
-
-    Returns:
-        JSON response with products, total pages, current page, and total products.
-    """
     try:
         # Get filter and pagination parameters from the request
         search_query = request.args.get('q', '')
@@ -136,7 +115,6 @@ def get_products():
                 }
             })
 
-        # Define the search stage for the aggregation pipeline
         search_stage = {
             '$search': {
                 'index': 'default',
@@ -147,19 +125,17 @@ def get_products():
             }
         }
 
-        # Define the match stage for fallback if no search criteria are given
         match_stage = {
             '$match': {'created_manually': True}
         }
 
-        # Build the aggregation pipeline
         pipeline = [search_stage if must_clauses or should_clauses else match_stage]
 
         pipeline.extend([
-            {'$sort': {'sponsored': -1}},  # Sort results by sponsored status
-            {'$skip': skip},  # Skip results for pagination
-            {'$limit': limit},  # Limit results to the page size
-            {'$project': {  # Select and project the required fields
+            {'$sort': {'sponsored': -1}},
+            {'$skip': skip},
+            {'$limit': limit},
+            {'$project': {
                 'name': 1,
                 'price': 1,
                 'description': 1,
@@ -174,7 +150,6 @@ def get_products():
             }}
         ])
 
-        # Execute the aggregation pipeline
         results = collection.aggregate(pipeline)
         products = list(results)
 
@@ -202,15 +177,6 @@ def get_products():
 # Define the route to get a single product by ID
 @app.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id):
-    """
-    Fetch a single product by its ID.
-
-    Parameters:
-        - product_id: ID of the product to fetch
-
-    Returns:
-        JSON response with the product details or an error message.
-    """
     try:
         product = collection.find_one({'_id': ObjectId(product_id)})
         if product:
@@ -225,15 +191,6 @@ def get_product(product_id):
 # Define the route to add a new product
 @app.route('/products', methods=['POST'])
 def add_product():
-    """
-    Add a new product to the database.
-
-    Parameters:
-        - JSON body containing product details
-
-    Returns:
-        JSON response with a success message and the new product ID.
-    """
     try:
         data = request.json
         data['created_manually'] = True
@@ -246,16 +203,6 @@ def add_product():
 # Define the route to update an existing product by ID
 @app.route('/products/<product_id>', methods=['PUT'])
 def update_product(product_id):
-    """
-    Update an existing product by its ID.
-
-    Parameters:
-        - product_id: ID of the product to update
-        - JSON body containing updated product details
-
-    Returns:
-        JSON response with a success message or an error message.
-    """
     try:
         data = request.json
         result = collection.update_one({'_id': ObjectId(product_id)}, {'$set': data})
@@ -270,15 +217,6 @@ def update_product(product_id):
 # Define the route to delete a product by ID
 @app.route('/products/<product_id>', methods=['DELETE'])
 def delete_product(product_id):
-    """
-    Delete a product by its ID.
-
-    Parameters:
-        - product_id: ID of the product to delete
-
-    Returns:
-        JSON response with a success message or an error message.
-    """
     try:
         result = collection.delete_one({'_id': ObjectId(product_id)})
         if result.deleted_count:
@@ -292,15 +230,6 @@ def delete_product(product_id):
 # Define the route to delete multiple products based on a filter
 @app.route('/products', methods=['DELETE'])
 def delete_products():
-    """
-    Delete multiple products based on a filter.
-
-    Parameters:
-        - JSON body containing filter criteria
-
-    Returns:
-        JSON response with the count of deleted products or an error message.
-    """
     try:
         filter_query = request.json.get('filter', {})
         result = collection.delete_many(filter_query)
@@ -312,15 +241,6 @@ def delete_products():
 # Define the route to get product recommendations based on embeddings
 @app.route('/products/<product_id>/recommendations', methods=['GET'])
 def get_recommendations(product_id):
-    """
-    Fetch product recommendations based on the embeddings of a given product.
-
-    Parameters:
-        - product_id: ID of the product to base recommendations on
-
-    Returns:
-        JSON response with recommended products or an error message.
-    """
     try:
         product = collection.find_one({'_id': ObjectId(product_id)}, {'embeddings': 1})
         if not product or 'embeddings' not in product:
@@ -328,7 +248,6 @@ def get_recommendations(product_id):
 
         embeddings = product['embeddings']
 
-        # Define the vector search stage for the aggregation pipeline
         search_stage = {
             "$vectorSearch": {
                 "index": "vs_details",
@@ -339,11 +258,10 @@ def get_recommendations(product_id):
             }
         }
 
-        # Build the aggregation pipeline
         pipeline = [
             search_stage,
-            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},  # Exclude the current product from recommendations
-            {'$project': {  # Select and project the required fields
+            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},
+            {'$project': {
                 'name': 1,
                 'price': 1,
                 'description': 1,
@@ -358,7 +276,6 @@ def get_recommendations(product_id):
             }}
         ]
 
-        # Execute the aggregation pipeline
         results = collection.aggregate(pipeline)
         recommendations = list(results)
 
@@ -373,21 +290,11 @@ def get_recommendations(product_id):
 # Define the route for autocomplete search suggestions
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
-    """
-    Fetch autocomplete suggestions based on the search query.
-
-    Parameters:
-        - q: Search query string
-
-    Returns:
-        JSON response with autocomplete suggestions or an error message.
-    """
     try:
         search_query = request.args.get('q', '')
         if not search_query:
             return jsonify([])
 
-        # Define the search stage for autocomplete
         pipeline = [
             {
                 '$search': {
@@ -399,14 +306,13 @@ def autocomplete():
                     }
                 }
             },
-            {'$limit': 5},  # Limit results to top 5 suggestions
-            {'$project': {  # Select and project the required fields
+            {'$limit': 5},
+            {'$project': {
                 '_id': 1,
                 'name': 1
             }}
         ]
 
-        # Execute the aggregation pipeline
         results = collection.aggregate(pipeline)
         suggestions = [{'id': str(result['_id']), 'name': result['name']} for result in results]
         return jsonify(suggestions)
@@ -416,16 +322,6 @@ def autocomplete():
 
 # Function to generate embeddings for text using OpenAI
 def generate_embedding(text, model="text-embedding-3-large"):
-    """
-    Generate embeddings for a given text using OpenAI.
-
-    Parameters:
-        - text: The input text to generate embeddings for
-        - model: The model to use for generating embeddings (default: "text-embedding-3-large")
-
-    Returns:
-        Embeddings vector for the input text
-    """
     try:
         return aiClient.embeddings.create(input=[text], model=model).data[0].embedding
     except Exception as e:
@@ -435,15 +331,6 @@ def generate_embedding(text, model="text-embedding-3-large"):
 # Define the route for the FashionBot
 @app.route('/fashionbot', methods=['POST'])
 def fashionbot():
-    """
-    Handle requests to the FashionBot.
-
-    Parameters:
-        - JSON body containing product_id and question
-
-    Returns:
-        JSON response with the bot's answer and product recommendations or an error message.
-    """
     try:
         data = request.json
         logger.debug(f"Received request data: {data}")
@@ -483,7 +370,7 @@ def fashionbot():
         combined_input = f"Question: {question}\nAnswer: {answer_content}"
         question_embedding = generate_embedding(combined_input)
 
-        # Define the vector search stage for the aggregation pipeline
+        # Find matching products using MongoDB Atlas Vector Search
         search_stage = {
             "$vectorSearch": {
                 "index": "vs_details",
@@ -494,11 +381,10 @@ def fashionbot():
             }
         }
 
-        # Build the aggregation pipeline
         pipeline = [
             search_stage,
-            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},  # Exclude the current product from recommendations
-            {'$project': {  # Select and project the required fields
+            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},
+            {'$project': {
                 'name': 1,
                 'price': 1,
                 'description': 1,
@@ -513,7 +399,6 @@ def fashionbot():
             }}
         ]
 
-        # Execute the aggregation pipeline
         results = collection.aggregate(pipeline)
         recommendations = list(results)
 

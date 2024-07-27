@@ -1,0 +1,51 @@
+/* styles.css */
+
+.autocomplete-suggestions {
+    border: 1px solid #ccc;
+    border-top: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+}
+
+.autocomplete-suggestion {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.autocomplete-suggestion:hover {
+    background-color: #f0f0f0;
+}
+
+.thumbnail-product {
+    width: 150px;  /* Thumbnail width */
+    height: 150px; /* Thumbnail height */
+    object-fit: cover;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.thumbnail-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.spinner-border {
+    display: block;
+    margin: auto;
+}
+
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}
