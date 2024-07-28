@@ -369,6 +369,7 @@ function sendChatMessage(question) {
     });
 }
 
+// Function to move the chat window to the latest message.
 function scrollToLatestMessage() {
     const chatContainer = $('#chat-messages');
     chatContainer.scrollTop(chatContainer.prop("scrollHeight"));
