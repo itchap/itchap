@@ -435,15 +435,6 @@ def generate_embedding(text, model="text-embedding-3-large"):
 # Define the route for the FashionBot
 @app.route('/fashionbot', methods=['POST'])
 def fashionbot():
-    """
-    Handle requests to the FashionBot.
-
-    Parameters:
-        - JSON body containing product_id and question
-
-    Returns:
-        JSON response with the bot's answer and product recommendations or an error message.
-    """
     try:
         data = request.json
         logger.debug(f"Received request data: {data}")
@@ -483,7 +474,7 @@ def fashionbot():
         combined_input = f"Question: {question}\nAnswer: {answer_content}"
         question_embedding = generate_embedding(combined_input)
 
-        # Define the vector search stage for the aggregation pipeline
+        # Find matching products using MongoDB Atlas Vector Search
         search_stage = {
             "$vectorSearch": {
                 "index": "vs_details",
@@ -494,11 +485,10 @@ def fashionbot():
             }
         }
 
-        # Build the aggregation pipeline
         pipeline = [
             search_stage,
-            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},  # Exclude the current product from recommendations
-            {'$project': {  # Select and project the required fields
+            {'$match': {'_id': {'$ne': ObjectId(product_id)}}},
+            {'$project': {
                 'name': 1,
                 'price': 1,
                 'description': 1,
@@ -513,12 +503,14 @@ def fashionbot():
             }}
         ]
 
-        # Execute the aggregation pipeline
         results = collection.aggregate(pipeline)
         recommendations = list(results)
 
         for recommendation in recommendations:
             recommendation['_id'] = str(recommendation['_id'])
+
+        logger.debug(f"Answer content: {answer_content}")
+        logger.debug(f"Recommendations: {recommendations}")
 
         return jsonify({'answer': answer_content, 'recommendations': recommendations})
     except Exception as e:

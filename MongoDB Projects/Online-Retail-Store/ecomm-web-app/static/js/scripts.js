@@ -333,19 +333,25 @@ function loadRecommendations(productId) {
 // Send chat message to FashionBot
 function sendChatMessage(question) {
     const productId = $('#product-details').data('product-id');
-    $('#chat-messages').append(`<div><strong>You:</strong> ${question}</div>`);
+    $('#chat-messages').append(`<div class="message-bubble user-message"><strong>You:</strong> ${question}</div>`);
+    scrollToLatestMessage();
+    showLoadingIndicator(true);
     $.ajax({
         url: `/fashionbot`,
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ product_id: productId, question: question }),
         success: function (response) {
-            $('#chat-messages').append(`<div><strong>FashionBot:</strong> ${response.answer}</div>`);
+            $('#chat-messages').append(`<div class="message-bubble bot-message"><strong>FashionBot:</strong> ${response.answer}</div>`);
             displayChatRecommendations(response.recommendations);
+            showLoadingIndicator(false);
+            scrollToLatestMessage();
         },
         error: function (xhr, status, error) {
+            showLoadingIndicator(false);
             showError('Error sending chat message. Please try again later.');
-            $('#chat-messages').append('<div><strong>FashionBot:</strong> Sorry, something went wrong. Please try again later.</div>');
+            $('#chat-messages').append('<div class="message-bubble bot-message"><strong>FashionBot:</strong> Sorry, something went wrong. Please try again later.</div>');
+            scrollToLatestMessage();
         }
     });
 }
@@ -358,6 +364,21 @@ function displayChatRecommendations(recommendations) {
             <img src="${item.images[0]}" class="thumbnail-product" alt="${item.name}" data-id="${item._id}">
         `);
     });
+}
+
+// Scroll to the latest message in the chat container
+function scrollToLatestMessage() {
+    const chatContainer = $('#chat-messages');
+    chatContainer.scrollTop(chatContainer.prop("scrollHeight"));
+}
+
+// Show or hide the loading indicator
+function showLoadingIndicator(show) {
+    if (show) {
+        $('.loading-indicator').show();
+    } else {
+        $('.loading-indicator').hide();
+    }
 }
 
 // Show or hide the loading spinner
