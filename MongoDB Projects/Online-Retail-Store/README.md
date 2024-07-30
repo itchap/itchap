@@ -4,25 +4,25 @@ This project is an online retail store demo application showcasing the use of Mo
 
 ## Project Structure
 ```bash
-Online-Retail-Store/</br>
-|---- ecomm-web-app/</br>
-|    |---- static/</br>
-|    |    |---- css/</br>
-|    |    |    |---- styles.cs</br>
-|    |    |---- images/</br>
-|    |    |---- js/</br>
-|    |    |    |---- fashionbot.js</br>
-|    |    |    |---- main.js</br>
-|    |    |    |---- products.js</br>
-|    |---- templates/</br>
-|    |    |---- admin.html</br>
-|    |    |---- index.html</br>
-|    |---- app.py</br>
-|    |---- config.py</br>
-|    |---- logging_setup.py</br>
-|    |---- products.py</br>
-|    |---- requirements.txt</br>
-|    |---- user.py</br>
+Online-Retail-Store/
+|---- ecomm-web-app/
+|    |---- static/
+|    |    |---- css/
+|    |    |    |---- styles.cs
+|    |    |---- images/
+|    |    |---- js/
+|    |    |    |---- fashionbot.js
+|    |    |    |---- main.js
+|    |    |    |---- products.js
+|    |---- templates/
+|    |    |---- admin.html
+|    |    |---- index.html
+|    |---- app.py
+|    |---- config.py
+|    |---- logging_setup.py
+|    |---- products.py
+|    |---- requirements.txt
+|    |---- user.py
 ```
 ## Setup Instructions
 
