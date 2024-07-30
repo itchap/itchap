@@ -3,14 +3,14 @@
 This project is a demo online retail store application showcasing the power of the MongoDB Atlas - with it's fully managed MongoDB Database, Search Engine and Vector Store. 
 * The application uses the flexible Document schema to store polymorphic product data with it's 1-to-1 and 1-to-Many relationshops more effectively for faster access. 
 * It harnesses Atlas Search indexes and query capabilties to provide all tablestake Lucene search features like  
- - relavence based search results, 
- - score boosting, 
- - auto-complete, 
- - fuzzy matching, 
- - facets and filters 
+** relavence based search results, 
+** score boosting, 
+** auto-complete, 
+** fuzzy matching, 
+** facets and filters 
 * Vector Seach indexes and query capabilities to provide 
- - a more accurate recommendation endgine 
- - as well as a RAG (Retrieve and Generate) feature for a Fashion Chatbot. 
+** a more accurate recommendation endgine 
+** as well as a RAG (Retrieve and Generate) feature for a Fashion Chatbot. 
  
 The application is built using Flask, with a MongoDB backend and OpenAI for conversational AI.
 
