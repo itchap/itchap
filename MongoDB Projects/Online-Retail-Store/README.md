@@ -5,23 +5,23 @@ This project is an online retail store demo application showcasing the use of Mo
 ## Project Structure
 Online-Retail-Store/</br>
 ├── ecomm-web-app/</br>
-│   ├── static/</br>
-│   │   ├── css/</br>
-│   │   │   ├── styles.cs</br>
-│   │   ├── images/</br>
-│   │   ├── js/</br>
-│   │   │   ├── fashionbot.js</br>
-│   │   │   ├── main.js</br>
-│   │   │   ├── products.js</br>
-│   ├── templates/</br>
-│   │   ├── admin.html</br>
-│   │   ├── index.html</br>
-│   ├── app.py</br>
-│   ├── config.py</br>
-│   ├── logging_setup.py</br>
-│   ├── products.py</br>
-│   ├── requirements.txt</br>
-│   ├── user.py</br>
+│</t>├── static/</br>
+│</t>│</t>├── css/</br>
+│</t>│</t>│</t>├── styles.cs</br>
+│</t>│</t>├── images/</br>
+│</t>│</t>├── js/</br>
+│</t>│</t>│</t>├── fashionbot.js</br>
+│</t>│</t>│</t>├── main.js</br>
+│</t>│</t>│</t>├── products.js</br>
+│</t>├── templates/</br>
+│</t>│</t>├── admin.html</br>
+│</t>│</t>├── index.html</br>
+│</t>├── app.py</br>
+│</t>├── config.py</br>
+│</t>├── logging_setup.py</br>
+│</t>├── products.py</br>
+│</t>├── requirements.txt</br>
+│</t>├── user.py</br>
 
 ## Setup Instructions
 
