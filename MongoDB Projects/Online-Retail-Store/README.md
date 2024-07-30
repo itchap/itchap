@@ -3,6 +3,7 @@
 This project is an online retail store demo application showcasing the use of MongoDB, Atlas Search, Atlas Vector Search, and a RAG (Retrieve and Generate) feature for a Fashion Chatbot. The application is built using Flask, with a MongoDB backend and OpenAI for conversational AI.
 
 ## Project Structure
+```bash
 Online-Retail-Store/</br>
 |---- ecomm-web-app/</br>
 |    |---- static/</br>
@@ -22,7 +23,7 @@ Online-Retail-Store/</br>
 |    |---- products.py</br>
 |    |---- requirements.txt</br>
 |    |---- user.py</br>
-
+```
 ## Setup Instructions
 
 ### Prerequisites
