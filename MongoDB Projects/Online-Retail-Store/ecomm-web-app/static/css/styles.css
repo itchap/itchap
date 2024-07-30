@@ -67,15 +67,15 @@
     flex-direction: column;
     transition: none; /* Remove transition for height changes */
     width: 100%; /* Ensure full width */
-    max-height: 600px; /* Fixed max height for the chat container */
-    height: 600px; /* Fixed height for the chat container */
+    max-height: 750px; /* Increase max height if needed */
+    height:750px; /* Set initial height */
 }
 
 #chat-messages {
     flex-grow: 1;
     overflow-y: auto; /* Allow vertical scrolling */
-    max-height: 520px; /* Fixed max height for the messages area */
-    height: 520px; /* Fixed height for the messages area */
+    max-height: 750px; /* Adjust max height if needed */
+    height: 750px; /* Set initial height */
     width: 100%; /* Ensure full width */
 }
 
@@ -114,4 +114,8 @@
 
 .message-bubble li {
     margin-bottom: 5px;
+}
+
+html {
+    scroll-behavior: smooth;
 }
