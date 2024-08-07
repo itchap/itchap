@@ -1,3 +1,4 @@
+<img width="1149" alt="image" src="https://github.com/user-attachments/assets/216f44de-aded-43bd-ac8d-83cf2f8538d0">
 # MongoDB Atlas Powered Online Retail Store
 
 This project is a demo online retail store application showcasing the power of the MongoDB Atlas - with it's fully managed:
