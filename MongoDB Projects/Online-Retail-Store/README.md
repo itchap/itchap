@@ -6,8 +6,7 @@ This project is a demo online retail store application showcasing the power of t
 3. Vector Store
 
 <img width="1149" alt="image" src="https://github.com/user-attachments/assets/216f44de-aded-43bd-ac8d-83cf2f8538d0">
-</br>
-</br>
+<br>
 * The application uses the flexible MongoDB BSON schema to store polymorphic product data (with it's 1-to-1 and 1-to-Many relationships) more effectively for faster access and ease of development.
 * It harnesses Atlas Search indexes and query capabilties to provide all tablestake Lucene search features like  
 	* relevance based search results
