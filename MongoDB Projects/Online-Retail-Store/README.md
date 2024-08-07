@@ -1,10 +1,11 @@
-<img width="1149" alt="image" src="https://github.com/user-attachments/assets/216f44de-aded-43bd-ac8d-83cf2f8538d0">
 # MongoDB Atlas Powered Online Retail Store
 
 This project is a demo online retail store application showcasing the power of the MongoDB Atlas - with it's fully managed:
 1. MongoDB Database
 2. Search Engine and
 3. Vector Store
+
+<img width="1149" alt="image" src="https://github.com/user-attachments/assets/216f44de-aded-43bd-ac8d-83cf2f8538d0">
 
 * The application uses the flexible MongoDB BSON schema to store polymorphic product data (with it's 1-to-1 and 1-to-Many relationships) more effectively for faster access and ease of development.
 * It harnesses Atlas Search indexes and query capabilties to provide all tablestake Lucene search features like  
