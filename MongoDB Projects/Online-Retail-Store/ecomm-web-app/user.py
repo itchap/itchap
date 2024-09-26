@@ -121,7 +121,7 @@ def autocomplete():
         pipeline = [
             {
                 '$search': {
-                    'index': 'default-ac',
+                    'index': 'name_ac',
                     'autocomplete': {
                         'query': search_query,
                         'path': 'name',

@@ -1,22 +1,26 @@
-# MongoDB Atlas Powered Online Retail Store
+# MongoDB Atlas Powered Online Retail Store with Gen AI Enhancements
 
-This project is a demo online retail store application showcasing the power of the MongoDB Atlas - with it's fully managed:
+This project is a demo Online Retail Store application showcasing the power Gen AI and MongoDB Atlas - with it's fully managed:
 1. MongoDB Database
 2. Search Engine and
 3. Vector Store
 
-* The application uses the flexible MongoDB BSON schema to store polymorphic product data (with it's 1-to-1 and 1-to-Many relationships) more effectively for faster access and ease of development.
-* It harnesses Atlas Search indexes and query capabilties to provide all tablestake Lucene search features like  
-	* relevance based search results
-	* score boosting
-	* auto-complete results 
-	* fuzzy matching for typo tollerence 
-	* facets for filtering
-* Vector Seach indexes and query capabilities to provide 
-	* a more accurate recommendation endgine 
-	* as well as a RAG (Retrieve and Generate) feature for a Fashion Chatbot. 
+* The application uses the flexible MongoDB BSON Document model to:
+	* store polymorphic product data in a single collection
+	* support 1-to-1 and 1-to-Many relationships more effectively for faster query access
+	* increase ease of development comapred to working with SQL and multi-table ORM layers
+* It harnesses Atlas Search indexes and query capabilities to provide all tablestake Lucene search features like:  
+    * relevance based search results
+    * score boosting
+    * auto-complete results
+    * fuzzy matching for typo tolerance 
+    * facets for filtering
+* It also leverages Atlas Vector Search indexes and query capabilities to provide:
+    * a more accurate product recommendation engine with semantic search results 
+    * as well as a RAG (Retrival Augmented Generation) solution for a Fashion Assistant Chatbot.
+* Gen AI technologies leveraged 
  
-The application is built using Flask, with a MongoDB backend and OpenAI for conversational AI.
+The application is built using Python Flask, with a MongoDB Atlas backend and OpenAI for LLM embedding and Natural Language Processing models.
 
 ## Project Structure
 ```bash
@@ -45,7 +49,7 @@ Online-Retail-Store/
 ### Prerequisites
 
 1. Python 3.8+
-2. MongoDB
+2. MongoDB Atlas Account M0+ account
 3. OpenAI API Key
 
 ### Installation
