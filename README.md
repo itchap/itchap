@@ -10,7 +10,7 @@ Hi there! 👋 I'm **Peter**, an **Advisory Solutions Architect at MongoDB**, wi
 
 ## Featured Projects
 ### Personal Projects
-- **[Itchap Repository](https://github.com/itchap)**: A collection of tools, ideas, and explorations in technology and innovation.
+- **[Itchap Repository](https://github.com/itchap/itchap)**: A collection of tools, ideas, and explorations in technology and innovation.
 
 ### MongoDB Work
 For MongoDB-specific projects, visit my [itchap GitHub account](https://github.com/itchap), where I delve into:
