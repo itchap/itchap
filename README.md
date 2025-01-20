@@ -1,4 +1,4 @@
-# Welcome to My GitHub Homepage
+# Welcome to my GitHub homepage
 
 Hi there! 👋 I'm **Peter**, an **Advisory Solutions Architect at MongoDB**, with a passion for crafting scalable solutions and sharing knowledge. With over 15 years of experience in IT, ranging from IT support to solutions architecture, I thrive at the intersection of technology and business.
 
