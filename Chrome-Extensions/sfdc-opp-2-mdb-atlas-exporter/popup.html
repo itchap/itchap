@@ -1,0 +1,49 @@
+<!-- The popup page is an HTML document that includes a form for capturing Atlas Data API and
+cluster details such as the Data API App ID, API Key, Cluster Name, Database, and Collection.
+The form includes input fields for each of these details and a submit button to export the records.
+It also includes a div element for displaying an acknowledgement message when the form is submitted.
+The page also includes links to Bootstrap CSS for styling, and a custom CSS file for additional styling,
+and a script for the popup page. -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SFDC to Atlas Data Exporter</title>
+        <!-- Bootstrap CSS for styling -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- link to custom CSS file for additional styling -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- container for the form and other elements -->
+        <div class="container">
+            <!-- logo image -->
+            <img src="logo.png" class="icon">
+            <!-- heading for the page -->
+            <h4>SFDC to Atlas Data Exporter</h4>
+            <!-- form for capturing Atlas Data API and cluster details -->
+            <form id="constants-form" class="form-group">
+                <!-- input for the the Atlas Data API App ID -->
+                <label>Data API App ID:</label>
+                <input type="text" id="app-id" name="app_id" class="form-control" required>
+                <!-- input for the Atlas Data API Key -->
+                <label>API Key:</label>
+                <input type="text" id="api-key" name="api_key" class="form-control" required>
+                <!-- input for the Cluster name -->
+                <label>Cluster Name:</label>
+                <input type="text" id="data-source" name="cluster_name" class="form-control" required>
+                <!-- input for the Database name -->
+                <label>Database:</label>
+                <input type="text" id="db" name="db_name" class="form-control" required>
+                <!-- input for the Collection name -->
+                <label>Collection:</label>
+                <input type="text" id="collection" name="collection_name" class="form-control" required><br>
+                <!-- submit button for the form -->
+                <input type="button" value="Export Records" id="submit-button" class="btn btn-primary">
+            </form>
+            <!-- div element for displaying acknowledgement message -->
+            <div id="ack-message" style="display:none"></div>
+        </div>
+        <!-- script for the popup page -->
+        <script src="popup.js"></script>
+    </body>
+</html>

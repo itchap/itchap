@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "SFDC to Atlas Data Exporter",
+    "version": "1.0",
+    "author": "Peter Smith (MongoDB Solutions Architect)",
+    "description": "Exports table data from Salesforce views and sends the data to the MongoDB Atlas Data API for storage.",
+    "icons": {
+        "128": "icon.png"
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }],
+    "action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": [
+        "activeTab"
+    ]
+}
