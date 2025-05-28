@@ -8,12 +8,12 @@ Hi there! 👋 I'm **Peter**, an **Advisory Solutions Architect at MongoDB**, wi
 - **Personal Projects:** Hosted here on my personal GitHub homepage
 - **Professional Work:** Stored in dedicated repositories under the [ITChap GitHub account](https://github.com/itchap)
 
-## Featured Projects
-### Personal Projects
+## Featured Repositories
+### Personal Repo
 - **[ITChap Repository](https://github.com/itchap/itchap)**: A collection of tools, ideas, and explorations in technology and innovation.
 
-### MongoDB Work
-For MongoDB-specific projects, visit my [ITChap GitHub account](https://github.com/itchap), where I delve into:
+### MongoDB Work Repo
+For MongoDB-specific projects, visit my [MongoDB Projects Repo](https://github.com/itchap/mongodb-projects), where I delve into:
 - Data modeling and schema design
 - Advanced aggregation pipelines
 - GenAI RAG Applications
