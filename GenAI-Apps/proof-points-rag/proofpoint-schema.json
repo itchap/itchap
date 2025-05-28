@@ -1,0 +1,150 @@
+{
+    "customer": {
+        "company_name": "Wolt",
+        "logo": "https://d21buns5ku92am.cloudfront.net/69299/images/410961-RGB_Wolt_logos_UA-d9ea4d-medium-1638873352.png",
+        "website": "https://www.wolt.com/",
+        "size": 8186,
+        "about": [
+            "Wolt is a Helsinki based technology company that provides an online platform for consumers, merchants and couriers. It connects people looking to order food and other goods with people interested in selling and delivering them. To enable this, Wolt develops a wide range of technologies from local logistics to retail software and financial solutions - as well as operating its own grocery stores under the Wolt Market brand.",
+            "Wolt's products include Wolt+ (subscription service for customers), Wolt for Work (meal benefits and office deliveries for companies), Wolt Drive (fast last-mile deliveries for merchants) and Wolt Self-Delivery (service for merchant partners with their own delivery staff). Wolt's mission is to make cities better by empowering and growing local communities. Wolt was founded in 2014 and joined forces with DoorDash in 2022. DoorDash operates in 29 countries today, 25 of which are with the Wolt product and brand."
+        ],
+        "founded": 2014,
+        "industry": "Software Development",
+        "specialties": ["Food and beverages", "Food & goods delivery"],
+        "headquarters": "Helsinki, Uusimaa",
+        "tech_stack": ["MongoDB", "Oracle", "Kafka", "AWS", "Ubuntu", "Java", "Elastic Search"]
+    },
+    "usecase": {
+        "type": "Catalog",
+        "title": "Wolt scales their delivery platform with MongoDB Atlas",
+        "overview":"How Finnish delivery company uses MongoDB to scale and support new and unique customer requirements.",
+        "introduction": {
+            "heading": "Delivery of food and products to consumers in minutes",
+            "paragraphs": [
+                "Wolt empowers customers to find anything they want from their local neighborhood online and get it delivered quickly. Founded in Helsinki, the company has grown from a takeaway delivery service in 2014 to a bridge between merchants and their customers today. Its vision is to make cities better places for everyone by making shopping and eating more accessible, couriering products from sandwiches and gifts to medication and the weekly grocery shop, right to the customer's front door.",
+                "The company was acquired by DoorDash in 2022, and currently operates in 500 cities across 25 countries.",
+                "“Our app is the top-rated delivery app in most of the markets we operate in,” revealed Sobit Akhmedov, staff engineer at Wolt. “We strive to make products our customers will love and that we're proud of. There's a passion behind our work, and our customers feel the difference in their experience.”",
+                "Excellence is a value that goes deep at Wolt. For example, it sends photographers to all restaurants to help them build a menu with professional images of their dishes, to visually appeal to customers that are undecided on what to order. And if a restaurant or merchant needs support, they can reach out to a local support team who speak their native language — a level of care that gives the company a competitive edge.",
+                "“Merchants benefit from tools like self-service, automation, and analytics. We aim to provide technology that's useful, efficient, reliable, and delightful to use,” said Sobit.",
+                "The 700-strong product development team is focused on building offerings such as Wolt for Work, which companies can use for office deliveries or to offer meals as a perk; Wolt Drive, which handles last-mile deliveries; and Wolt+, a subscription service for customers with benefits such as free delivery and credits on orders they pickup themselves."
+            ]                  
+        },
+        "challenges":[
+            {
+                "heading": "Adapting to meet the needs of every merchant",
+                "paragraphs": [
+                    "Wolt continuously refines its products to meet the unique needs of different countries, and to tap into new markets. It decided to use its platform as the blueprint to offer delivery services to merchants and chain restaurants.",
+                    "“All operations were designed to optimize food delivery from local restaurants, but we want to be an attractive partner for chains with hundreds of branches and for merchants who have a much bigger product catalog than the average menu,” explained Sobit.",
+                    "The product team knew they didn't want the platform to become a bottleneck. They needed to adapt it to scale up exponentially — because large supermarkets have hundreds of thousands of products — and to cater for a new type of customer. This required revamping the storage model, and expanding the storage capabilities.",
+                    "“Previously, if a restaurant was running a seasonal promotion like pumpkin spice drinks for fall, they'd get in touch with us and we'd manually update the menu after hours,” Sobit said. “If we onboarded one of the world's leading fast-food chains and they were launching a fall menu, we'd have a huge team of staff manually updating thousands of menus overnight across different time zones.”",
+                    "That's not just complex, time-consuming, and a poor employee experience, it introduces the risk of manual error. And for chains who regularly change the menu or run promotions, it simply isn't fast or agile enough to keep up with their needs. Although the team designed a workaround allowing staff to export a selection of data in JSON format from one store and import it to others, they realized this wasn't scalable.",
+                    "“A total overhaul of the architecture would have been intrusive. We had to find the right balance between adapting to serve new markets and remaining operational,” recalled Sobit."
+                ]
+            }                
+        ],
+        "solutions":[
+            {
+                "heading": "Building a new offering platform on MongoDB",
+                "paragraphs": [
+                    "Wolt decided to build a new system for merchants and chain restaurants running in parallel to its existing platform on AWS. This provided the flexibility and scalability needed as well as additional capabilities, such as sharing a menu across multiple restaurants. The team will gradually migrate data into the new system without disrupting other services, and merchants can import menus or product lists, rather than manually entering their whole catalog.",
+                    "“We've used MongoDB since 2014 and migrated to MongoDB Atlas in 2019. It supports dozens of our apps, so we know it's reliable and has the flexible document model we need to support our new platform,” said Sobit. “MongoDB Atlas has infinite scalability capabilities and can handle heavy reads and writes without lagging. MongoDB was the right decision for us in 2014, the right decision now, and will support our future business endeavors without significant re-architecting. In fact, we can innovate at a much faster pace.”",
+                    "MongoDB also has native connectors for Apache Kafka, which Wolt uses to leverage event-driven architecture. Changes such as updates to a restaurant menu are delivered to the database as events. Where previously a Kafka listener needed to react to the event and manually update the menu, MongoDB Change Streams listens to changes from Kafka Connect and ensures that the update is reflected in real-time across all relevant menus.",
+                    "This is focal for running seasonal promotions, but also means if a meal or item sells out, it can be removed from the menu or catalog immediately so customers browsing the app can't place an order that the restaurant or retailer cannot fulfill.",
+                ]
+            },
+            {
+                "heading": "Giving restaurants and shop owners better visibility and control",
+                "paragraphs": [
+                    "The new platform also changes the way merchants manage their accounts with Wolt. They have a self-service portal where they can create a shared menu or product inventory and link it to all relevant branches, so they no longer have to manage each location separately. They also have dashboards and analytics to track KPIs and uncover insights into how many orders they can manage and why orders were rejected, for example.",
+                    "“We want to become a more proactive partner for our customers. We're looking at how we can use data to make recommendations for how they can boost sales and we're building more capabilities so they can run promotions without any input from us,” added Sobit.",
+                    "Meanwhile, MongoDB Atlas makes it easier for Wolt to manage its own environment. The platform is integrated with Terraform to manage the infrastructure-as-a-code, and the team uses data to analyze its own SLAs. Sobit remarked, “As a tool, Atlas provides us, engineers, an easy way to look at the data and perform quick analysis of it, without upfront investing in data warehouse setup. It also provides an easy way to contact MongoDB support whenever we need it.”",
+                    "As Wolt continues to develop its platform, the next steps are creating a data hub layer to solve challenges around distributed ownership, complex data models, and cross-system dependencies. This data hub will rely on MongoDB to handle heavy reads and writes, data aggregation and cascading events.",
+                    "“MongoDB enables us to move quickly as we build teams and systems to launch new business services without waiting for other departments to match our pace of innovation,” Sobit commented. “We haven't just improved the capabilities we can offer, we can give everyone from the product development team to B2B customers and end customers a better user experience.”"
+                ]
+            }
+        ],
+        "results":[
+            {
+                "heading": "Bringing a competitive offering to more markets",
+                "paragraphs": [
+                    "When Wolt launched its new offering platform, it opened a whole world of opportunities for merchants and consumers, both of whom have greater choice over how and where they do business.",
+                    "“Despite the increasing complexity behind catering to chain restaurants, merchants, and supermarkets, we're now set up to meet their needs,” said Sobit. “The platform is superfast and high performing. Updates to menus or product catalogs are available for consumers in just two seconds, and we can onboard new B2B customers in a matter of days.”",
+                    "Wolt also benefits from a close working relationship with MongoDB and comprehensive learning resources that are available. The teams meet regularly to solve potential issues and share best practices. Wolt also praised the fast customer support from MongDB and being able to preview upcoming products before launch.",
+                    "“With MongoDB, we can design and build without limits. Our platform supports restaurants and retailers of all sizes, while giving consumers the same fast and convenient experience,” said Sobit. “We're excited to keep developing on the platform and releasing new functionality to make cities better places for customers, merchants and courier partners alike.”"
+                ]
+            }                
+        ],
+        "quotes":[
+            {
+                "person": "John Doe",
+                "role": "Staff Engineer",
+                "company": "Wolt",
+                "quote": "MongoDB Atlas has nearly infinite scalability and can handle heavy reads and writes without lagging. MongoDB was the right decision for us in 2014, the right decision now, and will support our future business endeavors without significant re-architecting. In fact, we can innovate at a much faster pace."
+            },
+            {
+                "person": "Jane Johnson",
+                "role": "VP of Engineering",
+                "company": "Wolt",
+                "quote": "With MongoDB we can design and build without limits. Our platform supports restaurants and retailers of all sizes, while giving consumers the same fast and convenient experience. We're excited to keep developing on the platform and releasing new functionality to make city life better for everyone."
+            }
+        ],
+        "metrics":[
+            {
+                "kpi": "Atlas on AWS deal",
+                "result": "$970K+"
+            },
+            {
+                "kpi": "Expected ARR by end of 2021",
+                "result": "$1.4M+"
+            },
+            {
+                "kpi": "Pull through revenue in other AWS Services",
+                "result": "5X"
+            },
+            {
+                "kpi": "Funding via Re:Ignite",
+                "result": "$30K"
+            }
+        ]
+    },
+    "champion": {
+        "name": "Jane Johnson",
+        "role": "VP of Engineering",
+        "responsibilities": "Building a team of backend engineers and architects"
+    },
+    "region": {
+        "country": "Germany",
+        "city": "Berlin",
+        "continent": "EMEA"
+    },
+    "account": {
+        "products": ["Atlas", "Search", "Online Archive"],
+        "services": ["Pro Support", "PS"],
+        "deal_type": "Cloud",
+        "date_signed": ISODate("20203-04-24T00:00:00Z"),
+        "owner": "Victor Dansk",
+        "sales_motion": "Launch",
+        "value_drivers": ["Maximize Competitive Advantage to Drive Growth", "Accelerate Time to Value", "Lower Total Cost of Ownership", "Reduce Risk for Business Applications"],
+        "why_do_anything": [
+            "Wolt built its core food delivery platform on MongoDB Community, serving  millions of users across 23+ countries",
+            "Continuous, exponential customer growth during COVID lockdown led to massive increase in traffic & rising costs",
+            "Lack of internal resources threatened international expansion plans (Japan, Israel, etc.)",
+            "Sought best-in-class availability & performance to ensure high CSAT & accommodate hypergrowth"
+        ],
+        "why_now": [
+            "Management have set the goal to have a system running that helps reduce that operational overhead by the beginning of next year 2023 (Q1)",
+            "2x Growth expected in next 12 months which will increase the operational overhead of provisioning more and more instances"
+        ],
+        "why_mongodb": [
+            "Atlas, a fully managed MDB-aaS, automated sharding & ensured best in class performance to support hypergrowth",
+            "Data Archiving capabilities allow Wolt to optimize resource allocation between hot and cold data, reducing TCO",
+            "Superior performance, reliability & monitoring ensured best-in-class CSAT regardless of spikes in traffic",
+            "Numerous AWS integrations & multi-region clusters made Atlas a natural fit for Wolt’s existing AWS ecosystem"
+        ],
+        "sfdc_acc_link": "https://mongodb.my.salesforce.com/001A000001S0rEXIAZ"
+    },
+    "date_proof_point_created": ISODate("2023-05-15T00:00:00Z"),
+    "link_to_deck": "https://docs.google.com/presentation/d/1uMgprK-u7CmUFM0O_V1WXdgXPw6_UboGaPH87uPkYFs/edit?usp=sharing",
+    "link_to_web": "https://www.mongodb.com/customers/wolt",
+    "customer_validated": true
+}
