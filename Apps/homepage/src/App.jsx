@@ -79,10 +79,24 @@ function App() {
         
         {/* SOCIAL LINKS */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '20px' }}>
-          <a href="https://www.linkedin.com/in/itchap/" target="_blank" rel="noreferrer" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold' }}>
+          <a 
+            href="https://www.linkedin.com/in/itchap/" 
+            target="_blank" 
+            rel="noreferrer" 
+            style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold', transition: 'color 0.2s ease-in-out' }}
+            onMouseOver={e => e.target.style.color = '#01ed64'} 
+            onMouseOut={e => e.target.style.color = theme.textMain}
+          >
             LinkedIn
           </a>
-          <a href="https://github.com/itchap" target="_blank" rel="noreferrer" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold' }}>
+          <a 
+            href="https://github.com/itchap" 
+            target="_blank" 
+            rel="noreferrer" 
+            style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold', transition: 'color 0.2s ease-in-out' }}
+            onMouseOver={e => e.target.style.color = '#01ed64'} 
+            onMouseOut={e => e.target.style.color = theme.textMain}
+          >
             GitHub
           </a>
         </div>

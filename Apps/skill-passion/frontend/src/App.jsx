@@ -215,18 +215,30 @@ function App() {
         display: 'flex', 
         justifyContent: 'space-between', 
         padding: '10px 20px', 
-        opacity: 0.6, /* Makes it inconspicuous */
         fontSize: '13px',
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        opacity: 0.8
       }}>
-        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'opacity 0.2s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.6}>
+        <a 
+          href="/" 
+          style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} 
+          onMouseOver={e => e.target.style.color = '#01ed64'} 
+          onMouseOut={e => e.target.style.color = '#fff'}
+        >
           &larr; Home
         </a>
-        <a href="https://github.com/itchap/itchap/tree/main/Apps/skill-passion" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'opacity 0.2s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.6}>
+        <a 
+          href="https://github.com/itchap/itchap/tree/main/Apps/skill-passion" 
+          target="_blank" 
+          rel="noreferrer" 
+          style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} 
+          onMouseOver={e => e.target.style.color = '#01ed64'} 
+          onMouseOut={e => e.target.style.color = '#fff'}
+        >
           View Source on GitHub &nearr;
         </a>
       </div>
-      
+
       <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
         🌱 Solution Architect Skill / Passion Matrix
       </h2>
@@ -395,7 +407,7 @@ function App() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
           <div style={{ backgroundColor: '#011e2b', border: '2px solid #00ed64', padding: '30px', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
              <h3 style={{ color: '#00ed64', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-               <img src="https://i.redd.it/6a9l6ixg3fk81.png" alt="logo" style={{ height: '20px' }}/>
+               <img src="https://www.rw-designer.com/icon-image/10455-256x256x32.png" alt="logo" style={{ height: '20px' }}/>
                SA Career Insights
              </h3>
              <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
