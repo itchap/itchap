@@ -225,7 +225,7 @@ function App() {
           onMouseOver={e => e.target.style.color = '#01ed64'} 
           onMouseOut={e => e.target.style.color = '#fff'}
         >
-          &larr; Home
+          ← Home
         </a>
         <a 
           href="https://github.com/itchap/itchap/tree/main/Apps/skill-passion" 
@@ -235,7 +235,7 @@ function App() {
           onMouseOver={e => e.target.style.color = '#01ed64'} 
           onMouseOut={e => e.target.style.color = '#fff'}
         >
-          View Source on GitHub &nearr;
+          View Source on GitHub ↗
         </a>
       </div>
 
