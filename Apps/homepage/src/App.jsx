@@ -17,7 +17,7 @@ function App() {
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, backgroundColor: 'rgba(1, 30, 43, 0.9)', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ fontSize: '24px', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img 
-            src="https://pbs.twimg.com/profile_images/1391125349044531200/ZItfj6cS_400x400.jpg" 
+            src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1774483200&v=beta&t=W7P_eyKPX46QWaY8P7E-s5q9mMI_sljIcLo1Q9g-Gt8" 
             alt="itchap" 
             style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
           />
