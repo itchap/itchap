@@ -211,8 +211,7 @@ function App() {
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       
       <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
-        <img src="https://code.visualstudio.com/assets/home/extension-mongodb.png" alt="MongoDB Logo" style={{ height: '32px' }} />
-        MongoDB SA Skill / Passion Matrix
+        🌱 Solution Architect Skill / Passion Matrix
       </h2>
       
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -364,7 +363,7 @@ function App() {
 
           <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '8px', border: '1px solid #333' }}>
             <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Why Use This?</h3>
-            <p style={{ fontSize: '13px', color: '#e0e0e0', lineHeight: '1.5', marginTop: 0 }}>This framework helps you visualize your responsibilities and optimize your career trajectory at MongoDB.</p>
+            <p style={{ fontSize: '13px', color: '#e0e0e0', lineHeight: '1.5', marginTop: 0 }}>This framework helps you visualize your responsibilities and optimize your career trajectory in technical sales.</p>
             <ul style={{ fontSize: '13px', color: '#e0e0e0', paddingLeft: '20px', lineHeight: '1.5', marginBottom: 0 }}>
               <li style={{ marginBottom: '8px' }}><strong>Alignment:</strong> Maximize time spent in your "Zone of Genius" (Top-Right).</li>
               <li style={{ marginBottom: '8px' }}><strong>Growth:</strong> Discover new passions to develop (Top-Left).</li>
@@ -380,7 +379,7 @@ function App() {
           <div style={{ backgroundColor: '#011e2b', border: '2px solid #00ed64', padding: '30px', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
              <h3 style={{ color: '#00ed64', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                <img src="https://code.visualstudio.com/assets/home/extension-mongodb.png" alt="logo" style={{ height: '20px' }}/>
-               MongoDB SA Career Insights
+               SA Career Insights
              </h3>
              <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
              <button onClick={() => setAnalysis(null)} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close Insights</button>
