@@ -1,0 +1,6 @@
+db.leaderboard.updateMany(
+    {  },
+    {
+        "$inc": { "score": 10 }
+    }
+)
