@@ -76,6 +76,17 @@ function App() {
 
       {/* FOOTER */}
       <footer style={{ textAlign: 'center', padding: '40px 20px', backgroundColor: theme.bg, color: theme.textSub, fontSize: '13px', borderTop: `1px solid ${theme.border}` }}>
+        
+        {/* SOCIAL LINKS */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '20px' }}>
+          <a href="https://www.linkedin.com/in/itchap/" target="_blank" rel="noreferrer" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold' }}>
+            LinkedIn
+          </a>
+          <a href="https://github.com/itchap" target="_blank" rel="noreferrer" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '15px', fontWeight: 'bold' }}>
+            GitHub
+          </a>
+        </div>
+
         &copy; {new Date().getFullYear()} itchap. Built with MongoDB, Express, React, and Node.js.
       </footer>
     </div>

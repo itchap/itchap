@@ -210,6 +210,23 @@ function App() {
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       
+      {/* SUBTLE NAVIGATION BAR */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        padding: '10px 20px', 
+        opacity: 0.6, /* Makes it inconspicuous */
+        fontSize: '13px',
+        fontFamily: 'sans-serif'
+      }}>
+        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'opacity 0.2s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.6}>
+          &larr; Home
+        </a>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/skill-passion" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'opacity 0.2s' }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.6}>
+          View Source on GitHub &nearr;
+        </a>
+      </div>
+      
       <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
         🌱 Solution Architect Skill / Passion Matrix
       </h2>
