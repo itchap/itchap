@@ -240,7 +240,7 @@ function App() {
       </div>
 
       <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
-        🌱 Solution Architect Skill / Passion Matrix
+        🌱 Solution Architect <span style={{ color: '#01ed64' }}>Skill / Passion</span> Matrix
       </h2>
       
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start' }}>
