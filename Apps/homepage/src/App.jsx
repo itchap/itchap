@@ -32,9 +32,9 @@ function App() {
 
       {/* HERO SECTION */}
       <header id="about" style={{ padding: '120px 20px', textAlign: 'center', maxWidth: '850px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '48px', margin: '0 0 20px 0' }}>Elevating the <span style={{ color: theme.accent }}>SA Experience</span></h1>
+        <h1 style={{ fontSize: '48px', margin: '0 0 20px 0' }}>Raising the bar in<span style={{ color: theme.accent }}> SA Excellence</span></h1>
         <p style={{ fontSize: '18px', color: theme.textSub, lineHeight: '1.6', marginBottom: '40px' }}>
-          Hey, I'm Peter 👋 Manager of Solutions Architecture at MongoDB (Berlin). My day-to-day focus is on developing elite SA talent. I created this space to share the apps i build and resources I use to help other SAs and SA leaders excel in technical sales and drive better customer outcomes.
+          Hey, I'm Peter 👋 a Solutions Architects Leader at MongoDB (Berlin). My day-to-day focus is on developing elite SA talent. I created this space to share the apps I build and resources I use to help other SAs and SA leaders excel in technical sales and drive better customer outcomes.
         </p>
         <a href="#apps" style={{ padding: '12px 24px', backgroundColor: theme.accent, color: '#000', textDecoration: 'none', fontWeight: 'bold', borderRadius: '4px', fontSize: '16px', transition: 'opacity 0.2s' }}>
           View My Apps
