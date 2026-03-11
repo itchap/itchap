@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #011e2b;
+  font-family: sans-serif;
+  color: #fff;
+}
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+input[type=range] {
+  accent-color: #00ed64; /* Makes the sliders MongoDB Green! */
+}
