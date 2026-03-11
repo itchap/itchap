@@ -9,12 +9,7 @@ function App() {
   const [interactionName, setInteractionName] = useState('');
   const [runningAverage, setRunningAverage] = useState(null);
   const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
-
-  // Mock History (so you can test the UI before we build the backend)
-  const [history, setHistory] = useState([
-    { _id: 'mock1', name: 'Acme Corp Discovery', score: '12.5', c: 8, r: 9, i: 8, s: 2 },
-    { _id: 'mock2', name: 'Wayne Ent Demo', score: '3.0', c: 6, r: 7, i: 5, s: 6 }
-  ]);
+  const [history, setHistory] = useState([]); // Empty array now, no mock data!
 
   const theme = {
     bg: '#011e2b',
@@ -30,37 +25,100 @@ function App() {
   // The Trust Equation: T = (C + R + I) / S
   const trustScore = ((credibility + reliability + intimacy) / selfOrientation).toFixed(1);
 
-  // Placeholder Functions for Backend Wiring
-  const handleSaveForLater = () => alert("Backend Wiring Needed: Will generate and return a MongoDB Session ID.");
-  const handleResume = () => alert(`Backend Wiring Needed: Will fetch data for Session ${sessionId}`);
-  
+  // 1. Generate Session ID
+  const handleSaveForLater = () => {
+    const newId = `SA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    setSessionId(newId);
+    alert(`Your Session ID is: ${newId}. Save this to resume later!`);
+  };
+
+  // 2. Fetch History & Average
+  const handleResume = async () => {
+    if (!sessionId) return alert("Please enter a Session ID");
+    try {
+      const res = await fetch(`/api/trust/session/${sessionId}`);
+      const data = await res.json();
+      if (data.history) setHistory(data.history.slice(0, 5));
+      if (data.runningAverage) setRunningAverage(data.runningAverage);
+    } catch (err) {
+      alert("Error loading session data. Is the backend running?");
+    }
+  };
+
   const handleResetSession = () => { 
-    setSessionId(''); 
-    setInteractionName(''); 
-    setCredibility(5); 
-    setReliability(5); 
-    setIntimacy(5); 
-    setSelfOrientation(5); 
-    setCurrentAssessmentId(null);
-    setHistory([]);
+    setSessionId(''); setInteractionName(''); setCredibility(5); setReliability(5); setIntimacy(5); setSelfOrientation(5); 
+    setCurrentAssessmentId(null); setHistory([]); setRunningAverage(null);
   };
 
-  const handleSaveAssessment = () => {
-    alert(`Backend Wiring Needed: Will save or update '${interactionName}' for Session ${sessionId}`);
+  // 3. Save or Update Assessment
+  const handleSaveAssessment = async () => {
+    if (!sessionId || !interactionName) return alert("Session ID and Interaction Name are required!");
+    try {
+      await fetch('/api/trust/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: currentAssessmentId,
+          sessionId,
+          interactionName,
+          c: credibility,
+          r: reliability,
+          i: intimacy,
+          s: selfOrientation,
+          score: parseFloat(trustScore)
+        })
+      });
+      // Refresh the history list automatically
+      handleResume();
+      // Clear the form for the next entry
+      setInteractionName(''); 
+      setCurrentAssessmentId(null);
+    } catch (err) {
+      alert("Error saving assessment.");
+    }
   };
 
-  const handleUpdateAverage = () => alert("Backend Wiring Needed: Will calculate and return the average of all assessments in this session.");
-  const handleResetAverage = () => { setRunningAverage(null); alert("Backend Wiring Needed: Will clear history for this session."); };
-  const handleGetAIAnalysis = () => alert("Backend Wiring Needed: Will send current scores to Gemini AI for a Trust Analysis.");
+  // 4. Update Running Average
+  const handleUpdateAverage = async () => {
+    if (!sessionId) return alert("Session ID required.");
+    try {
+      const res = await fetch('/api/trust/average', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      });
+      const data = await res.json();
+      setRunningAverage(data.averageScore);
+    } catch (err) {
+      alert("Error updating average.");
+    }
+  };
 
-  // Load a past assessment into the sliders
+  const handleResetAverage = () => setRunningAverage(null);
+
+  // 5. Gemini AI Trust Analysis
+  const handleGetAIAnalysis = async () => {
+    try {
+      alert("Thinking... (Click OK and wait a few seconds)");
+      const res = await fetch('/api/trust/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ c: credibility, r: reliability, i: intimacy, s: selfOrientation, score: trustScore })
+      });
+      const data = await res.json();
+      alert(`🤖 AI Analysis:\n\n${data.analysis}`);
+    } catch (err) {
+      alert("Error generating AI analysis.");
+    }
+  };
+
   const loadAssessment = (item) => {
-    setInteractionName(item.name);
+    setInteractionName(item.interactionName);
     setCredibility(item.c);
     setReliability(item.r);
     setIntimacy(item.i);
     setSelfOrientation(item.s);
-    setCurrentAssessmentId(item._id); // Tracks that we are editing an existing record
+    setCurrentAssessmentId(item._id);
   };
 
   return (
@@ -100,7 +158,6 @@ function App() {
           {/* LEFT COLUMN: SESSION, AI, & HISTORY */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            {/* Session Controls */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
               <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
               <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
@@ -111,7 +168,6 @@ function App() {
               <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Reset Session</button>
             </div>
 
-            {/* AI Analysis */}
             <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <span>🧠</span> Get AI Trust Analysis
             </button>
@@ -143,7 +199,7 @@ function App() {
                       onMouseOut={e => { if(currentAssessmentId !== item._id) e.currentTarget.style.border = `1px solid transparent` }}
                     >
                       <span style={{ fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px', fontWeight: currentAssessmentId === item._id ? 'bold' : 'normal' }}>
-                        {item.name}
+                        {item.interactionName}
                       </span>
                       <span style={{ fontWeight: 'bold', fontSize: '14px', color: item.score < 5 ? theme.danger : theme.accent }}>
                         {item.score}
@@ -175,7 +231,7 @@ function App() {
             <Slider label="Self-Orientation (S)" subtext="You focus on your opinions, views, needs or outcomes" value={selfOrientation} setValue={setSelfOrientation} theme={theme} reverseColor />
           </div>
 
-          {/* RIGHT COLUMN: CURRENT SCORE, SAVE & AVERAGE */}
+          {/* RIGHT COLUMN: SCORE & AVERAGE */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px 20px', textAlign: 'center' }}>
               <h2 style={{ margin: '0 0 10px 0', color: theme.textSub }}>Current Score</h2>
