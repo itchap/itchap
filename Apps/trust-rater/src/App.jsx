@@ -10,6 +10,7 @@ function App() {
   const [runningAverage, setRunningAverage] = useState(null);
   const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
   const [history, setHistory] = useState([]); // Empty array now, no mock data!
+  const [showIdBox, setShowIdBox] = useState(false);
 
   const theme = {
     bg: '#011e2b',
@@ -24,6 +25,11 @@ function App() {
 
   // The Trust Equation: T = (C + R + I) / S
   const trustScore = ((credibility + reliability + intimacy) / selfOrientation).toFixed(1);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(sessionId);
+    alert("Session ID copied to clipboard!");
+  };
 
   // 1. Generate Session ID (With Warning & Auto-Reset)
   const handleSaveForLater = () => {
@@ -48,9 +54,9 @@ function App() {
     setHistory([]); 
     setRunningAverage(null);
 
-    // Set the new ID and tell the user
+    // Set the new ID and smoothly open the UI box
     setSessionId(newId);
-    alert(`Your NEW Session ID is: ${newId}. Save this to resume later!`);
+    setShowIdBox(true); 
   };
 
   // Reset the entire session (Clear everything)
@@ -68,7 +74,7 @@ function App() {
     setHistory([]);
     setRunningAverage(null);
   };
-  
+
   // 2. Fetch History & Average
   const handleResume = async () => {
     if (!sessionId) return alert("Please enter a Session ID");
@@ -215,7 +221,33 @@ function App() {
                 <input type="text" placeholder="Enter Session ID..." value={sessionId} onChange={(e) => setSessionId(e.target.value)} style={{ flexGrow: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff' }} />
                 <button onClick={handleResume} style={{ padding: '8px 12px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Resume</button>
               </div>
-              <button onClick={handleSaveForLater} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', marginBottom: '10px' }}>Save for Later (Get ID)</button>
+              <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                <input type="text" placeholder="Enter Session ID..." value={sessionId} onChange={(e) => setSessionId(e.target.value)} style={{ flexGrow: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff' }} />
+                <button onClick={handleResume} style={{ padding: '8px 12px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Resume</button>
+              </div>
+              
+              {/* --- NEW DYNAMIC TOGGLE BUTTON --- */}
+              <button 
+                onClick={sessionId ? () => setShowIdBox(!showIdBox) : handleSaveForLater} 
+                style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', marginBottom: '10px' }}
+              >
+                {sessionId ? (showIdBox ? 'Hide Session ID' : 'Show Session ID') : 'Generate New ID'}
+              </button>
+
+              {/* --- NEW DASHED COPY BOX --- */}
+              {showIdBox && sessionId && (
+                <div style={{ padding: '15px', border: `1px dashed ${theme.accent}`, borderRadius: '4px', marginBottom: '10px', backgroundColor: 'rgba(0, 237, 100, 0.05)' }}>
+                  <div style={{ color: theme.accent, fontWeight: 'bold', marginBottom: '5px' }}>Your Unique ID:</div>
+                  <div style={{ fontSize: '12px', color: theme.textSub, marginBottom: '10px' }}>Save this somewhere safe to restore your board.</div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input type="text" readOnly value={sessionId} style={{ flexGrow: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: '#fff', color: '#000', fontSize: '14px' }} />
+                    <button onClick={handleCopyId} style={{ padding: '8px 15px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Copy</button>
+                  </div>
+                </div>
+              )}
+
               <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Reset Session</button>
             </div>
 
