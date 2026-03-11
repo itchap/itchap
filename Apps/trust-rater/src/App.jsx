@@ -154,14 +154,12 @@ function App() {
     }
   };
 
-  // 5. Gemini AI Trust Analysis (With UI Loading State)
+  // 5. Gemini AI Trust Analysis (With UI Loading State & Better Error Handling)
   const handleGetAIAnalysis = async () => {
-    // Prevent double submissions
     if (isAnalyzing) return; 
     setIsAnalyzing(true); 
 
     try {
-      // alert removed! The UI now handles the feedback.
       const res = await fetch('/api/trust/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -169,12 +167,17 @@ function App() {
       });
       const data = await res.json();
       
-      // We still use an alert for the FINAL result (which is fine)
-      alert(`🤖 AI Analysis:\n\n${data.analysis}`); 
+      // If the server sends an error status (like 500), throw it!
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong on the server.");
+      }
+      
+      // Display the analysis, or a fallback if the backend uses a different key
+      alert(`🤖 AI Analysis:\n\n${data.analysis || data.result || JSON.stringify(data)}`); 
     } catch (err) {
-      alert("Error generating AI analysis.");
+      // Now this will show us the REAL error!
+      alert(`Error generating AI analysis:\n${err.message}`);
     } finally {
-      // This runs no matter what, resetting the button
       setIsAnalyzing(false); 
     }
   };
