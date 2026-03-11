@@ -12,6 +12,7 @@ function App() {
   const [history, setHistory] = useState([]); // Empty array now, no mock data!
   const [showIdBox, setShowIdBox] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
 
   const theme = {
     bg: '#011e2b',
@@ -167,20 +168,17 @@ function App() {
       });
       const data = await res.json();
       
-      // If the server sends an error status (like 500), throw it!
       if (!res.ok) {
         throw new Error(data.error || "Something went wrong on the server.");
       }
       
-      // Display the analysis, or a fallback if the backend uses a different key
-      alert(`🤖 AI Analysis:\n\n${data.analysis || data.result || JSON.stringify(data)}`); 
+      // Removed the alert() and replaced it with this:
+      setAnalysis(data.analysis || data.result || JSON.stringify(data)); 
     } catch (err) {
-      // Now this will show us the REAL error!
       alert(`Error generating AI analysis:\n${err.message}`);
     } finally {
       setIsAnalyzing(false); 
     }
-  };
 
   const loadAssessment = (item) => {
     setInteractionName(item.interactionName);
@@ -396,7 +394,22 @@ function App() {
 
         </div>
       </div>
-    </div>
+      {/* --- CUSTOM AI INSIGHTS MODAL --- */}
+      {analysis && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <div style={{ backgroundColor: theme.bg, border: `2px solid ${theme.accent}`, padding: '30px', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
+             <h3 style={{ color: theme.accent, marginTop: 0, borderBottom: `1px solid ${theme.border}`, paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+               <span style={{ fontSize: '24px' }}>🧠</span>
+               SA Trust Insights
+             </h3>
+             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
+             <button onClick={() => setAnalysis(null)} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+               Close Insights
+             </button>
+          </div>
+        </div>
+      )}
+    </div> 
   );
 }
 
