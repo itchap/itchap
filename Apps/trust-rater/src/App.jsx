@@ -59,16 +59,15 @@ function App() {
     try {
       const res = await fetch(`/api/trust/session/${sessionId}`);
       const data = await res.json();
+      
+      // Update history
       if (data.history) setHistory(data.history.slice(0, 5));
-      if (data.runningAverage) setRunningAverage(data.runningAverage);
+      
+      // Update average (even if it is null/reset)
+      setRunningAverage(data.runningAverage); 
     } catch (err) {
       alert("Error loading session data. Is the backend running?");
     }
-  };
-
-  const handleResetSession = () => { 
-    setSessionId(''); setInteractionName(''); setCredibility(5); setReliability(5); setIntimacy(5); setSelfOrientation(5); 
-    setCurrentAssessmentId(null); setHistory([]); setRunningAverage(null);
   };
 
   // 3. Save Assessment (Now Auto-Updates Average!)
@@ -108,7 +107,7 @@ function App() {
     if (!sessionId) return alert("No active session to reset.");
     
     const confirmWipe = window.confirm(
-      "Are you sure? This will archive your past assessments so you can start with a clean slate. Your historical data will be saved safely in the database."
+      "Are you sure? This will reset your running average to zero, but keep your past assessments visible in your history pane."
     );
     if (!confirmWipe) return;
 
@@ -119,13 +118,16 @@ function App() {
         body: JSON.stringify({ sessionId })
       });
       
-      setRunningAverage(null);
-      setHistory([]);
+      // Force a fresh sync with the database immediately!
+      await handleResume();
+      
+      // Clear the active form inputs
       setCurrentAssessmentId(null);
       setInteractionName('');
-      alert("Slate wiped clean! You are starting fresh.");
+      
+      alert("Average reset! Your past assessments are now archived from the math, but still visible.");
     } catch (err) {
-      alert("Error wiping the slate.");
+      alert("Error resetting the average.");
     }
   };
 
