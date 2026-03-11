@@ -47,10 +47,11 @@ const RunningAverage = trustDb.model('RunningAverage', runningAverageSchema, 'ru
 // API ROUTES
 // ==========================================
 
-// Get Session Data (Only fetches ACTIVE history)
+// Get Session Data (Fetches top 5 recent history, regardless of active status)
 app.get('/api/trust/session/:id', async (req, res) => {
   try {
-    const history = await TrustScore.find({ sessionId: req.params.id, isActive: true })
+    // We removed 'isActive: true' here so your history list NEVER disappears!
+    const history = await TrustScore.find({ sessionId: req.params.id })
       .sort({ createdAt: -1 })
       .limit(5);
     
