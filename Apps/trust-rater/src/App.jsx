@@ -174,11 +174,12 @@ function App() {
       
       // Removed the alert() and replaced it with this:
       setAnalysis(data.analysis || data.result || JSON.stringify(data)); 
-    } catch (err) {
+} catch (err) {
       alert(`Error generating AI analysis:\n${err.message}`);
     } finally {
       setIsAnalyzing(false); 
     }
+  }; // <--- ADD THIS CLOSING BRACKET AND SEMICOLON!
 
   const loadAssessment = (item) => {
     setInteractionName(item.interactionName);
