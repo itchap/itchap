@@ -411,10 +411,9 @@ function App() {
         </div>
       )}
 
-      </div>
     </div>
   );
-} // <--- THIS BRACKET CLOSES THE APP FUNCTION!
+}
 
 // Reusable Slider Component
 function Slider({ label, subtext, value, setValue, theme, reverseColor }) {
