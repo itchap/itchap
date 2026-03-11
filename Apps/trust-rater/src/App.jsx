@@ -53,6 +53,22 @@ function App() {
     alert(`Your NEW Session ID is: ${newId}. Save this to resume later!`);
   };
 
+  // Reset the entire session (Clear everything)
+  const handleResetSession = () => {
+    const confirmClear = window.confirm("This will clear your current Session ID and all data on screen. Are you sure?");
+    if (!confirmClear) return;
+    
+    setSessionId('');
+    setInteractionName('');
+    setCredibility(5);
+    setReliability(5);
+    setIntimacy(5);
+    setSelfOrientation(5);
+    setCurrentAssessmentId(null);
+    setHistory([]);
+    setRunningAverage(null);
+  };
+  
   // 2. Fetch History & Average
   const handleResume = async () => {
     if (!sessionId) return alert("Please enter a Session ID");
