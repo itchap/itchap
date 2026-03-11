@@ -285,7 +285,6 @@ function App() {
               <div style={{ fontSize: '48px', fontWeight: 'bold', color: theme.accent, marginBottom: '15px' }}>
                 {runningAverage ? runningAverage : '--'}
               </div>
-              <button onClick={handleUpdateAverage} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px' }}>Update Average</button>
               <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
             </div>
           </div>
