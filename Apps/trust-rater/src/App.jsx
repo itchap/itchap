@@ -66,7 +66,7 @@ function App() {
         {/* 3-COLUMN LAYOUT */}
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(400px, 2fr) minmax(300px, 1fr)', gap: '20px' }}>
           
-          {/* LEFT COLUMN: SESSION & AVERAGE */}
+          {/* LEFT COLUMN: SESSION & AI ANALYSIS */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
               <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
@@ -78,14 +78,9 @@ function App() {
               <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Reset Session</button>
             </div>
 
-            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
-              <h3 style={{ marginTop: 0, marginBottom: '10px' }}>Running Average</h3>
-              <div style={{ fontSize: '48px', fontWeight: 'bold', color: theme.accent, marginBottom: '15px' }}>
-                {runningAverage ? runningAverage : '--'}
-              </div>
-              <button onClick={handleUpdateAverage} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px' }}>Update Running Average</button>
-              <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
-            </div>
+            <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <span>🧠</span> Get AI Trust Analysis
+            </button>
           </div>
 
           {/* MIDDLE COLUMN: THE INPUTS */}
@@ -98,16 +93,16 @@ function App() {
               style={{ width: '100%', padding: '12px', marginBottom: '30px', borderRadius: '4px', border: `1px solid ${theme.border}`, backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff', boxSizing: 'border-box', fontSize: '16px' }}
             />
 
-            <Slider label="Credibility (C)" subtext="You really know the subject matter" value={credibility} setValue={setCredibility} theme={theme} />
-            <Slider label="Reliability (R)" subtext="You always deliver and do what you say" value={reliability} setValue={setReliability} theme={theme} />
-            <Slider label="Intimacy (I)" subtext="You built rapport and made them feel safe" value={intimacy} setValue={setIntimacy} theme={theme} />
+            <Slider label="Credibility (C)" subtext="You really know your subject matter and showcase it" value={credibility} setValue={setCredibility} theme={theme} />
+            <Slider label="Reliability (R)" subtext="You always deliver with quality and do what you say you will do." value={reliability} setValue={setReliability} theme={theme} />
+            <Slider label="Intimacy (I)" subtext="You build rapport, make people feel safe and nurture relationships" value={intimacy} setValue={setIntimacy} theme={theme} />
             
             <hr style={{ borderColor: theme.border, margin: '30px 0' }} />
             
-            <Slider label="Self-Orientation (S)" subtext="You focused on your views and needs" value={selfOrientation} setValue={setSelfOrientation} theme={theme} reverseColor />
+            <Slider label="Self-Orientation (S)" subtext="You focus on your opinions, views, needs or outcomes" value={selfOrientation} setValue={setSelfOrientation} theme={theme} reverseColor />
           </div>
 
-          {/* RIGHT COLUMN: SCORE & AI */}
+          {/* RIGHT COLUMN: CURRENT SCORE, SAVE & AVERAGE */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px 20px', textAlign: 'center' }}>
               <h2 style={{ margin: '0 0 10px 0', color: theme.textSub }}>Current Score</h2>
@@ -122,10 +117,15 @@ function App() {
             <button onClick={handleSaveAssessment} style={{ width: '100%', padding: '15px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
               Save Assessment
             </button>
-            
-            <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span>🧠</span> Get AI Trust Analysis
-            </button>
+
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '10px' }}>Running Average</h3>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: theme.accent, marginBottom: '15px' }}>
+                {runningAverage ? runningAverage : '--'}
+              </div>
+              <button onClick={handleUpdateAverage} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px' }}>Update Average</button>
+              <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
+            </div>
           </div>
 
         </div>
