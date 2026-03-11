@@ -219,21 +219,23 @@ function App() {
               <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
               
               {/* Top Row: Input & Resume */}
-              <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ display: 'flex', gap: '8px', height: '40px', marginBottom: '15px' }}>
                 <input 
                   type="text" 
                   placeholder="Enter Session ID..." 
                   value={sessionId} 
                   onChange={(e) => setSessionId(e.target.value)} 
-                  style={{ flexGrow: 1, padding: '0 15px', height: '44px', borderRadius: '4px', border: `1px solid ${theme.border}`, backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff', boxSizing: 'border-box', outline: 'none' }} 
+                  style={{ flex: 1, padding: '0 12px', margin: 0, borderRadius: '4px', border: `1px solid ${theme.border}`, backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff', outline: 'none', boxSizing: 'border-box', height: '100%' }} 
                 />
-                <button onClick={handleResume} style={{ padding: '0 20px', height: '44px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxSizing: 'border-box' }}>Resume</button>
+                <button onClick={handleResume} style={{ padding: '0 16px', margin: 0, backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', boxSizing: 'border-box', height: '100%' }}>
+                  Resume
+                </button>
               </div>
               
               {/* --- DYNAMIC TOGGLE BUTTON --- */}
               <button 
                 onClick={sessionId ? () => setShowIdBox(!showIdBox) : handleSaveForLater} 
-                style={{ width: '100%', height: '44px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', marginBottom: '10px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: 0, margin: '0 0 10px 0', height: '40px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', outline: 'none', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 {sessionId ? (showIdBox ? 'Hide Session ID' : 'Show Session ID') : 'Generate New ID'}
               </button>
@@ -245,19 +247,23 @@ function App() {
                   <div style={{ fontSize: '12px', color: theme.textSub, marginBottom: '12px' }}>Save this somewhere safe to restore your board.</div>
                   
                   {/* Bottom Row: Copy Input & Button */}
-                  <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ display: 'flex', gap: '8px', height: '40px' }}>
                     <input 
                       type="text" 
                       readOnly 
                       value={sessionId} 
-                      style={{ flexGrow: 1, padding: '0 15px', height: '44px', borderRadius: '4px', border: '1px solid #fff', backgroundColor: '#fff', color: '#000', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }} 
+                      style={{ flex: 1, padding: '0 12px', margin: 0, borderRadius: '4px', border: 'none', backgroundColor: '#fff', color: '#000', fontSize: '14px', outline: 'none', boxSizing: 'border-box', height: '100%' }} 
                     />
-                    <button onClick={handleCopyId} style={{ padding: '0 20px', height: '44px', backgroundColor: theme.accent, color: '#000', border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', boxSizing: 'border-box' }}>Copy</button>
+                    <button onClick={handleCopyId} style={{ padding: '0 16px', margin: 0, backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', boxSizing: 'border-box', height: '100%' }}>
+                      Copy
+                    </button>
                   </div>
                 </div>
               )}
 
-              <button onClick={handleResetSession} style={{ width: '100%', height: '44px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', boxSizing: 'border-box' }}>Reset Session</button>
+              <button onClick={handleResetSession} style={{ width: '100%', padding: 0, margin: 0, height: '40px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                Reset Session
+              </button>
             </div>
 
             <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
