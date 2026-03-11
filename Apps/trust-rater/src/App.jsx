@@ -98,7 +98,7 @@ function App() {
         setCurrentAssessmentId(null);
       }
     } catch (err) {
-      alert("Error saving assessment.");
+      alert("Error saving assessment. ");
     }
   };
 
