@@ -25,11 +25,32 @@ function App() {
   // The Trust Equation: T = (C + R + I) / S
   const trustScore = ((credibility + reliability + intimacy) / selfOrientation).toFixed(1);
 
-  // 1. Generate Session ID
+  // 1. Generate Session ID (With Warning & Auto-Reset)
   const handleSaveForLater = () => {
+    // If they already have a Session ID, warn them first!
+    if (sessionId) {
+      const confirmReset = window.confirm(
+        "You already have an active Session ID. Generating a new one will clear your current screen and start fresh. Are you sure?"
+      );
+      if (!confirmReset) return; // Stop if they click "Cancel"
+    }
+
+    // Generate the new ID
     const newId = `SA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    
+    // Explicitly reset the entire UI to factory defaults
+    setInteractionName(''); 
+    setCredibility(5); 
+    setReliability(5); 
+    setIntimacy(5); 
+    setSelfOrientation(5); 
+    setCurrentAssessmentId(null); 
+    setHistory([]); 
+    setRunningAverage(null);
+
+    // Set the new ID and tell the user
     setSessionId(newId);
-    alert(`Your Session ID is: ${newId}. Save this to resume later!`);
+    alert(`Your NEW Session ID is: ${newId}. Save this to resume later!`);
   };
 
   // 2. Fetch History & Average
