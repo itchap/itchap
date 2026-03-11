@@ -212,7 +212,7 @@ function App() {
           
           {/* VISUAL TRUST EQUATION */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', backgroundColor: theme.cardBg, padding: '15px 30px', borderRadius: '8px', border: `1px solid ${theme.border}` }}>
-            <span style={{ fontSize: '24px', fontWeight: 'bold' }}>Trust = </span>
+            <span style={{ fontSize: '24px', fontWeight: 'bold' }}><span style={{ color: '#02ec64' }}>Trust</span> = </span>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontWeight: 'bold', fontSize: '18px' }}>
               <div style={{ paddingBottom: '5px' }}>Credibility + Reliability + Intimacy</div>
               <div style={{ borderTop: `2px solid ${theme.accent}`, width: '100%' }}></div>

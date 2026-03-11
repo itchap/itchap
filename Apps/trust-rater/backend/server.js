@@ -24,20 +24,25 @@ const trustDb = mongoose.connection.useDb('trustrater');
 // SCHEMAS
 // ==========================================
 const trustScoreSchema = new mongoose.Schema({
-  sessionId: String,
+  sessionId: { type: String, required: true, index: true }, // <-- Added index here!
   interactionName: String,
   c: Number,
   r: Number,
   i: Number,
   s: Number,
   score: Number,
-  isActive: { type: Boolean, default: true }, // <-- NEW: Soft delete flag
+  isActive: { type: Boolean, default: true }, 
   createdAt: { type: Date, default: Date.now }
 });
 const TrustScore = trustDb.model('TrustScore', trustScoreSchema, 'trustscores');
 
 const runningAverageSchema = new mongoose.Schema({
-  sessionId: String,
+  sessionId: { 
+    type: String, 
+    required: true, 
+    unique: true, // <-- Guarantees uniqueness AND creates a fast index
+    index: true   // <-- Explicitly tells MongoDB to index this field
+  },
   averageScore: Number,
   updatedAt: { type: Date, default: Date.now }
 });
