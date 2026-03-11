@@ -11,6 +11,7 @@ function App() {
   const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
   const [history, setHistory] = useState([]); // Empty array now, no mock data!
   const [showIdBox, setShowIdBox] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const theme = {
     bg: '#011e2b',
@@ -153,19 +154,28 @@ function App() {
     }
   };
 
-  // 5. Gemini AI Trust Analysis
+  // 5. Gemini AI Trust Analysis (With UI Loading State)
   const handleGetAIAnalysis = async () => {
+    // Prevent double submissions
+    if (isAnalyzing) return; 
+    setIsAnalyzing(true); 
+
     try {
-      alert("Thinking... (Click OK and wait a few seconds)");
+      // alert removed! The UI now handles the feedback.
       const res = await fetch('/api/trust/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ c: credibility, r: reliability, i: intimacy, s: selfOrientation, score: trustScore })
       });
       const data = await res.json();
-      alert(`🤖 AI Analysis:\n\n${data.analysis}`);
+      
+      // We still use an alert for the FINAL result (which is fine)
+      alert(`🤖 AI Analysis:\n\n${data.analysis}`); 
     } catch (err) {
       alert("Error generating AI analysis.");
+    } finally {
+      // This runs no matter what, resetting the button
+      setIsAnalyzing(false); 
     }
   };
 
@@ -267,8 +277,34 @@ function App() {
               </div>
             </div>
 
-            <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span>🧠</span> Get AI Trust Analysis
+            {/* DYNAMIC AI ANALYSIS BUTTON */}
+            <button 
+              onClick={handleGetAIAnalysis} 
+              disabled={isAnalyzing} // Disable clicks while thinking
+              style={{ 
+                width: '100%', 
+                padding: '15px', 
+                // Color changes to gray (#555) when thinking
+                backgroundColor: isAnalyzing ? '#555' : '#023430', 
+                color: theme.accent, 
+                border: `1px solid ${theme.accent}`, 
+                borderRadius: '4px', 
+                fontWeight: 'bold', 
+                fontSize: '16px', 
+                // Cursor changes to "wait" (spinning circle/hourglass)
+                cursor: isAnalyzing ? 'wait' : 'pointer', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '8px' 
+              }}
+            >
+              {/* Text changes based on state */}
+              {isAnalyzing ? (
+                <><span>🧠</span> AI is thinking...</>
+              ) : (
+                <><span>🧠</span> Get AI Trust Analysis</>
+              )}
             </button>
 
             {/* History Pane */}
