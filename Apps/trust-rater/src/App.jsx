@@ -71,11 +71,11 @@ function App() {
     setCurrentAssessmentId(null); setHistory([]); setRunningAverage(null);
   };
 
-  // 3. Save or Update Assessment
+  // 3. Save Assessment (Now Auto-Updates Average!)
   const handleSaveAssessment = async () => {
     if (!sessionId || !interactionName) return alert("Session ID and Interaction Name are required!");
     try {
-      await fetch('/api/trust/save', {
+      const response = await fetch('/api/trust/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,29 +89,43 @@ function App() {
           score: parseFloat(trustScore)
         })
       });
-      // Refresh the history list automatically
-      handleResume();
-      // Clear the form for the next entry
-      setInteractionName(''); 
-      setCurrentAssessmentId(null);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Automatically update the UI with the new calculated average!
+        setRunningAverage(data.averageScore);
+        handleResume(); // Refreshes the recent list
+        setInteractionName(''); 
+        setCurrentAssessmentId(null);
+      }
     } catch (err) {
       alert("Error saving assessment.");
     }
   };
 
-  // 4. Update Running Average
-  const handleUpdateAverage = async () => {
-    if (!sessionId) return alert("Session ID required.");
+  // 4. Soft Reset Average
+  const handleResetAverage = async () => {
+    if (!sessionId) return alert("No active session to reset.");
+    
+    const confirmWipe = window.confirm(
+      "Are you sure? This will archive your past assessments so you can start with a clean slate. Your historical data will be saved safely in the database."
+    );
+    if (!confirmWipe) return;
+
     try {
-      const res = await fetch('/api/trust/average', {
+      await fetch('/api/trust/reset-average', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId })
       });
-      const data = await res.json();
-      setRunningAverage(data.averageScore);
+      
+      setRunningAverage(null);
+      setHistory([]);
+      setCurrentAssessmentId(null);
+      setInteractionName('');
+      alert("Slate wiped clean! You are starting fresh.");
     } catch (err) {
-      alert("Error updating average.");
+      alert("Error wiping the slate.");
     }
   };
 

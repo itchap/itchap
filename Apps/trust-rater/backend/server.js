@@ -31,6 +31,7 @@ const trustScoreSchema = new mongoose.Schema({
   i: Number,
   s: Number,
   score: Number,
+  isActive: { type: Boolean, default: true }, // <-- NEW: Soft delete flag
   createdAt: { type: Date, default: Date.now }
 });
 const TrustScore = trustDb.model('TrustScore', trustScoreSchema, 'trustscores');
@@ -46,57 +47,82 @@ const RunningAverage = trustDb.model('RunningAverage', runningAverageSchema, 'ru
 // API ROUTES
 // ==========================================
 
-// Get Session Data (Fetches top 5 recent history + current running average)
+// Get Session Data (Only fetches ACTIVE history)
 app.get('/api/trust/session/:id', async (req, res) => {
   try {
-    const history = await TrustScore.find({ sessionId: req.params.id })
+    const history = await TrustScore.find({ sessionId: req.params.id, isActive: true })
       .sort({ createdAt: -1 })
       .limit(5);
     
     const averageDoc = await RunningAverage.findOne({ sessionId: req.params.id });
-    
     res.json({ history, runningAverage: averageDoc ? averageDoc.averageScore : null });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch session data" });
   }
 });
 
-// Save or Update Assessment
+// TRANSACTION: Save Assessment & Update Average Together
 app.post('/api/trust/save', async (req, res) => {
   const { id, sessionId, interactionName, c, r, i, s, score } = req.body;
+  
+  // 1. Start the Transaction Session
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
+    let newOrUpdatedId = id;
+    
+    // 2. Save or Update the TrustScore
     if (id) {
-      await TrustScore.findByIdAndUpdate(id, { interactionName, c, r, i, s, score });
-      res.json({ success: true, message: "Assessment updated" });
+      await TrustScore.findByIdAndUpdate(id, { interactionName, c, r, i, s, score }, { session });
     } else {
       const newScore = new TrustScore({ sessionId, interactionName, c, r, i, s, score });
-      await newScore.save();
-      res.json({ success: true, message: "Assessment saved", newId: newScore._id });
+      await newScore.save({ session });
+      newOrUpdatedId = newScore._id;
     }
-  } catch (error) {
-    res.status(500).json({ error: "Failed to save assessment" });
-  }
-});
 
-// Update Running Average
-app.post('/api/trust/average', async (req, res) => {
-  const { sessionId } = req.body;
-  try {
-    const scores = await TrustScore.find({ sessionId });
-    if (scores.length === 0) return res.json({ averageScore: null });
+    // 3. Recalculate the Average (Only using ACTIVE scores)
+    const activeScores = await TrustScore.find({ sessionId, isActive: true }).session(session);
+    let averageScore = null;
+    if (activeScores.length > 0) {
+      const total = activeScores.reduce((acc, curr) => acc + curr.score, 0);
+      averageScore = (total / activeScores.length).toFixed(1);
+    }
 
-    const total = scores.reduce((acc, curr) => acc + curr.score, 0);
-    const averageScore = (total / scores.length).toFixed(1);
-
+    // 4. Update the RunningAverage Collection
     await RunningAverage.findOneAndUpdate(
       { sessionId },
       { sessionId, averageScore, updatedAt: Date.now() },
-      { upsert: true, new: true }
+      { upsert: true, new: true, session }
     );
 
-    res.json({ averageScore });
+    // 5. Commit the Transaction (Locks it in!)
+    await session.commitTransaction();
+    session.endSession();
+
+    res.json({ success: true, newId: newOrUpdatedId, averageScore });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update average" });
+    // If ANYTHING fails, abort everything so the DB stays clean
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Transaction Error:", error);
+    res.status(500).json({ error: "Transaction failed to save assessment" });
+  }
+});
+
+// Soft-Reset the Average (Keep the data, wipe the slate)
+app.post('/api/trust/reset-average', async (req, res) => {
+  const { sessionId } = req.body;
+  try {
+    // Soft Delete: Hide them from the math, but keep them in the DB
+    await TrustScore.updateMany({ sessionId }, { isActive: false });
+    
+    // Clear the visual running average
+    await RunningAverage.findOneAndUpdate({ sessionId }, { averageScore: null });
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to reset average" });
   }
 });
 
