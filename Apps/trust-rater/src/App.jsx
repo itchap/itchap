@@ -129,8 +129,6 @@ function App() {
     }
   };
 
-  const handleResetAverage = () => setRunningAverage(null);
-
   // 5. Gemini AI Trust Analysis
   const handleGetAIAnalysis = async () => {
     try {
