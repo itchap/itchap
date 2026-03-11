@@ -8,6 +8,13 @@ function App() {
   const [selfOrientation, setSelfOrientation] = useState(5);
   const [interactionName, setInteractionName] = useState('');
   const [runningAverage, setRunningAverage] = useState(null);
+  const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
+
+  // Mock History (so you can test the UI before we build the backend)
+  const [history, setHistory] = useState([
+    { _id: 'mock1', name: 'Acme Corp Discovery', score: '12.5', c: 8, r: 9, i: 8, s: 2 },
+    { _id: 'mock2', name: 'Wayne Ent Demo', score: '3.0', c: 6, r: 7, i: 5, s: 6 }
+  ]);
 
   const theme = {
     bg: '#011e2b',
@@ -26,11 +33,35 @@ function App() {
   // Placeholder Functions for Backend Wiring
   const handleSaveForLater = () => alert("Backend Wiring Needed: Will generate and return a MongoDB Session ID.");
   const handleResume = () => alert(`Backend Wiring Needed: Will fetch data for Session ${sessionId}`);
-  const handleResetSession = () => { setSessionId(''); setInteractionName(''); setCredibility(5); setReliability(5); setIntimacy(5); setSelfOrientation(5); };
-  const handleSaveAssessment = () => alert(`Backend Wiring Needed: Will save '${interactionName}' as a new document linked to Session ${sessionId}`);
+  
+  const handleResetSession = () => { 
+    setSessionId(''); 
+    setInteractionName(''); 
+    setCredibility(5); 
+    setReliability(5); 
+    setIntimacy(5); 
+    setSelfOrientation(5); 
+    setCurrentAssessmentId(null);
+    setHistory([]);
+  };
+
+  const handleSaveAssessment = () => {
+    alert(`Backend Wiring Needed: Will save or update '${interactionName}' for Session ${sessionId}`);
+  };
+
   const handleUpdateAverage = () => alert("Backend Wiring Needed: Will calculate and return the average of all assessments in this session.");
   const handleResetAverage = () => { setRunningAverage(null); alert("Backend Wiring Needed: Will clear history for this session."); };
   const handleGetAIAnalysis = () => alert("Backend Wiring Needed: Will send current scores to Gemini AI for a Trust Analysis.");
+
+  // Load a past assessment into the sliders
+  const loadAssessment = (item) => {
+    setInteractionName(item.name);
+    setCredibility(item.c);
+    setReliability(item.r);
+    setIntimacy(item.i);
+    setSelfOrientation(item.s);
+    setCurrentAssessmentId(item._id); // Tracks that we are editing an existing record
+  };
 
   return (
     <div style={{ backgroundColor: theme.bg, minHeight: '100vh', paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif' }}>
@@ -66,8 +97,10 @@ function App() {
         {/* 3-COLUMN LAYOUT */}
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(400px, 2fr) minmax(300px, 1fr)', gap: '20px' }}>
           
-          {/* LEFT COLUMN: SESSION & AI ANALYSIS */}
+          {/* LEFT COLUMN: SESSION, AI, & HISTORY */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Session Controls */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
               <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
               <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
@@ -78,9 +111,49 @@ function App() {
               <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Reset Session</button>
             </div>
 
+            {/* AI Analysis */}
             <button onClick={handleGetAIAnalysis} style={{ width: '100%', padding: '15px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <span>🧠</span> Get AI Trust Analysis
             </button>
+
+            {/* History Pane */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '15px', fontSize: '16px' }}>Recent Assessments</h3>
+              
+              {history.length === 0 ? (
+                <div style={{ color: theme.textSub, fontSize: '13px', fontStyle: 'italic', textAlign: 'center' }}>No history for this session yet.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {history.map((item) => (
+                    <div 
+                      key={item._id} 
+                      onClick={() => loadAssessment(item)}
+                      style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        padding: '12px', 
+                        backgroundColor: currentAssessmentId === item._id ? '#023430' : 'rgba(0,0,0,0.3)', 
+                        borderRadius: '4px', 
+                        cursor: 'pointer', 
+                        border: currentAssessmentId === item._id ? `1px solid ${theme.accent}` : `1px solid transparent`,
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseOver={e => { if(currentAssessmentId !== item._id) e.currentTarget.style.border = `1px solid ${theme.textSub}` }}
+                      onMouseOut={e => { if(currentAssessmentId !== item._id) e.currentTarget.style.border = `1px solid transparent` }}
+                    >
+                      <span style={{ fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px', fontWeight: currentAssessmentId === item._id ? 'bold' : 'normal' }}>
+                        {item.name}
+                      </span>
+                      <span style={{ fontWeight: 'bold', fontSize: '14px', color: item.score < 5 ? theme.danger : theme.accent }}>
+                        {item.score}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
 
           {/* MIDDLE COLUMN: THE INPUTS */}
@@ -115,7 +188,7 @@ function App() {
             </div>
 
             <button onClick={handleSaveAssessment} style={{ width: '100%', padding: '15px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
-              Save Assessment
+              {currentAssessmentId ? 'Update Assessment' : 'Save Assessment'}
             </button>
 
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
