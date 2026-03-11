@@ -221,12 +221,6 @@ function App() {
                 <input type="text" placeholder="Enter Session ID..." value={sessionId} onChange={(e) => setSessionId(e.target.value)} style={{ flexGrow: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff' }} />
                 <button onClick={handleResume} style={{ padding: '8px 12px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Resume</button>
               </div>
-              <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
-              <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
-              <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-                <input type="text" placeholder="Enter Session ID..." value={sessionId} onChange={(e) => setSessionId(e.target.value)} style={{ flexGrow: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff' }} />
-                <button onClick={handleResume} style={{ padding: '8px 12px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Resume</button>
-              </div>
               
               {/* --- NEW DYNAMIC TOGGLE BUTTON --- */}
               <button 
