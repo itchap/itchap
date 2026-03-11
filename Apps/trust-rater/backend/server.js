@@ -94,7 +94,7 @@ app.post('/api/trust/save', async (req, res) => {
     await RunningAverage.findOneAndUpdate(
       { sessionId },
       { sessionId, averageScore, updatedAt: Date.now() },
-      { upsert: true, new: true, session }
+      { upsert: true, returnDocument: 'after', session } // <-- Fixed warning here!
     );
 
     // 5. Commit the Transaction (Locks it in!)
@@ -131,7 +131,7 @@ app.post('/api/trust/reset-average', async (req, res) => {
 app.post('/api/trust/analyze', async (req, res) => {
   const { c, r, i, s, score } = req.body;
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const prompt = `You are an elite Pre-Sales / Solutions Architecture leadership coach. I am a Solutions Architect. Analyze my recent customer interaction based on the Trust Equation (Trust = (Credibility + Reliability + Intimacy) / Self-Orientation).
     
     My self-assessed scores are:
@@ -141,7 +141,7 @@ app.post('/api/trust/analyze', async (req, res) => {
     - Self-Orientation: ${s}/10
     - Total Trust Score: ${score}
 
-    Provide a punchy, 3-sentence analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid.`;
+    Provide a punchy, 3-paragraph analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid.`;
 
     const result = await model.generateContent(prompt);
     res.json({ analysis: result.response.text() });
