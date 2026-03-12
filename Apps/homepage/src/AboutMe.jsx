@@ -29,9 +29,7 @@ function AboutMe() {
             Solutions Architect Leader. Technologist. Team Builder.
           </h2>
           <p style={{ fontSize: '18px', lineHeight: '1.6', maxWidth: '700px', margin: '0 auto', color: theme.textSub }}>
-            I don't just architect multi-petabyte cloud solutions; I build the teams that deliver them. 
-            With 20 years in the IT trenches, I am obsessed with creating cultures of radical candor, 
-            trust, and technical brilliance.
+            Architecting modern, scalable cloud platforms is my background; empowering the people who build them is my true calling. With two decades in the industry, my focus is entirely on cultivating teams where technical brilliance meets genuine care, transparency, and trust.
           </p>
         </div>
 
