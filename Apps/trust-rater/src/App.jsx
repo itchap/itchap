@@ -391,6 +391,45 @@ function App() {
               </div>
               <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
             </div>
+
+            {/* --- NEW TRUST BAROMETER GAUGE --- */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px 20px 25px 20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '25px', fontSize: '16px', textAlign: 'center' }}>Trust Barometer</h3>
+              
+              <div style={{ position: 'relative', height: '16px', borderRadius: '8px', background: `linear-gradient(to right, ${theme.danger}, #ffbf00, ${theme.accent})`, marginBottom: '10px' }}>
+                
+                {/* 1. The Watermark (Target "Good" Trust = 10.0) */}
+                {/* 10 out of 30 is exactly 33.33% along the bar */}
+                <div style={{ position: 'absolute', left: '33.33%', top: '-22px', transform: 'translateX(-50%)', fontSize: '11px', color: theme.textSub, fontWeight: 'bold' }}>Good</div>
+                <div style={{ position: 'absolute', left: '33.33%', top: '-6px', bottom: '-6px', width: '2px', backgroundColor: 'rgba(255,255,255,0.4)', zIndex: 1 }}></div>
+
+                {/* 2. The Needle (Current Running Average) */}
+                {runningAverage && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    // Calculate percentage (Average / 30 * 100), maxing out at 100%
+                    left: `${Math.min(100, Math.max(0, (parseFloat(runningAverage) / 30) * 100))}%`, 
+                    top: '-6px', 
+                    bottom: '-6px', 
+                    width: '4px', 
+                    backgroundColor: '#fff', 
+                    borderRadius: '2px', 
+                    transform: 'translateX(-50%)', 
+                    boxShadow: '0 0 8px rgba(0,0,0,0.8)', 
+                    zIndex: 2, 
+                    transition: 'left 0.5s ease-out' 
+                  }}></div>
+                )}
+              </div>
+              
+              {/* Scale Labels */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: theme.textSub, fontWeight: 'bold', marginTop: '8px' }}>
+                <span>0.0</span>
+                <span>15.0</span>
+                <span>30.0</span>
+              </div>
+            </div>
+
           </div>
 
         </div>
