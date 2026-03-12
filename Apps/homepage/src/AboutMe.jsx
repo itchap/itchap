@@ -113,7 +113,7 @@ function AboutMe() {
 
             {/* 5. Newbay Software */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-              <img src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1397196480/6d953c97914c01d75fe1937767a3553b.png?ik-sanitizeSvg=true" alt="Newbay Software" style={{ height: '40px', marginBottom: '15px', opacity: 0.6, filter: 'grayscale(100%) brightness(1.5)' }} />
+              <img src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1397196480/6d953c97914c01d75fe1937767a3553b.png?ik-sanitizeSvg=true" alt="Newbay Software" style={{ height: '70px', marginBottom: '15px', opacity: 0.6, filter: 'grayscale(100%) brightness(1.5)' }} />
               <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Newbay Software</h4>
               <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Senior Systems Engineer. Responsible for the build-out, deployment, and site reliability of Cloud SaaS products.</p>
             </div>
