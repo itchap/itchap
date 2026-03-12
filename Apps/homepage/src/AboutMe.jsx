@@ -128,7 +128,7 @@ function AboutMe() {
 
           {/* ACADEMIA & EDUCATION (Full Width) */}
           <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '40px', marginTop: '20px' }}>
-            <h4 style={{ color: '#fff', fontSize: '24px', margin: '0 0 30px 0', textAlign: 'center' }}>Academia & Education</h4>
+            <h4 style={{ color: '#fff', fontSize: '24px', margin: '0 0 30px 0', textAlign: 'center' }}>Academia</h4>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '800px', margin: '0 auto' }}>
               
