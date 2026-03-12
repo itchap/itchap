@@ -62,16 +62,17 @@ function AboutMe() {
           ))}
         </div>
 
-        {/* THE LEGO TIMELINE (Image Placeholder) */}
+        {/* THE LEGO TIMELINE */}
         <div style={{ marginBottom: '80px', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>My Life Journey</h3>
-          <p style={{ color: theme.textSub, marginBottom: '40px' }}>From the family farm to leading modern data architecture.</p>
+          <h3 style={{ fontSize: '28px', borderBottom: `2px solid ${theme.accent}`, paddingBottom: '10px', display: 'inline-block', marginBottom: '20px' }}>My Journey</h3>
+          <p style={{ color: theme.textSub, marginBottom: '40px', fontSize: '16px' }}>From the family farm to leading modern data architecture.</p>
           
-          <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', overflowX: 'auto' }}>
-             {/* REPLACE THIS DIV WITH YOUR ACTUAL IMAGE TAG: <img src="/timeline.png" alt="Life Timeline" style={{width: '100%', height: 'auto'}} /> */}
-             <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', border: '2px dashed #ccc', borderRadius: '8px' }}>
-                [ Insert Graphic: Your LEGO Life Timeline Image Here ]
-             </div>
+          <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'center' }}>
+             <img 
+               src="https://i.postimg.cc/qMhgPw8D/timeline.png" 
+               alt="Peter's Life Timeline" 
+               style={{ width: '100%', maxWidth: '900px', height: 'auto', borderRadius: '8px' }} 
+             />
           </div>
         </div>
 
