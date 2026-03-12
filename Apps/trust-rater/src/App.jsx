@@ -192,7 +192,16 @@ function App() {
 
   return (
     <div style={{ backgroundColor: theme.bg, minHeight: '100vh', paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif' }}>
-      
+      {/* --- CSS FOR THE BOUNCING POINTER --- */}
+      <style>
+        {`
+          @keyframes bounceTooltip {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -6px); }
+          }
+        `}
+      </style>
+
       {/* SUBTLE NAVIGATION BAR */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
@@ -245,13 +254,50 @@ function App() {
                   </button>
                 </div>
 
-                {/* --- DYNAMIC TOGGLE BUTTON --- */}
-                <button 
-                  onClick={sessionId ? () => setShowIdBox(!showIdBox) : handleSaveForLater} 
-                  style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer' }}
-                >
-                  {sessionId ? (showIdBox ? 'Hide Session ID' : 'Show Session ID') : 'Generate New ID'}
-                </button>
+                {/* --- DYNAMIC TOGGLE BUTTON WITH BOUNCING POINTER --- */}
+                <div style={{ position: 'relative', marginTop: '15px' }}>
+                  
+                  {/* The Tooltip (Only shows if there is NO sessionId) */}
+                  {!sessionId && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '-38px',
+                      left: '50%',
+                      animation: 'bounceTooltip 1.5s infinite ease-in-out',
+                      backgroundColor: theme.accent,
+                      color: '#000',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
+                      zIndex: 10
+                    }}>
+                      👋 Start here: Generate a New ID!
+                      
+                      {/* The little down arrow */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: '-5px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: `6px solid ${theme.accent}`
+                      }}></div>
+                    </div>
+                  )}
+
+                  <button 
+                    onClick={sessionId ? () => setShowIdBox(!showIdBox) : handleSaveForLater} 
+                    style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {sessionId ? (showIdBox ? 'Hide Session ID' : 'Show Session ID') : 'Generate New ID'}
+                  </button>
+                </div>
 
                 {/* --- DASHED COPY BOX --- */}
                 {showIdBox && sessionId && (
