@@ -92,21 +92,20 @@ function AboutMe() {
 
             {/* 2. Intercom */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-              <div style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', opacity: 0.6, marginBottom: '15px' }}>💬</div>
+              <img src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2699%2FPNG%2F512%2Fintercom_logo_icon_169644.png&id=169644&pack_or_individual=pack" alt="Intercom" style={{ height: '36px', marginBottom: '19px', opacity: 0.6, filter: 'brightness(0) invert(1)' }} />
               <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Intercom</h4>
               <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Founding Sales Engineer. Built the EMEA SE function, collateral, and technical processes from scratch.</p>
             </div>
 
             {/* 3. Synchronoss */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-              <div style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', opacity: 0.6, marginBottom: '15px' }}>☁️</div>
+              <img src="https://companieslogo.com/img/orig/SNCR-692b860e.png?t=1720244494" alt="Synchronoss" style={{ height: '36px', marginBottom: '19px', opacity: 0.6, filter: 'brightness(0) invert(1)' }} />
               <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Synchronoss</h4>
               <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Senior Solutions Architect. Managed major cloud data migrations, RFP responses, and strategic account delivery.</p>
             </div>
 
             {/* 4. BlackBerry (RIM) */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-              {/* Note: Using CSS invert here so the black logo shows up perfectly white on your dark background! */}
               <img src="https://companieslogo.com/img/orig/BB.D-fa11eaf9.png?t=1720244490" alt="BlackBerry" style={{ height: '36px', marginBottom: '19px', opacity: 0.6, filter: 'brightness(0) invert(1)' }} />
               <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>BlackBerry (RIM)</h4>
               <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Solutions Architect. Technical Account Management and Hadoop infrastructure architecture for major Operators.</p>
@@ -143,20 +142,12 @@ function AboutMe() {
                 </p>
               </div>
 
-              {/* Postgrad */}
-              <div style={{ borderLeft: `3px solid #555`, paddingLeft: '20px' }}>
-                <h5 style={{ margin: '0 0 5px 0', fontSize: '18px', color: '#fff' }}>Postgraduate Diploma, Cloud Computing</h5>
-                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>National College of Ireland (2011 – 2012)</p>
-                <p style={{ margin: 0, fontSize: '14px', color: theme.textSub, lineHeight: '1.5' }}>
-                  Core Modules: Advanced Rich Internet Application, Cloud Architecture, Enterprise Frameworks, Technological Entrepreneurship.
-                </p>
-              </div>
-
               {/* Bachelors */}
               <div style={{ borderLeft: `3px solid #555`, paddingLeft: '20px' }}>
                 <h5 style={{ margin: '0 0 5px 0', fontSize: '18px', color: '#fff' }}>B.Sc. Computer Networking</h5>
                 <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>South East Technological University (2001 – 2007)</p>
                 <p style={{ margin: 0, fontSize: '14px', color: theme.textSub, lineHeight: '1.5' }}>
+                  Grade: Honours.  <br />
                   Advanced Networking, Linux Administration, C/Java, Telecommunications. <br />
                   Activities: College Football (Captain, Freshmen Year).
                 </p>
