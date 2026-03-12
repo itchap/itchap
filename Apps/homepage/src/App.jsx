@@ -1,4 +1,7 @@
 import React from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import AboutMe from './AboutMe'; // <-- 1. Import your new page
 
 function App() {
   const theme = {
@@ -120,6 +123,24 @@ function App() {
         &copy; {new Date().getFullYear()} itchap. Built with MongoDB, Express, React, and Node.js.
       </footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      {/* Optional: A simple global nav bar */}
+      <nav style={{ padding: '20px', backgroundColor: '#011e2b', textAlign: 'center' }}>
+        <Link to="/" style={{ color: '#00ed64', marginRight: '20px', textDecoration: 'none' }}>Home</Link>
+        <Link to="/about" style={{ color: '#00ed64', textDecoration: 'none' }}>About Me</Link>
+      </nav>
+
+      {/* 2. Define the Routes */}
+      <Routes>
+        <Route path="/" element={<HomeComponent />} />
+        <Route path="/about" element={<AboutMe />} /> {/* <-- This renders your new page! */}
+      </Routes>
+    </Router>
   );
 }
 
