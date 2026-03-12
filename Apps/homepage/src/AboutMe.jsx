@@ -75,21 +75,95 @@ function AboutMe() {
           </div>
         </div>
 
-        {/* HIGHLIGHTS / PROOF (Instead of a resume list) */}
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 300px', backgroundColor: '#023430', border: `1px solid ${theme.accent}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-            <h4 style={{ color: theme.accent, fontSize: '18px', margin: '0 0 10px 0' }}>MongoDB</h4>
-            <p style={{ fontSize: '14px', margin: 0 }}>EMEA SA of the Year 2023 & Excellence Club 2024. Led modernization for massive Enterprise accounts.</p>
+        {/* HIGHLIGHTS / PROOF (Expanded Career & Academia) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          <h3 style={{ fontSize: '28px', borderBottom: `2px solid ${theme.accent}`, paddingBottom: '10px', display: 'inline-block', marginBottom: '10px' }}>Career Highlights</h3>
+
+          {/* COMPANY GRID */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            
+            {/* 1. MongoDB */}
+            <div style={{ backgroundColor: '#023430', border: `1px solid ${theme.accent}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              <img src="https://images.seeklogo.com/logo-png/44/2/mongodb-logo-png_seeklogo-444844.png" alt="MongoDB" style={{ height: '40px', marginBottom: '15px' }} />
+              <h4 style={{ color: theme.accent, fontSize: '18px', margin: '0 0 10px 0' }}>MongoDB</h4>
+              <p style={{ fontSize: '14px', margin: 0, color: '#e0e0e0' }}>EMEA SA of the Year 2023 & Excellence Club 2024. Led modernization for massive Enterprise accounts.</p>
+            </div>
+
+            {/* 2. Intercom */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              <div style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', opacity: 0.6, marginBottom: '15px' }}>💬</div>
+              <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Intercom</h4>
+              <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Founding Sales Engineer. Built the EMEA SE function, collateral, and technical processes from scratch.</p>
+            </div>
+
+            {/* 3. Synchronoss */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              <div style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', opacity: 0.6, marginBottom: '15px' }}>☁️</div>
+              <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Synchronoss</h4>
+              <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Senior Solutions Architect. Managed major cloud data migrations, RFP responses, and strategic account delivery.</p>
+            </div>
+
+            {/* 4. BlackBerry (RIM) */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              {/* Note: Using CSS invert here so the black logo shows up perfectly white on your dark background! */}
+              <img src="https://companieslogo.com/img/orig/BB.D-fa11eaf9.png?t=1720244490" alt="BlackBerry" style={{ height: '36px', marginBottom: '19px', opacity: 0.6, filter: 'brightness(0) invert(1)' }} />
+              <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>BlackBerry (RIM)</h4>
+              <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Solutions Architect. Technical Account Management and Hadoop infrastructure architecture for major Operators.</p>
+            </div>
+
+            {/* 5. Newbay Software */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              <img src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1397196480/6d953c97914c01d75fe1937767a3553b.png?ik-sanitizeSvg=true" alt="Newbay Software" style={{ height: '40px', marginBottom: '15px', opacity: 0.6, filter: 'grayscale(100%) brightness(1.5)' }} />
+              <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Newbay Software</h4>
+              <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Senior Systems Engineer. Responsible for the build-out, deployment, and site reliability of Cloud SaaS products.</p>
+            </div>
+
+            {/* 6. Irish Defence Forces */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Badge_of_the_Irish_Defence_Forces.svg/1280px-Badge_of_the_Irish_Defence_Forces.svg.png" alt="Irish Defence Forces" style={{ height: '44px', marginBottom: '11px', opacity: 0.6, filter: 'grayscale(100%)' }} />
+              <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Irish Defence Forces</h4>
+              <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Army Civilian Comms Engineer. Provided technical communications and systems engineering support.</p>
+            </div>
           </div>
-          <div style={{ flex: '1 1 300px', backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-            <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Intercom</h4>
-            <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Founding Sales Engineer. Built the EMEA SE function, collateral, and technical processes from scratch.</p>
+
+          {/* ACADEMIA & EDUCATION (Full Width) */}
+          <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '40px', marginTop: '20px' }}>
+            <h4 style={{ color: '#fff', fontSize: '24px', margin: '0 0 30px 0', textAlign: 'center' }}>Academia & Education</h4>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '800px', margin: '0 auto' }}>
+              
+              {/* Masters */}
+              <div style={{ borderLeft: `3px solid ${theme.accent}`, paddingLeft: '20px' }}>
+                <h5 style={{ margin: '0 0 5px 0', fontSize: '18px', color: theme.accent }}>Master's Degree, Cloud Computing</h5>
+                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>National College of Ireland (2014 – 2016)</p>
+                <p style={{ margin: 0, fontSize: '14px', color: theme.textSub, lineHeight: '1.5' }}>
+                  Grade: Honours. <br />
+                  Final Dissertation: <i>"Pre-emptive Cloud Auto-scaling Influenced by Social Network Trends"</i> (Published in IEEE).
+                </p>
+              </div>
+
+              {/* Postgrad */}
+              <div style={{ borderLeft: `3px solid #555`, paddingLeft: '20px' }}>
+                <h5 style={{ margin: '0 0 5px 0', fontSize: '18px', color: '#fff' }}>Postgraduate Diploma, Cloud Computing</h5>
+                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>National College of Ireland (2011 – 2012)</p>
+                <p style={{ margin: 0, fontSize: '14px', color: theme.textSub, lineHeight: '1.5' }}>
+                  Core Modules: Advanced Rich Internet Application, Cloud Architecture, Enterprise Frameworks, Technological Entrepreneurship.
+                </p>
+              </div>
+
+              {/* Bachelors */}
+              <div style={{ borderLeft: `3px solid #555`, paddingLeft: '20px' }}>
+                <h5 style={{ margin: '0 0 5px 0', fontSize: '18px', color: '#fff' }}>B.Sc. Computer Networking</h5>
+                <p style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>South East Technological University (2001 – 2007)</p>
+                <p style={{ margin: 0, fontSize: '14px', color: theme.textSub, lineHeight: '1.5' }}>
+                  Advanced Networking, Linux Administration, C/Java, Telecommunications. <br />
+                  Activities: College Football (Captain, Freshmen Year).
+                </p>
+              </div>
+
+            </div>
           </div>
-          <div style={{ flex: '1 1 300px', backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
-            <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Academia</h4>
-            <p style={{ color: theme.textSub, fontSize: '14px', margin: 0 }}>Master of Science (Cloud Computing) with Honours. Thesis on preemptive auto-scaling published in IEEE.</p>
-          </div>
-        </div>
 
       </div>
     </div>
