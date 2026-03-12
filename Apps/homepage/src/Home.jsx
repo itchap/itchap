@@ -12,23 +12,6 @@ function Home() {
 
   return (
     <div style={{ backgroundColor: theme.bg, color: theme.textMain, minHeight: '100vh', width: '100%', fontFamily: 'sans-serif', margin: 0, padding: 0, boxSizing: 'border-box' }}>
-      
-      {/* NAVBAR */}
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, backgroundColor: 'rgba(1, 30, 43, 0.9)', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img 
-            src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1774483200&v=beta&t=W7P_eyKPX46QWaY8P7E-s5q9mMI_sljIcLo1Q9g-Gt8" 
-            alt="itchap" 
-            style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
-          />
-          itchap
-        </div>
-        <div style={{ display: 'flex', gap: '20px', fontSize: '14px', fontWeight: 'bold' }}>
-          <a href="#about" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>About</a>
-          <a href="#apps" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>Apps</a>
-          <a href="#blog" style={{ color: theme.textSub, textDecoration: 'none', cursor: 'not-allowed' }}>Blog (Soon)</a>
-        </div>
-      </nav>
 
       {/* HERO SECTION */}
       <header id="about" style={{ padding: '120px 20px', textAlign: 'center', maxWidth: '850px', margin: '0 auto' }}>
