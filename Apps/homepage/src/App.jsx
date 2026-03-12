@@ -4,30 +4,43 @@ import Home from './Home';
 import AboutMe from './AboutMe';
 
 function App() {
-  const theme = { bg: '#011e2b', textMain: '#fff', accent: '#00ed64' };
+  const theme = {
+    bg: '#011e2b',
+    border: '#333',
+    accent: '#00ed64',
+    textMain: '#fff',
+    textSub: '#bbb'
+  };
 
   return (
     <Router>
-      <div style={{ backgroundColor: theme.bg, minHeight: '100vh', color: theme.textMain }}>
+      <div style={{ backgroundColor: theme.bg, minHeight: '100vh', color: theme.textMain, fontFamily: 'sans-serif' }}>
         
-        {/* GLOBAL NAVIGATION BAR (Shows on all pages) */}
-        <nav style={{ padding: '20px', display: 'flex', justifyContent: 'center', gap: '30px', borderBottom: '1px solid #333' }}>
+        {/* GLOBAL STICKY NAVBAR (Your original sleek design) */}
+        <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, backgroundColor: 'rgba(1, 30, 43, 0.9)', position: 'sticky', top: 0, zIndex: 100 }}>
           
-          {/* Use React Router's <Link> instead of <a> tags! */}
-          <Link to="/" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '18px', fontWeight: 'bold' }}>
-            Home
-          </Link>
-          
-          <Link to="/about" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '18px', fontWeight: 'bold' }}>
-            About
+          {/* LOGO (Clickable to go back Home) */}
+          <Link to="/" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+            <img 
+              src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1774483200&v=beta&t=W7P_eyKPX46QWaY8P7E-s5q9mMI_sljIcLo1Q9g-Gt8" 
+              alt="itchap" 
+              style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
+            />
+            itchap
           </Link>
 
-          {/* Links to your other external apps can stay as normal <a> tags */}
-          <a href="/trust-rater" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '18px' }}>Trust Rater</a>
-          <a href="/skills-matrix" style={{ color: theme.textMain, textDecoration: 'none', fontSize: '18px' }}>Skills Matrix</a>
+          {/* RIGHT ALIGNED MENU */}
+          <div style={{ display: 'flex', gap: '20px', fontSize: '14px', fontWeight: 'bold' }}>
+            {/* React Router Link for the About Page */}
+            <Link to="/about" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>About</Link>
+            
+            {/* Standard Anchor Links for the Homepage sections */}
+            <a href="/#apps" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>Apps</a>
+            <a href="#blog" style={{ color: theme.textSub, textDecoration: 'none', cursor: 'not-allowed' }}>Blog (Soon)</a>
+          </div>
         </nav>
 
-        {/* THE ROUTER (Swaps pages in and out instantly) */}
+        {/* THE ROUTER (Swaps pages in and out instantly below the navbar) */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutMe />} />
