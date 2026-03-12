@@ -29,7 +29,7 @@ function AboutMe() {
             Solutions Architect Leader. Technologist. Team Builder.
           </h2>
           <p style={{ fontSize: '18px', lineHeight: '1.6', maxWidth: '700px', margin: '0 auto', color: theme.textSub }}>
-            Architecting modern cloud platforms is my background; empowering people is my true calling. With two decades in the software industry, my focus now is entirely on cultivating teams where technical brilliance meets genuine care, transparency, and trust.
+            Architecting modern cloud platforms is my background; empowering people is my true calling. With two decades in the software industry, my focus now is entirely on cultivating teams where technical brilliance meets genuine care and trust.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ function AboutMe() {
 
         {/* THE LEGO TIMELINE (Image Placeholder) */}
         <div style={{ marginBottom: '80px', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>My Journey</h3>
+          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>My Life Journey</h3>
           <p style={{ color: theme.textSub, marginBottom: '40px' }}>From the family farm to leading modern data architecture.</p>
           
           <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', overflowX: 'auto' }}>
@@ -79,7 +79,7 @@ function AboutMe() {
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 300px', backgroundColor: '#023430', border: `1px solid ${theme.accent}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
             <h4 style={{ color: theme.accent, fontSize: '18px', margin: '0 0 10px 0' }}>MongoDB</h4>
-            <p style={{ fontSize: '14px', margin: 0 }}>SA of the Year (EMEA HT) & Excellence Club. Led modernization for massive Enterprise accounts.</p>
+            <p style={{ fontSize: '14px', margin: 0 }}>EMEA SA of the Year 2023 & Excellence Club 2024. Led modernization for massive Enterprise accounts.</p>
           </div>
           <div style={{ flex: '1 1 300px', backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px', textAlign: 'center' }}>
             <h4 style={{ color: '#fff', fontSize: '18px', margin: '0 0 10px 0' }}>Intercom</h4>
