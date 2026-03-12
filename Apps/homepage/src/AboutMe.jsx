@@ -29,7 +29,7 @@ function AboutMe() {
             Solutions Architect Leader. Technologist. Team Builder.
           </h2>
           <p style={{ fontSize: '18px', lineHeight: '1.6', maxWidth: '700px', margin: '0 auto', color: theme.textSub }}>
-            Architecting modern, scalable cloud platforms is my background; empowering the people who build them is my true calling. With two decades in the industry, my focus is entirely on cultivating teams where technical brilliance meets genuine care, transparency, and trust.
+            Architecting modern cloud platforms is my background; empowering people is my true calling. With two decades in the software industry, my focus now is entirely on cultivating teams where technical brilliance meets genuine care, transparency, and trust.
           </p>
         </div>
 
