@@ -52,23 +52,22 @@ function App() {
       outline: 'none'
     }}>
       <GlobalReset />
-      
-      {/* NAV BAR - Explicitly themed to match Trust App Nav */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '25px 50px', fontSize: '13px' }}>
-        <a href="/" style={{ color: '#fff', textDecoration: 'none', opacity: 0.6 }}>← Home</a>
-        <span style={{ color: '#fff', letterSpacing: '1.5px', fontWeight: '600', opacity: 0.6 }}>SA EXCELLENCE SERIES</span>
+      {/* SUBTLE NAVIGATION BAR */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
+        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
+          ← Home
+        </a>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/learning-cycle" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
+          View Source on GitHub ↗
+        </a>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
         
         {/* HEADER - CLEAN WHITE TEXT */}
         <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
-          <h1 style={{ margin: '0 0 20px 0', fontSize: '3.5rem', fontWeight: '800', letterSpacing: '-1.5px', color: '#fff' }}>
-            🧠 Cycle of <span style={{ color: theme.accent }}>Learning</span>
-          </h1>
-          <p style={{ color: theme.textSub, fontSize: '1.2rem', maxWidth: '650px', margin: '0 auto', lineHeight: '1.6' }}>
-            The blueprint for transforming from a practitioner into a Thought Leader.
-          </p>
+          <h1 style={{ margin: '0 0 10px 0' }}>📚 Cycle of <span style={{ color: theme.accent }}>Learning</span></h1>
+          <p style={{ color: theme.textSub, marginBottom: '20px' }}>The roadmap for transforming from a practitioner into a Thought Leader.</p>
         </div>
 
         {/* MAIN BOX - NO CONTAINER OVERFLOW */}
