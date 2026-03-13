@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// GLOBAL RESET - This is the "kill switch" for those white side lines
+// GLOBAL RESET - Kills the phantom white lines on the edges
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -10,7 +10,6 @@ const GlobalReset = () => (
       width: 100% !important;
       height: 100% !important;
       overflow-x: hidden !important;
-      /* Removes any phantom borders/outlines from the browser or parent containers */
       border: none !important;
       outline: none !important;
     }
@@ -31,10 +30,7 @@ function App() {
     border: '#333',
     accent: '#00ed64',
     textMain: '#fff',
-    textWhite: '#ffffff',
-    textSub: '#bbb',
-    danger: '#ff4d4d',
-    buttonHover: '#00c753'
+    textSub: '#bbb'
   };
 
   const cycleData = [
@@ -53,28 +49,31 @@ function App() {
       flexDirection: 'column',
       border: 'none',
       outline: 'none',
-      paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif'
+      paddingBottom: '40px', 
+      color: theme.textMain, 
+      fontFamily: 'Inter, system-ui, sans-serif'
     }}>
       <GlobalReset />
-      {/* SUBTLE NAVIGATION BAR */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
-        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
-          ← Home
-        </a>
-        <a href="https://github.com/itchap/itchap/tree/main/Apps/learning-cycle" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
-          View Source on GitHub ↗
-        </a>
+
+      {/* NAV BAR */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 30px', fontSize: '12px', opacity: 0.7 }}>
+        <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>← Home</a>
+        <a href="https://github.com/itchap/itchap" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>View Source on GitHub ↗</a>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
         
-        {/* HEADER - CLEAN WHITE TEXT */}
+        {/* HEADER */}
         <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
-          <h1 style={{ margin: '0 0 10px 0' }}>📚 Cycle of <span style={{ color: theme.accent }}>Learning</span></h1>
-          <p style={{ color: theme.textSub, marginBottom: '20px' }}>The roadmap for transforming from a practitioner into a Thought Leader.</p>
+          <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '800' }}>
+            📚 Cycle of <span style={{ color: theme.accent }}>Learning</span>
+          </h1>
+          <p style={{ color: theme.textSub, fontSize: '1.1rem' }}>
+            The roadmap for transforming from a practitioner into a Thought Leader.
+          </p>
         </div>
 
-        {/* MAIN BOX - NO CONTAINER OVERFLOW */}
+        {/* MAIN CONTAINER */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
           border: `1px solid ${theme.border}`, 
@@ -93,7 +92,7 @@ function App() {
           
           <div style={{ position: 'relative', width: 'min(95%, 750px)', height: 'min(95%, 750px)' }}>
             
-            {/* THICK BRANDED CIRCLE (#01ed64) */}
+            {/* BRANDED CIRCLE PATH */}
             <svg viewBox="0 0 100 100" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
               <circle
                 cx="50" cy="50" r="38"
@@ -101,11 +100,11 @@ function App() {
                 stroke={theme.accent}
                 strokeWidth="2.5" 
                 strokeDasharray="5 4"
-                opacity="0.8"
+                opacity="1" /* Increased visibility to match latest style */
               />
             </svg>
 
-            {/* NODES */}
+            {/* NODES WITH DYNAMIC GLOW */}
             {cycleData.map((node) => (
               <div
                 key={node.id}
@@ -125,15 +124,18 @@ function App() {
                   textAlign: 'center',
                   zIndex: 10,
                   transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.5)'
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)' // Default subtle shadow
                 }}
                 onMouseOver={e => {
                   e.currentTarget.style.borderColor = theme.accent;
-                  e.currentTarget.style.transform = 'translate(-50%, -55%)';
+                  e.currentTarget.style.transform = 'translate(-50%, -55%) scale(1.02)';
+                  // GREEN NEON GLOW ADDED HERE
+                  e.currentTarget.style.boxShadow = `0 20px 50px rgba(0, 237, 100, 0.2)`; 
                 }}
                 onMouseOut={e => {
                   e.currentTarget.style.borderColor = theme.border;
-                  e.currentTarget.style.transform = 'translate(-50%, -50%)';
+                  e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
                 }}
               >
                 <h3 style={{ margin: '0 0 10px 0', color: theme.accent, fontSize: '1.3rem', fontWeight: '800' }}>{node.title}</h3>
@@ -144,13 +146,13 @@ function App() {
         </div>
       </div>
 
-      {/* MODAL - BLURRED AI STYLE */}
+      {/* MODAL */}
       {activeNode && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.96)', backdropFilter: 'blur(12px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ backgroundColor: theme.bg, border: `2px solid ${theme.accent}`, padding: '40px', borderRadius: '20px', maxWidth: '600px', width: '90%', boxShadow: `0 0 80px ${theme.accent}15` }}>
-             <h3 style={{ color: theme.accent, marginTop: 0, fontSize: '2.4rem', letterSpacing: '-1px' }}>{activeNode.title}</h3>
+          <div style={{ backgroundColor: theme.bg, border: `2px solid ${theme.accent}`, padding: '40px', borderRadius: '20px', maxWidth: '600px', width: '90%', boxShadow: `0 0 80px rgba(0, 237, 100, 0.15)` }}>
+             <h3 style={{ color: theme.accent, marginTop: 0, fontSize: '2.4rem' }}>{activeNode.title}</h3>
              <p style={{ margin: '25px 0', lineHeight: '1.8', fontSize: '1.15rem', color: '#eee' }}>{activeNode.deep}</p>
-             <button onClick={() => setActiveNode(null)} style={{ width: '100%', padding: '16px', backgroundColor: theme.accent, color: '#000', fontWeight: '900', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '18px' }}>Close</button>
+             <button onClick={() => setActiveNode(null)} style={{ width: '100%', padding: '16px', backgroundColor: theme.accent, color: '#000', fontWeight: '900', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '18px' }}>Got it</button>
           </div>
         </div>
       )}
