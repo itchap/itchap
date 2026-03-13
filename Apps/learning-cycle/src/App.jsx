@@ -27,14 +27,11 @@ function App() {
 
   const theme = {
     bg: '#011e2b',
-    cardBg: 'rgba(255, 255, 255, 0.05)',
+    cardBg: 'rgba(255, 255, 255, 0.03)',
     border: '#333',
-    accent: '#00ed64',
-    textMain: '#fff',
+    accent: '#01ed64', 
     textWhite: '#ffffff',
-    textSub: '#bbb',
-    danger: '#ff4d4d',
-    buttonHover: '#00c753'
+    textSub: '#bbb'
   };
 
   const cycleData = [
@@ -68,10 +65,10 @@ function App() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
         
         {/* HEADER - CLEAN WHITE TEXT */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}></div>
+        <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
           <h1 style={{ margin: '0 0 10px 0' }}>📚 Cycle of <span style={{ color: theme.accent }}>Learning</span></h1>
           <p style={{ color: theme.textSub, marginBottom: '20px' }}>The roadmap for transforming from a practitioner into a Thought Leader.</p>
-        </div>          
+        </div>
 
         {/* MAIN BOX - NO CONTAINER OVERFLOW */}
         <div style={{ 
