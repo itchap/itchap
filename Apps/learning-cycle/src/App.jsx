@@ -114,7 +114,7 @@ const cycleData = [
             📚 Cycle of <span style={{ color: theme.accent }}>Learning</span>
           </h1>
           <p style={{ color: theme.textSub, fontSize: '1.1rem' }}>
-            The roadmap for transforming from a practitioner into a Thought Leader.
+            The roadmap for transforming from a practitioner into a Thought Leader in any subject matter or skill set. Rinse and repeat this cycle to go from novice to expert, and eventually a thought leader in your field.
           </p>
         </div>
 
