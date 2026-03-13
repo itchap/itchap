@@ -101,7 +101,7 @@ function App() {
                 stroke={theme.accent}
                 strokeWidth="2.5" 
                 strokeDasharray="5 4"
-                opacity="0.2"
+                opacity="0.8"
               />
             </svg>
 
