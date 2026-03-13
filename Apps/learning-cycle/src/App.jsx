@@ -27,11 +27,14 @@ function App() {
 
   const theme = {
     bg: '#011e2b',
-    cardBg: 'rgba(255, 255, 255, 0.03)',
+    cardBg: 'rgba(255, 255, 255, 0.05)',
     border: '#333',
-    accent: '#01ed64', 
+    accent: '#00ed64',
+    textMain: '#fff',
     textWhite: '#ffffff',
-    textSub: '#bbb'
+    textSub: '#bbb',
+    danger: '#ff4d4d',
+    buttonHover: '#00c753'
   };
 
   const cycleData = [
