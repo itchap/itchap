@@ -42,8 +42,8 @@ const cycleData = [
     left: '50%', 
     desc: 'Consume knowledge and skills from various sources.',
     guidance: {
-      theory: "Everyone consumes information and learnings differently. Whether it's books, videos, blogs, podcasts or hands-on practical work, you should absorb the content to gain the knowledge. ",
-      action: "As you absorb the information, type or write notes, share your findings in realtime with people around you, or say it out loud to yourself if that helps.",
+      theory: "Everyone consumes information and learnings differently. Whether it's books, videos, blogs, podcasts or hands-on practical work, you should learn the content in a way that works best for you to gain the knowledge. ",
+      action: "As you absorb the information, type or write notes, share your findings in realtime with people around you, or say it out loud to yourself as any of these methods will help you retain the information.",
       outcome: "At this point you should have a good understanding of the subject matter and be able to explain it to a non-technical stakeholder in under 2 minutes."
     }
   },
@@ -54,9 +54,9 @@ const cycleData = [
     left: '88%', 
     desc: 'Experiment, get feedback, tweak and retest.',
     guidance: {
-      theory: "Testing is about de-risking assumptions. If you haven't broken the environment, you haven't tested the limits.",
-      action: "Build a 'Lab-in-a-Box' for your current stack. Run 5 'What-if' failure scenarios (e.g., regional outage, API throttling).",
-      kpi: "Creation of a documented 'Failure Log' that prevents repeat errors across the team."
+      theory: "Once you've learned the subject matter or skills it's time to put your knowledege to the test. Testing is about putting the learning into practice, de-risking any assumptions and seeing how well you understood the topic or skill.",
+      action: "Use what you learned in a real scenario and see how well you can recall it and apply it. Detect any gaps in your knowledge and go back to the 'Learn' stage to fill those gaps. The idea is to test and restest until you can confidently apply the knowledge.",
+      outcome: "At this point you are really well informed on the skill or subject matter and can apply it in real life scenarios with confidence. You should be able to troubleshoot and solve problems related to the topic without needing to refer back to your notes or resources."
     }
   },
   { 
@@ -66,9 +66,9 @@ const cycleData = [
     left: '50%', 
     desc: 'Assess what worked, what didn\'t, and more importantly WHY.',
     guidance: {
-      theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom.",
-      action: "Conduct a Weekly 'Win/Loss' review. Ask: 'What did I underestimate?' and 'Where did I rely on luck instead of logic?'",
-      kpi: "A quarterly 'Standard Operating Procedure' (SOP) update based on your personal retrospectives."
+      theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom. It allows you to identify patterns, understand your own thinking and decision-making processes, and make informed adjustments for future iterations.",
+      action: "After every scenario where you use the knowledge or skill, ask yourself 'What worked and why did it work?' or 'What didn't work and why didn't it work?'. Document your reflections in a journal and review it on a regular basis to identify patterns and insights.",
+      outcome: "At this point you have a deep understanding of the subject matter or skill, not just in theory but in practice. You can identify your own strengths and weaknesses, understand the nuances of the topic, and make informed decisions on how to apply it in different scenarios."
     }
   },
   { 
@@ -78,9 +78,9 @@ const cycleData = [
     left: '12%', 
     desc: 'Reinforce understanding by teaching others.',
     guidance: {
-      theory: "Teaching is the highest form of learning. It forces you to simplify and exposes your own hidden knowledge gaps.",
-      action: "Produce one internal 'Brown Bag' session or a LinkedIn technical deep-dive once per month.",
-      kpi: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority."
+      theory: "Now you are ready to teach others and share your subject matter expertise. Teaching is the highest form of learning. It forces you to simplify and exposes your own hidden knowledge gaps.",
+      action: "Whether you demo to a customer, present internally to colleagues or give a public talk, the more you can do this in an unscripted way, the better as it will force you to really understand the topic and be able to field any questions that come your way.",
+      outcome: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority will the point you can consider yourself a thought leader on any given subject matter or skill set."
     }
   }
 ];
@@ -220,8 +220,8 @@ const cycleData = [
           </div>
 
           <div style={{ padding: '15px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', borderLeft: `4px solid ${theme.accent}` }}>
-            <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Success Metric (KPI)</h4>
-            <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.kpi}</p>
+            <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Stage Outcome</h4>
+            <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.outcome}</p>
           </div>
        </div>
 
