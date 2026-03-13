@@ -69,7 +69,7 @@ function AboutMe() {
           
           <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '12px', padding: '20px', display: 'flex', justifyContent: 'center' }}>
              <img 
-               src="https://i.postimg.cc/qMhgPw8D/timeline.png" 
+               src="https://i.postimg.cc/fwTkZMj7/timeline.png" 
                alt="Peter's Life Timeline" 
                style={{ width: '100%', maxWidth: '900px', height: 'auto', borderRadius: '8px' }} 
              />
