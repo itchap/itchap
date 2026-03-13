@@ -54,8 +54,8 @@ const cycleData = [
     left: '88%', 
     desc: 'Experiment, get feedback, tweak and retest.',
     guidance: {
-      theory: "Once you've learned the subject matter or skills it's time to put your knowledege to the test. Testing is about putting the learning into practice, de-risking any assumptions and seeing how well you understood the topic or skill.",
-      action: "Use what you learned in a real scenario and see how well you can recall it and apply it. Detect any gaps in your knowledge and go back to the 'Learn' stage to fill those gaps. The idea is to test and restest until you can confidently apply the knowledge.",
+      theory: "Once you've learned the subject matter or skills, it's time to put your knowledege to the test. Testing is about putting the learning into practice, de-risking any assumptions and seeing how well you understood the topic or skill.",
+      action: "Use what you've learned in a real scenario and see how well you can recall it and apply it. Detect any gaps in your knowledge and go back to the 'Learn' stage to fill those gaps. The idea is to test and restest until you can confidently apply the knowledge or skill.",
       outcome: "At this point you are really well informed on the skill or subject matter and can apply it in real life scenarios with confidence. You should be able to troubleshoot and solve problems related to the topic without needing to refer back to your notes or resources."
     }
   },
@@ -78,8 +78,8 @@ const cycleData = [
     left: '12%', 
     desc: 'Reinforce understanding by teaching others.',
     guidance: {
-      theory: "Now you are ready to teach others and share your subject matter expertise. Teaching is the highest form of learning. It forces you to simplify and exposes your own hidden knowledge gaps.",
-      action: "Whether you demo to a customer, present internally to colleagues or give a public talk, the more you can do this in an unscripted way, the better as it will force you to really understand the topic and be able to field any questions that come your way.",
+      theory: "Now you are ready to teach others and share your subject matter expertise. Teaching is the highest form of learning as it reinforces what you learned. It forces you to simplify and exposes your own hidden knowledge gaps.",
+      action: "Whether you demo to a customer, present internally to colleagues or give a public talk, the more you can do this in an unscripted way the better as it will force you to really understand the topic and be able to field any questions that come your way.",
       outcome: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority will the point you can consider yourself a thought leader on any given subject matter or skill set."
     }
   }
