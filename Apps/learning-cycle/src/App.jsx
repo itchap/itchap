@@ -52,7 +52,8 @@ function App() {
       display: 'flex', 
       flexDirection: 'column',
       border: 'none',
-      outline: 'none'
+      outline: 'none',
+      paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif'
     }}>
       <GlobalReset />
       {/* SUBTLE NAVIGATION BAR */}
