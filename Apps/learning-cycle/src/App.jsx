@@ -190,63 +190,62 @@ const cycleData = [
           </div>
         </div>
       </div>
+      {/* NAV BAR // 2. UPDATED MODAL UI (Inside the activeNode && (...) block) */}
+      {activeNode && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ 
+            backgroundColor: '#021a25', 
+            border: `2px solid ${theme.accent}`, 
+            padding: '40px', 
+            borderRadius: '24px', 
+            maxWidth: '750px', 
+            width: '90%', 
+            boxShadow: `0 0 100px rgba(0, 237, 100, 0.12)` 
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+                <h3 style={{ color: theme.accent, margin: 0, fontSize: '2.5rem', fontWeight: '800' }}>{activeNode.title}</h3>
+                <span style={{ color: theme.accent, opacity: 0.5, fontWeight: 'bold' }}>STAGE 0{activeNode.id}</span>
+            </div>
 
-      // 2. UPDATED MODAL UI (Inside the activeNode && (...) block)
-{activeNode && (
-  <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-    <div style={{ 
-      backgroundColor: '#021a25', 
-      border: `2px solid ${theme.accent}`, 
-      padding: '40px', 
-      borderRadius: '24px', 
-      maxWidth: '750px', 
-      width: '90%', 
-      boxShadow: `0 0 100px rgba(0, 237, 100, 0.12)` 
-    }}>
-       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-          <h3 style={{ color: theme.accent, margin: 0, fontSize: '2.5rem', fontWeight: '800' }}>{activeNode.title}</h3>
-          <span style={{ color: theme.accent, opacity: 0.5, fontWeight: 'bold' }}>STAGE 0{activeNode.id}</span>
-       </div>
+            <div style={{ display: 'grid', gap: '25px', textAlign: 'left' }}>
+                <div>
+                  <h4 style={{ color: '#fff', margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>The Theory</h4>
+                  <p style={{ color: theme.textSub, margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.theory}</p>
+                </div>
+                
+                <div>
+                  <h4 style={{ color: theme.accent, margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Action Items</h4>
+                  <p style={{ color: '#fff', margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.action}</p>
+                </div>
 
-       <div style={{ display: 'grid', gap: '25px', textAlign: 'left' }}>
-          <div>
-            <h4 style={{ color: '#fff', margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>The Theory</h4>
-            <p style={{ color: theme.textSub, margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.theory}</p>
+                <div style={{ padding: '15px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', borderLeft: `4px solid ${theme.accent}` }}>
+                  <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Stage Outcome</h4>
+                  <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.outcome}</p>
+                </div>
+            </div>
+
+            <button 
+              onClick={() => setActiveNode(null)} 
+              style={{ 
+                marginTop: '40px', 
+                width: '100%', 
+                padding: '18px', 
+                backgroundColor: theme.accent, 
+                color: '#000', 
+                fontWeight: '900', 
+                border: 'none', 
+                borderRadius: '12px', 
+                cursor: 'pointer', 
+                fontSize: '16px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}
+            >
+              Return to Cycle
+            </button>
           </div>
-          
-          <div>
-            <h4 style={{ color: theme.accent, margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Action Items</h4>
-            <p style={{ color: '#fff', margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.action}</p>
-          </div>
-
-          <div style={{ padding: '15px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', borderLeft: `4px solid ${theme.accent}` }}>
-            <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Stage Outcome</h4>
-            <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.outcome}</p>
-          </div>
-       </div>
-
-       <button 
-         onClick={() => setActiveNode(null)} 
-         style={{ 
-           marginTop: '40px', 
-           width: '100%', 
-           padding: '18px', 
-           backgroundColor: theme.accent, 
-           color: '#000', 
-           fontWeight: '900', 
-           border: 'none', 
-           borderRadius: '12px', 
-           cursor: 'pointer', 
-           fontSize: '16px',
-           textTransform: 'uppercase',
-           letterSpacing: '1px'
-         }}
-       >
-         Return to Cycle
-       </button>
-    </div>
-  </div>
-)}
+        </div>
+      )}
     </div>
   );
 }
