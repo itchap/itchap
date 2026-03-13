@@ -140,10 +140,10 @@ const cycleData = [
             {/* BRANDED CIRCLE PATH */}
             <svg viewBox="0 0 100 100" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
               <circle
-                cx="50" cy="50" r="38"
+                cx="50" cy="50" r="50"
                 fill="none"
                 stroke={theme.accent}
-                strokeWidth="2.5" 
+                strokeWidth="2" 
                 strokeDasharray="5 4"
                 opacity="1" /* Increased visibility to match latest style */
               />
