@@ -34,56 +34,56 @@ function App() {
   };
 
   // 1. UPDATED DATA SOURCE WITH STRUCTURED INSIGHTS
-  const cycleData = [
-    { 
-      id: 1, 
-      title: 'Learn', 
-      top: '12%', 
-      left: '50%', 
-      desc: 'Targeted knowledge acquisition for SA Excellence.',
-      guidance: {
-        theory: "Don't just read; curate. Follow the 70/20/10 rule: 70% from job experiences, 20% from peers, and 10% from formal courses.",
-        action: "Identify 3 core technical gaps this quarter. Use 'Just-in-Time' learning rather than 'Just-in-Case' to ensure immediate application.",
-        kpi: "Ability to explain a complex architectural concept to a non-technical stakeholder in under 2 minutes."
-      }
-    },
-    { 
-      id: 2, 
-      title: 'Test', 
-      top: '50%', 
-      left: '88%', 
-      desc: 'Safe failure in a controlled environment.',
-      guidance: {
-        theory: "Testing is about de-risking assumptions. If you haven't broken the environment, you haven't tested the limits.",
-        action: "Build a 'Lab-in-a-Box' for your current stack. Run 5 'What-if' failure scenarios (e.g., regional outage, API throttling).",
-        kpi: "Creation of a documented 'Failure Log' that prevents repeat errors across the team."
-      }
-    },
-    { 
-      id: 3, 
-      title: 'Reflect', 
-      top: '88%', 
-      left: '50%', 
-      desc: 'Extracting the "Why" from the "What".',
-      guidance: {
-        theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom.",
-        action: "Conduct a Weekly 'Win/Loss' review. Ask: 'What did I underestimate?' and 'Where did I rely on luck instead of logic?'",
-        kpi: "A quarterly 'Standard Operating Procedure' (SOP) update based on your personal retrospectives."
-      }
-    },
-    { 
-      id: 4, 
-      title: 'Teach', 
-      top: '50%', 
-      left: '12%', 
-      desc: 'The ultimate stage of mastery.',
-      guidance: {
-        theory: "Teaching is the highest form of learning. It forces you to simplify and exposes your own hidden knowledge gaps.",
-        action: "Produce one internal 'Brown Bag' session or a LinkedIn technical deep-dive once per month.",
-        kpi: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority."
-      }
+const cycleData = [
+  { 
+    id: 1, 
+    title: 'Learn', 
+    top: '12%', 
+    left: '50%', 
+    desc: 'Consume knowledge and skills from various sources.',
+    guidance: {
+      theory: "Everyone consumes information and learnings differently. Whether it's books, videos, blogs, podcasts or hands-on practical work, you should absorb the content to gain the knowledge. ",
+      action: "As you absorb the information, type or write notes, share your findings in realtime with people around you, or say it out loud to yourself if that helps.",
+      outcome: "At this point you should have a good understanding of the subject matter and be able to explain it to a non-technical stakeholder in under 2 minutes."
     }
-  ];
+  },
+  { 
+    id: 2, 
+    title: 'Test', 
+    top: '50%', 
+    left: '88%', 
+    desc: 'Experiment, get feedback, tweak and retest.',
+    guidance: {
+      theory: "Testing is about de-risking assumptions. If you haven't broken the environment, you haven't tested the limits.",
+      action: "Build a 'Lab-in-a-Box' for your current stack. Run 5 'What-if' failure scenarios (e.g., regional outage, API throttling).",
+      kpi: "Creation of a documented 'Failure Log' that prevents repeat errors across the team."
+    }
+  },
+  { 
+    id: 3, 
+    title: 'Reflect', 
+    top: '88%', 
+    left: '50%', 
+    desc: 'Assess what worked, what didn\'t, and more importantly WHY.',
+    guidance: {
+      theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom.",
+      action: "Conduct a Weekly 'Win/Loss' review. Ask: 'What did I underestimate?' and 'Where did I rely on luck instead of logic?'",
+      kpi: "A quarterly 'Standard Operating Procedure' (SOP) update based on your personal retrospectives."
+    }
+  },
+  { 
+    id: 4, 
+    title: 'Teach', 
+    top: '50%', 
+    left: '12%', 
+    desc: 'Reinforce understanding by teaching others.',
+    guidance: {
+      theory: "Teaching is the highest form of learning. It forces you to simplify and exposes your own hidden knowledge gaps.",
+      action: "Produce one internal 'Brown Bag' session or a LinkedIn technical deep-dive once per month.",
+      kpi: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority."
+    }
+  }
+];
 
   return (
     <div style={{ 
@@ -192,61 +192,61 @@ function App() {
       </div>
 
       // 2. UPDATED MODAL UI (Inside the activeNode && (...) block)
-      {activeNode && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ 
-            backgroundColor: '#021a25', 
-            border: `2px solid ${theme.accent}`, 
-            padding: '40px', 
-            borderRadius: '24px', 
-            maxWidth: '750px', 
-            width: '90%', 
-            boxShadow: `0 0 100px rgba(0, 237, 100, 0.12)` 
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <h3 style={{ color: theme.accent, margin: 0, fontSize: '2.5rem', fontWeight: '800' }}>{activeNode.title}</h3>
-                <span style={{ color: theme.accent, opacity: 0.5, fontWeight: 'bold' }}>STAGE 0{activeNode.id}</span>
-            </div>
+{activeNode && (
+  <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ 
+      backgroundColor: '#021a25', 
+      border: `2px solid ${theme.accent}`, 
+      padding: '40px', 
+      borderRadius: '24px', 
+      maxWidth: '750px', 
+      width: '90%', 
+      boxShadow: `0 0 100px rgba(0, 237, 100, 0.12)` 
+    }}>
+       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+          <h3 style={{ color: theme.accent, margin: 0, fontSize: '2.5rem', fontWeight: '800' }}>{activeNode.title}</h3>
+          <span style={{ color: theme.accent, opacity: 0.5, fontWeight: 'bold' }}>STAGE 0{activeNode.id}</span>
+       </div>
 
-            <div style={{ display: 'grid', gap: '25px', textAlign: 'left' }}>
-                <div>
-                  <h4 style={{ color: '#fff', margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>The Theory</h4>
-                  <p style={{ color: theme.textSub, margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.theory}</p>
-                </div>
-                
-                <div>
-                  <h4 style={{ color: theme.accent, margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Action Items</h4>
-                  <p style={{ color: '#fff', margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.action}</p>
-                </div>
-
-                <div style={{ padding: '15px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', borderLeft: `4px solid ${theme.accent}` }}>
-                  <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Success Metric (KPI)</h4>
-                  <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.kpi}</p>
-                </div>
-            </div>
-
-            <button 
-              onClick={() => setActiveNode(null)} 
-              style={{ 
-                marginTop: '40px', 
-                width: '100%', 
-                padding: '18px', 
-                backgroundColor: theme.accent, 
-                color: '#000', 
-                fontWeight: '900', 
-                border: 'none', 
-                borderRadius: '12px', 
-                cursor: 'pointer', 
-                fontSize: '16px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}
-            >
-              Return to Cycle
-            </button>
+       <div style={{ display: 'grid', gap: '25px', textAlign: 'left' }}>
+          <div>
+            <h4 style={{ color: '#fff', margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>The Theory</h4>
+            <p style={{ color: theme.textSub, margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.theory}</p>
           </div>
-        </div>
-      )}
+          
+          <div>
+            <h4 style={{ color: theme.accent, margin: '0 0 8px 0', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Action Items</h4>
+            <p style={{ color: '#fff', margin: 0, lineHeight: '1.6' }}>{activeNode.guidance.action}</p>
+          </div>
+
+          <div style={{ padding: '15px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '12px', borderLeft: `4px solid ${theme.accent}` }}>
+            <h4 style={{ color: '#fff', margin: '0 0 5px 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Success Metric (KPI)</h4>
+            <p style={{ color: theme.accent, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>{activeNode.guidance.kpi}</p>
+          </div>
+       </div>
+
+       <button 
+         onClick={() => setActiveNode(null)} 
+         style={{ 
+           marginTop: '40px', 
+           width: '100%', 
+           padding: '18px', 
+           backgroundColor: theme.accent, 
+           color: '#000', 
+           fontWeight: '900', 
+           border: 'none', 
+           borderRadius: '12px', 
+           cursor: 'pointer', 
+           fontSize: '16px',
+           textTransform: 'uppercase',
+           letterSpacing: '1px'
+         }}
+       >
+         Return to Cycle
+       </button>
+    </div>
+  </div>
+)}
     </div>
   );
 }
