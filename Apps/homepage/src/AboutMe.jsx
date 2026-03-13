@@ -12,10 +12,10 @@ function AboutMe() {
 
   const coreValues = [
     { icon: '🤝', title: 'Service', desc: 'I place huge importance on serving and caring for others with quality and value.' },
-    { icon: '⭐', title: 'Excellence', desc: 'I strive to always pursue the highest level of performance in every aspect of the role.' },
+    { icon: '⭐', title: 'Excellence', desc: 'I strive to always pursue the highest level of performance in every aspect of my role.' },
     { icon: '🔗', title: 'Relationships', desc: 'I try to nurture strong bonds and trust among family, friends and colleagues.' },
     { icon: '🧗', title: 'Challenges', desc: 'I take on situations or tasks that test my thoughts, abilities and resilience.' },
-    { icon: '😊', title: 'Happiness', desc: 'I want to attain feelings of contentment, satisfaction and fulfilment.' }
+    { icon: '😊', title: 'Happiness', desc: 'I want to attain feelings of joy, contentment, satisfaction and fulfilment.' }
   ];
 
   return (
@@ -24,12 +24,28 @@ function AboutMe() {
         
         {/* HERO SECTION */}
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
+          
+          {/* PROFILE PICTURE */}
+          <img 
+            src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1775088000&v=beta&t=ajnV4O9I7h0JX9lcp4u-Bj4izpIIlfKzWhjH61oavGs" 
+            alt="Peter" 
+            style={{ 
+              width: '140px', 
+              height: '140px', 
+              borderRadius: '50%', 
+              objectFit: 'cover', 
+              border: `3px solid ${theme.accent}`, 
+              marginBottom: '25px',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
+            }} 
+          />
+
           <h1 style={{ fontSize: '48px', margin: '0 0 15px 0' }}>Peter <span style={{ color: theme.accent }}>Smith</span></h1>
           <h2 style={{ fontSize: '24px', color: theme.textSub, margin: '0 0 20px 0', fontWeight: 'normal' }}>
             Solutions Architect Leader. Technologist. Team Builder.
           </h2>
           <p style={{ fontSize: '18px', lineHeight: '1.6', maxWidth: '700px', margin: '0 auto', color: theme.textSub }}>
-            Architecting modern cloud platforms is my background; empowering people is my true calling. With two decades in the software industry, my focus now is entirely on cultivating teams where technical brilliance meets genuine care and trust.
+            Architecting modern cloud platforms is my background; empowering people is my true calling. With two decades in the software industry, my focus now is entirely on cultivating teams where technical brilliance meets genuine care, transparency, and trust.
           </p>
         </div>
 
