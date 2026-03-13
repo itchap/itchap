@@ -143,7 +143,7 @@ const cycleData = [
                 cx="50" cy="50" r="40"
                 fill="none"
                 stroke={theme.accent}
-                strokeWidth="2" 
+                strokeWidth="1.5" 
                 strokeDasharray="5 4"
                 opacity="1" /* Increased visibility to match latest style */
               />
