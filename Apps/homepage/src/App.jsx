@@ -22,7 +22,7 @@ function App() {
           {/* LOGO (Clickable to go back Home) */}
           <Link to="/" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
             <img 
-              src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1774483200&v=beta&t=W7P_eyKPX46QWaY8P7E-s5q9mMI_sljIcLo1Q9g-Gt8" 
+              src="https://i.postimg.cc/5N1gmQ10/ninja2.png" 
               alt="itchap" 
               style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
             />
