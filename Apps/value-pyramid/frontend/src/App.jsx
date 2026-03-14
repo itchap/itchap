@@ -122,7 +122,7 @@ function App() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
 
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>
           <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '800' }}>
             💎 The <span style={{ color: theme.accent }}>Value Pyramid</span>
           </h1>
@@ -139,7 +139,7 @@ function App() {
           borderRadius: '32px', 
           width: '100%',
           maxWidth: '1400px', 
-          minHeight: '750px', // INCREASED height for breathing room
+          minHeight: '700px', // INCREASED height for breathing room
           position: 'relative', 
           display: 'flex',
           justifyContent: 'center',
