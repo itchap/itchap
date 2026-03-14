@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// GLOBAL RESET - Added the bounceTooltip keyframes here
+// GLOBAL RESET - Kills the phantom white lines and adds the bounce animation
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -27,7 +27,7 @@ const GlobalReset = () => (
 
 function App() {
   const [activeNode, setActiveNode] = useState(null);
-  const [hasInteracted, setHasInteracted] = useState(false); // Tracks if they've clicked yet
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const theme = {
     bg: '#011e2b',
@@ -140,7 +140,6 @@ function App() {
           </p>
         </div>
 
-
         {/* MAIN CARD CONTAINER */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
@@ -161,11 +160,11 @@ function App() {
           {/* THE PYRAMID WRAPPER */}
           <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' }}>
             
-            {/* BOUNCING POINTER (Hides after first click, absolute positioned to avoid clipping) */}
+            {/* BOUNCING POINTER */}
             {!hasInteracted && (
               <div style={{
                 position: 'absolute',
-                top: '-45px', // Positions it right above the apex
+                top: '-45px',
                 left: '50%',
                 animation: 'bounceTooltip 1.5s infinite ease-in-out',
                 backgroundColor: theme.accent,
@@ -178,7 +177,7 @@ function App() {
                 boxShadow: `0 4px 15px rgba(2, 236, 100, 0.4)`,
                 zIndex: 50,
                 cursor: 'default',
-                pointerEvents: 'none' // Ensures clicks pass through it to the pyramid if they misclick
+                pointerEvents: 'none'
               }}>
                 👋 Start here: Click a tier to explore!
                 
@@ -212,7 +211,7 @@ function App() {
                   key={tier.id}
                   onClick={() => {
                     setActiveNode(tier);
-                    setHasInteracted(true); // Dismisses tooltip
+                    setHasInteracted(true);
                   }}
                   style={{
                     flex: tier.flex,
@@ -224,21 +223,21 @@ function App() {
                     justifyContent: tier.isTop ? 'flex-end' : 'center',
                     alignItems: 'center',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease', // Transition handles both bg color and box-shadow
+                    transition: 'all 0.3s ease',
                     paddingBottom: tier.isTop ? '25px' : '0'
                   }}
                   onMouseOver={e => {
                     if(!tier.isTop) {
                       e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
-                      // THE GLOW: Added here!
-                      e.currentTarget.style.boxShadow = `inset 0 0 30px rgba(2, 236, 100, 0.4)`;
+                      // THE GLOW: Added here! Using drop-shadow to glow OUTWARDS
+                      e.currentTarget.style.filter = `drop-shadow(0 0 15px rgba(2, 236, 100, 0.5))`;
                     }
                   }}
                   onMouseOut={e => {
                     if(!tier.isTop) {
                       e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
                       // REMOVE GLOW: Added here!
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.filter = 'none';
                     }
                   }}
                 >
