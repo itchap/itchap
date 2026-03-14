@@ -22,13 +22,17 @@ const GlobalReset = () => (
       0%, 100% { transform: translate(-50%, 0); }
       50% { transform: translate(-50%, -8px); }
     }
+    /* Essential rule for our glow hack: give pseudoelements default content */
+    .tier-base::after {
+      content: '';
+    }
   `}</style>
 );
 
 function App() {
   const [activeNode, setActiveNode] = useState(null);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [hoveredTier, setHoveredTier] = useState(null); // Track hover at parent level
+  const [hoveredTier, setHoveredTier] = useState(null); 
 
   const theme = {
     bg: '#011e2b',
@@ -40,7 +44,6 @@ function App() {
   };
 
   // DATA SOURCE WITH PRECISE GEOMETRIC PERCENTAGES
-  // yTop and yBot mathematically form the perfect unbroken triangle slopes with exact 0.6% gaps
   const pyramidData = [
     {
       id: 5,
@@ -79,7 +82,7 @@ function App() {
       guidance: {
         theory: "This defines HOW the company will deliver on its overarching objectives. It dictates where budgets are allocated across business units.",
         action: "Map the specific business units you are selling to directly into these strategic pillars to ensure your deal has executive sponsorship.",
-        outcome: "Examples: 'Focus on premium and speciality tires' or 'Revenue Diversification: 30% non-tire sales.'"
+        outcome: "Examples: 'Focus on premium and speciality tires' or 'Diversification: 30% non-tire sales.'"
       }
     },
     {
@@ -130,7 +133,7 @@ function App() {
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
-        <a href="https://github.com/itchap/itchap/tree/main/Apps/value-pyramid/frontend" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
+        <a href="https://github.com/itchap" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
           View Source on GitHub ↗
         </a>
       </div>
@@ -167,11 +170,11 @@ function App() {
           {/* THE PYRAMID WRAPPER */}
           <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' }}>
             
-            {/* BOUNCING POINTER */}
+            {/* BOUNCING POINTER (Slightly lowered position so it's not visual unmoored) */}
             {!hasInteracted && (
               <div style={{
                 position: 'absolute',
-                top: '-45px',
+                top: '-35px', // Lowered from -45px
                 left: '50%',
                 animation: 'bounceTooltip 1.5s infinite ease-in-out',
                 backgroundColor: theme.accent,
@@ -194,32 +197,52 @@ function App() {
               </div>
             )}
 
-            {/* ABSOLUTE GEOMETRIC TIERS (This allows the drop-shadow to escape) */}
+            {/* ABSOLUTE GEOMETRIC TIERS (This architecture enables outward glows on translucent boxes) */}
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
               {pyramidData.map((tier) => {
                 const isHovered = hoveredTier === tier.id;
                 
-                // Calculates the exact perfect coordinates for the trapezoid at this height
+                // Calculates precise coordinates for flawless diagonal alignment
                 const xTopLeft = 50 - (tier.yTop / 2);
                 const xTopRight = 50 + (tier.yTop / 2);
                 const xBotLeft = 50 - (tier.yBot / 2);
                 const xBotRight = 50 + (tier.yBot / 2);
                 const polygon = `polygon(${xTopLeft}% 0%, ${xTopRight}% 0%, ${xBotRight}% 100%, ${xBotLeft}% 100%)`;
 
+                // Common styles for both parent and glowing pseudoelement
+                const shapeStyles = {
+                  clipPath: polygon,
+                  backgroundColor: tier.isTop ? theme.accent : 'rgba(2, 236, 100, 0.05)',
+                  transition: 'background-color 0.3s ease',
+                };
+
                 return (
                   <div
                     key={tier.id}
+                    className={tier.isTop ? '' : 'tier-base'}
                     style={{
                       position: 'absolute',
                       top: `${tier.yTop}%`,
                       height: `${tier.yBot - tier.yTop}%`,
                       width: '100%',
-                      // THE MAGIC: Drop-shadow placed on the wrapper radiates *outward* from the clip-path
-                      filter: isHovered ? `drop-shadow(0 0 25px rgba(2, 236, 100, 0.8))` : `drop-shadow(0 0 0px rgba(2, 236, 100, 0))`,
-                      transition: 'filter 0.3s ease',
                       zIndex: isHovered ? 10 : 1 // Brings glowing tier to the front
                     }}
                   >
+                    {/* THE PSEUDOELEMENT GLOW HACK: */}
+                    {/* We apply a solid background, a massive outward drop-shadow, and a clip-path. */}
+                    {/* Then we place it DIRECTLY BEHIND the translucent parent. */}
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      backgroundColor: theme.accent, // Solid bright color generates the glow
+                      clipPath: polygon,
+                      transition: 'all 0.3s ease',
+                      zIndex: -1,
+                      // Filter renders filter OUTWARD from the clip-path edges
+                      filter: isHovered ? `drop-shadow(0 0 25px rgba(2, 236, 100, 0.8))` : `drop-shadow(0 0 0px rgba(2, 236, 100, 0))`,
+                    }}></div>
+
+                    {/* THE VISIBLE TRANSLUCENT TIER */}
                     <div
                       onMouseEnter={() => setHoveredTier(tier.id)}
                       onMouseLeave={() => setHoveredTier(null)}
@@ -228,16 +251,16 @@ function App() {
                         setHasInteracted(true);
                       }}
                       style={{
+                        ...shapeStyles,
                         width: '100%',
                         height: '100%',
-                        clipPath: polygon,
                         backgroundColor: tier.isTop ? theme.accent : (isHovered ? 'rgba(2, 236, 100, 0.15)' : 'rgba(2, 236, 100, 0.05)'),
+                        color: tier.isTop ? '#000' : '#fff',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: tier.isTop ? 'flex-end' : 'center',
                         alignItems: 'center',
                         cursor: 'pointer',
-                        transition: 'background-color 0.3s ease',
                         paddingBottom: tier.isTop ? '25px' : '0'
                       }}
                     >
