@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// GLOBAL RESET
+// GLOBAL RESET - Kills the phantom white lines and adds the bounce animation
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -22,17 +22,12 @@ const GlobalReset = () => (
       0%, 100% { transform: translate(-50%, 0); }
       50% { transform: translate(-50%, -8px); }
     }
-    /* Essential rule for our glow hack: give pseudoelements default content */
-    .tier-base::after {
-      content: '';
-    }
   `}</style>
 );
 
 function App() {
   const [activeNode, setActiveNode] = useState(null);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [hoveredTier, setHoveredTier] = useState(null); 
 
   const theme = {
     bg: '#011e2b',
@@ -43,16 +38,15 @@ function App() {
     textSub: '#bbb'
   };
 
-  // DATA SOURCE WITH PRECISE GEOMETRIC PERCENTAGES
+  // DATA SOURCE
   const pyramidData = [
     {
       id: 5,
       title: "The Mission",
       subtitle: "The Ultimate 'Why'",
-      textWidth: '220px', 
+      flex: 2.2, 
       isTop: true,
-      yTop: 0,
-      yBot: 30.67,
+      textWidth: '220px', 
       guidance: {
         theory: "The Mission defines the high-level, aspirational reason the company exists. It is the north star for the entire organization.",
         action: "As an SA, you must map your overarching technical vision to support this mission. If your solution doesn't ultimately serve the mission, it is expendable.",
@@ -63,9 +57,8 @@ function App() {
       id: 4,
       title: "Corporate Objectives",
       subtitle: "Focus Shared by the leadership team and organisation",
+      flex: 1.2,
       textWidth: '380px', 
-      yTop: 31.27,
-      yBot: 48.0,
       guidance: {
         theory: "These are the quantifiable goals set by the board (e.g., ESG metrics, ROCE). This is what the C-suite is measured against and compensated for.",
         action: "Identify the top 2-3 company-wide metrics from their annual report. Frame your project's technical ROI entirely around moving these specific numbers.",
@@ -76,22 +69,20 @@ function App() {
       id: 3,
       title: "Business Strategies",
       subtitle: "Strategic actionable priorities to achieve defined objectives",
+      flex: 1.2,
       textWidth: '520px', 
-      yTop: 48.60,
-      yBot: 65.33,
       guidance: {
         theory: "This defines HOW the company will deliver on its overarching objectives. It dictates where budgets are allocated across business units.",
         action: "Map the specific business units you are selling to directly into these strategic pillars to ensure your deal has executive sponsorship.",
-        outcome: "Examples: 'Focus on premium and speciality tires' or 'Diversification: 30% non-tire sales.'"
+        outcome: "Examples: 'Focus on premium and speciality tires' or 'Revenue Diversification: 30% non-tire sales.'"
       }
     },
     {
       id: 2,
       title: "Technology Initiatives",
       subtitle: "Projects to implement the strategies",
+      flex: 1.2,
       textWidth: '680px', 
-      yTop: 65.93,
-      yBot: 82.66,
       guidance: {
         theory: "These are the actual, funded technology projects designed to enable the business strategies. This is typically where IT and Engineering live.",
         action: "Position your solution as the primary accelerator for these specific funded initiatives. Do not pitch features; pitch initiative acceleration.",
@@ -102,9 +93,8 @@ function App() {
       id: 1,
       title: "Critical Challenges",
       subtitle: "Obstacles and issues to achieving strategy and required capabilities",
+      flex: 1.2,
       textWidth: '820px', 
-      yTop: 83.26,
-      yBot: 100,
       guidance: {
         theory: "This is where the Business and Technical worlds collide. These are the specific blockers preventing progress on the funded initiatives.",
         action: "Perform deep discovery to uncover the technical limitations and immediately tie them to the business impact of a failed strategy.",
@@ -133,7 +123,7 @@ function App() {
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
-        <a href="https://github.com/itchap" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/value-pyramid/frontend" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
           View Source on GitHub ↗
         </a>
       </div>
@@ -170,11 +160,11 @@ function App() {
           {/* THE PYRAMID WRAPPER */}
           <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' }}>
             
-            {/* BOUNCING POINTER (Slightly lowered position so it's not visual unmoored) */}
+            {/* BOUNCING POINTER */}
             {!hasInteracted && (
               <div style={{
                 position: 'absolute',
-                top: '-35px', // Lowered from -45px
+                top: '-45px',
                 left: '50%',
                 animation: 'bounceTooltip 1.5s infinite ease-in-out',
                 backgroundColor: theme.accent,
@@ -187,102 +177,87 @@ function App() {
                 boxShadow: `0 4px 15px rgba(2, 236, 100, 0.4)`,
                 zIndex: 50,
                 cursor: 'default',
-                pointerEvents: 'none' 
+                pointerEvents: 'none'
               }}>
                 👋 Start here: Click a tier to explore!
+                
+                {/* The little down arrow */}
                 <div style={{
-                  position: 'absolute', bottom: '-6px', left: '50%', transform: 'translateX(-50%)',
-                  width: 0, height: 0, borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: `6px solid ${theme.accent}`
+                  position: 'absolute',
+                  bottom: '-6px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '6px solid transparent',
+                  borderRight: '6px solid transparent',
+                  borderTop: `6px solid ${theme.accent}`
                 }}></div>
               </div>
             )}
 
-            {/* ABSOLUTE GEOMETRIC TIERS (This architecture enables outward glows on translucent boxes) */}
-            <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-              {pyramidData.map((tier) => {
-                const isHovered = hoveredTier === tier.id;
-                
-                // Calculates precise coordinates for flawless diagonal alignment
-                const xTopLeft = 50 - (tier.yTop / 2);
-                const xTopRight = 50 + (tier.yTop / 2);
-                const xBotLeft = 50 - (tier.yBot / 2);
-                const xBotRight = 50 + (tier.yBot / 2);
-                const polygon = `polygon(${xTopLeft}% 0%, ${xTopRight}% 0%, ${xBotRight}% 100%, ${xBotLeft}% 100%)`;
-
-                // Common styles for both parent and glowing pseudoelement
-                const shapeStyles = {
-                  clipPath: polygon,
-                  backgroundColor: tier.isTop ? theme.accent : 'rgba(2, 236, 100, 0.05)',
-                  transition: 'background-color 0.3s ease',
-                };
-
-                return (
-                  <div
-                    key={tier.id}
-                    className={tier.isTop ? '' : 'tier-base'}
-                    style={{
-                      position: 'absolute',
-                      top: `${tier.yTop}%`,
-                      height: `${tier.yBot - tier.yTop}%`,
-                      width: '100%',
-                      zIndex: isHovered ? 10 : 1 // Brings glowing tier to the front
-                    }}
-                  >
-                    {/* THE PSEUDOELEMENT GLOW HACK: */}
-                    {/* We apply a solid background, a massive outward drop-shadow, and a clip-path. */}
-                    {/* Then we place it DIRECTLY BEHIND the translucent parent. */}
-                    <div style={{
-                      position: 'absolute',
-                      inset: 0,
-                      backgroundColor: theme.accent, // Solid bright color generates the glow
-                      clipPath: polygon,
-                      transition: 'all 0.3s ease',
-                      zIndex: -1,
-                      // Filter renders filter OUTWARD from the clip-path edges
-                      filter: isHovered ? `drop-shadow(0 0 25px rgba(2, 236, 100, 0.8))` : `drop-shadow(0 0 0px rgba(2, 236, 100, 0))`,
-                    }}></div>
-
-                    {/* THE VISIBLE TRANSLUCENT TIER */}
-                    <div
-                      onMouseEnter={() => setHoveredTier(tier.id)}
-                      onMouseLeave={() => setHoveredTier(null)}
-                      onClick={() => {
-                        setActiveNode(tier);
-                        setHasInteracted(true);
-                      }}
-                      style={{
-                        ...shapeStyles,
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: tier.isTop ? theme.accent : (isHovered ? 'rgba(2, 236, 100, 0.15)' : 'rgba(2, 236, 100, 0.05)'),
-                        color: tier.isTop ? '#000' : '#fff',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: tier.isTop ? 'flex-end' : 'center',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        paddingBottom: tier.isTop ? '25px' : '0'
-                      }}
-                    >
-                      <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
-                        <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px', color: tier.isTop ? '#000' : '#fff' }}>
-                          {tier.title}
-                        </h3>
-                        <p style={{ margin: 0, fontSize: '0.85rem', opacity: tier.isTop ? 1 : 0.85, fontWeight: '500', color: tier.isTop ? '#111' : '#bbb' }}>
-                          {tier.subtitle}
-                        </p>
-                      </div>
-                    </div>
+            {/* THE PERFECT TRIANGLE CLIP-PATH */}
+            <div style={{
+              width: '100%',
+              height: '100%',
+              clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px', 
+              backgroundColor: 'transparent'
+            }}>
+              {pyramidData.map((tier) => (
+                <div
+                  key={tier.id}
+                  onClick={() => {
+                    setActiveNode(tier);
+                    setHasInteracted(true);
+                  }}
+                  style={{
+                    flex: tier.flex,
+                    width: '100%',
+                    backgroundColor: tier.isTop ? theme.accent : 'rgba(2, 236, 100, 0.05)',
+                    color: tier.isTop ? '#000' : '#fff',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: tier.isTop ? 'flex-end' : 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    paddingBottom: tier.isTop ? '25px' : '0'
+                  }}
+                  onMouseOver={e => {
+                    if(!tier.isTop) {
+                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
+                      // THE GLOW: Added here! Using drop-shadow to glow OUTWARDS
+                      e.currentTarget.style.filter = `drop-shadow(0 0 15px rgba(2, 236, 100, 0.5))`;
+                    }
+                  }}
+                  onMouseOut={e => {
+                    if(!tier.isTop) {
+                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
+                      // REMOVE GLOW: Added here!
+                      e.currentTarget.style.filter = 'none';
+                    }
+                  }}
+                >
+                  <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
+                    <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {tier.title}
+                    </h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.85, fontWeight: '500' }}>
+                      {tier.subtitle}
+                    </p>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
 
             {/* GREEN SIDE BRACKET: BUSINESS CREDIBILITY */}
             <div style={{ 
-              position: 'absolute', right: '-120px', top: '0', height: '65.33%', width: '15px', 
+              position: 'absolute', right: '-120px', top: '0', height: '64.5%', width: '15px', 
               borderLeft: `2px dashed ${theme.accent}`, borderTop: `2px dashed ${theme.accent}`, borderBottom: `2px dashed ${theme.accent}`, 
-              display: 'flex', alignItems: 'center', zIndex: 0 
+              display: 'flex', alignItems: 'center' 
             }}>
               <span style={{ color: theme.accent, fontSize: '0.8rem', fontWeight: '800', letterSpacing: '1px', position: 'absolute', left: '25px', width: '120px' }}>
                 BUSINESS<br/>CREDIBILITY
@@ -291,9 +266,9 @@ function App() {
             
             {/* GREEN SIDE BRACKET: TECHNICAL CREDIBILITY */}
             <div style={{ 
-              position: 'absolute', right: '-120px', bottom: '0', height: '34.07%', width: '15px', 
+              position: 'absolute', right: '-120px', bottom: '0', height: '34.5%', width: '15px', 
               borderLeft: `2px dashed ${theme.accent}`, borderTop: `2px dashed ${theme.accent}`, borderBottom: `2px dashed ${theme.accent}`, 
-              display: 'flex', alignItems: 'center', zIndex: 0 
+              display: 'flex', alignItems: 'center' 
             }}>
               <span style={{ color: theme.accent, fontSize: '0.8rem', fontWeight: '800', letterSpacing: '1px', position: 'absolute', left: '25px', width: '120px' }}>
                 TECHNICAL<br/>CREDIBILITY
