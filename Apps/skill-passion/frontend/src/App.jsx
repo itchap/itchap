@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 // const API_URL = 'http://localhost:5001/api/skills';
 const API_URL = '/api/skills';
 
-// GLOBAL RESET - Added the left-bouncing animation
+// GLOBAL RESET
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -25,9 +25,9 @@ const GlobalReset = () => (
       height: 100%;
       border: none !important;
     }
-    @keyframes bounceTooltipLeft {
-      0%, 100% { transform: translate(0, -50%); }
-      50% { transform: translate(6px, -50%); }
+    @keyframes bounceTooltip {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -6px); }
     }
   `}</style>
 );
@@ -65,7 +65,7 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   const [expandedCats, setExpandedCats] = useState({});
-  const [hasExpandedCat, setHasExpandedCat] = useState(false); // Tracks if they've figured out how to expand categories
+  const [hasExpandedCat, setHasExpandedCat] = useState(false); // Tracks if they've expanded a category
   
   // Custom PDF Export Modal State
   const [showExportModal, setShowExportModal] = useState(false);
@@ -281,53 +281,53 @@ function App() {
               <button type="submit" style={{ padding: '8px', cursor: 'pointer', backgroundColor: '#00ed64', color: 'black', fontWeight: 'bold', border: 'none', borderRadius: '4px' }}>Add Skill</button>
             </form>
 
-            <p style={{ fontSize: '11px', color: '#bbb', marginBottom: '10px' }}>Drag tags into the matrix. Toss them out to return them.</p>
+            {/* RELATIVE WRAPPER FOR TOOLTIP (Placed outside the scroll container to prevent clipping) */}
+            <div style={{ position: 'relative' }}>
+              <p style={{ fontSize: '11px', color: '#bbb', marginBottom: '10px' }}>Drag tags into the matrix. Toss them out to return them.</p>
+              
+              {!hasExpandedCat && (
+                <div style={{
+                  position: 'absolute',
+                  top: '20px', // Pushes it down so it hovers right over the first button
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  animation: 'bounceTooltip 1.5s infinite ease-in-out',
+                  backgroundColor: '#00ed64',
+                  color: '#000',
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
+                  zIndex: 50,
+                  pointerEvents: 'none' // Allows clicks to pass through to the button beneath it
+                }}>
+                  👋 Click a category to expand!
+                  
+                  {/* The little down arrow */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '-5px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '6px solid transparent',
+                    borderRight: '6px solid transparent',
+                    borderTop: `6px solid #00ed64`
+                  }}></div>
+                </div>
+              )}
+            </div>
             
+            {/* THIS IS THE SCROLL CONTAINER THAT CLIPPED THE OLD TOOLTIP */}
             <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }}>
-              {categoryOrder.map((cat, index) => {
+              {categoryOrder.map((cat) => {
                 if (!categorizedSkills[cat] || categorizedSkills[cat].length === 0) return null;
 
-                // Identify if this is the first category in the list to attach the tooltip
-                const isFirstCat = index === 0;
-
                 return (
-                  <div key={cat} style={{ marginBottom: '8px', position: 'relative' }}>
-                    
-                    {/* THE BOUNCING POINTER TOOLTIP (Only on the first category, and only if they haven't interacted) */}
-                    {isFirstCat && !hasExpandedCat && (
-                      <div style={{
-                        position: 'absolute',
-                        top: '50%',
-                        right: '-145px', // Positioned to the right of the button
-                        animation: 'bounceTooltipLeft 1.5s infinite ease-in-out',
-                        backgroundColor: '#00ed64',
-                        color: '#000',
-                        padding: '6px 12px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        whiteSpace: 'nowrap',
-                        boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
-                        zIndex: 50,
-                        pointerEvents: 'none'
-                      }}>
-                        👋 Click to expand!
-                        
-                        {/* The little left-pointing arrow */}
-                        <div style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '-5px', // Points out the left side
-                          transform: 'translateY(-50%)',
-                          width: 0,
-                          height: 0,
-                          borderTop: '6px solid transparent',
-                          borderBottom: '6px solid transparent',
-                          borderRight: `6px solid #00ed64`
-                        }}></div>
-                      </div>
-                    )}
-
+                  <div key={cat} style={{ marginBottom: '8px' }}>
                     <button 
                       onClick={() => toggleCat(cat)} 
                       style={{ width: '100%', textAlign: 'left', padding: '8px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00684a', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}
