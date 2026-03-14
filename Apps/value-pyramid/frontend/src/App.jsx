@@ -28,14 +28,22 @@ const GlobalReset = () => (
 function App() {
   const [activeNode, setActiveNode] = useState(null);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [hoveredTier, setHoveredTier] = useState(null); // Added to smoothly control hover colors
 
   const theme = {
     bg: '#011e2b',
     cardBg: 'rgba(255, 255, 255, 0.05)',
     border: '#333',
-    accent: '#02ec64', // Signature green
+    accent: '#05ec64', // Updated to your requested neon green
     textMain: '#fff',
     textSub: '#bbb'
+  };
+
+  // Helper to apply the specific background colors based on tier ID
+  const getTierBg = (id) => {
+    if (id === 5 || id === 4) return '#00694a'; // Top 2
+    if (id === 3 || id === 2) return '#005a3c'; // Next 2
+    return '#023430';                           // Bottom 1
   };
 
   // DATA SOURCE
@@ -174,7 +182,7 @@ function App() {
                 fontSize: '13px',
                 fontWeight: '900',
                 whiteSpace: 'nowrap',
-                boxShadow: `0 4px 15px rgba(2, 236, 100, 0.4)`,
+                boxShadow: `0 4px 15px rgba(5, 236, 100, 0.4)`,
                 zIndex: 50,
                 cursor: 'default',
                 pointerEvents: 'none'
@@ -203,52 +211,61 @@ function App() {
               clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '4px', 
+              gap: '0px', // Removed gap to rely entirely on the bottom border
               backgroundColor: 'transparent'
             }}>
-              {pyramidData.map((tier) => (
-                <div
-                  key={tier.id}
-                  onClick={() => {
-                    setActiveNode(tier);
-                    setHasInteracted(true);
-                  }}
-                  style={{
-                    flex: tier.flex,
-                    width: '100%',
-                    backgroundColor: tier.isTop ? theme.accent : 'rgba(2, 236, 100, 0.05)',
-                    color: tier.isTop ? '#011e2c' : '#fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: tier.isTop ? 'flex-end' : 'center',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    paddingBottom: tier.isTop ? '25px' : '0'
-                  }}
-                  onMouseOver={e => {
-                    if(!tier.isTop) {
-                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
-                      e.currentTarget.style.filter = `drop-shadow(0 0 15px rgba(2, 236, 100, 0.5))`;
-                    }
-                  }}
-                  onMouseOut={e => {
-                    if(!tier.isTop) {
-                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
-                      e.currentTarget.style.filter = 'none';
-                    }
-                  }}
-                >
-                  <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      {tier.title}
-                    </h3>
-                    <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.85, fontWeight: '500' }}>
-                      {tier.subtitle}
-                    </p>
+              {pyramidData.map((tier) => {
+                const isHovered = hoveredTier === tier.id;
+                
+                return (
+                  <div
+                    key={tier.id}
+                    onMouseEnter={() => setHoveredTier(tier.id)}
+                    onMouseLeave={() => setHoveredTier(null)}
+                    onClick={() => {
+                      setActiveNode(tier);
+                      setHasInteracted(true);
+                    }}
+                    style={{
+                      flex: tier.flex,
+                      width: '100%',
+                      backgroundColor: isHovered ? theme.accent : getTierBg(tier.id),
+                      borderBottom: `4px solid ${theme.accent}`, // Added the green bottom border
+                      color: isHovered ? '#000' : '#fff',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: tier.isTop ? 'flex-end' : 'center',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      paddingBottom: tier.isTop ? '25px' : '0',
+                      filter: isHovered ? `drop-shadow(0 0 15px rgba(5, 236, 100, 0.6))` : 'none', // Glow effect on hover
+                    }}
+                  >
+                    <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
+                      <h3 style={{ 
+                        margin: '0 0 5px 0', 
+                        fontSize: '1.4rem', 
+                        fontWeight: '900', 
+                        textTransform: 'uppercase', 
+                        letterSpacing: '0.5px',
+                        color: isHovered ? '#000' : '#fff'
+                      }}>
+                        {tier.title}
+                      </h3>
+                      <p style={{ 
+                        margin: 0, 
+                        fontSize: '0.85rem', 
+                        opacity: isHovered ? 1 : 0.85, 
+                        fontWeight: '500',
+                        color: isHovered ? '#111' : '#ccc'
+                      }}>
+                        {tier.subtitle}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* GREEN SIDE BRACKET: BUSINESS CREDIBILITY */}
@@ -282,7 +299,7 @@ function App() {
         <div style={{ 
           position: 'fixed', 
           inset: 0, 
-          backgroundColor: 'rgba(1, 30, 43, 0.65)', /* Changed from 0.98 to 0.65 so background shows through */
+          backgroundColor: 'rgba(1, 30, 43, 0.65)',
           backdropFilter: 'blur(15px)', 
           zIndex: 100, 
           display: 'flex', 
@@ -296,7 +313,7 @@ function App() {
             borderRadius: '24px', 
             maxWidth: '750px', 
             width: '90%', 
-            boxShadow: `0 0 100px rgba(2, 236, 100, 0.12)` 
+            boxShadow: `0 0 100px rgba(5, 236, 100, 0.12)` 
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                 <h3 style={{ color: theme.accent, margin: 0, fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase' }}>{activeNode.title}</h3>
