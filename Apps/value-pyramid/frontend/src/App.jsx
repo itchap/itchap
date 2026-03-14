@@ -224,14 +224,22 @@ function App() {
                     justifyContent: tier.isTop ? 'flex-end' : 'center',
                     alignItems: 'center',
                     cursor: 'pointer',
-                    transition: 'background-color 0.3s ease',
+                    transition: 'all 0.3s ease', // Transition handles both bg color and box-shadow
                     paddingBottom: tier.isTop ? '25px' : '0'
                   }}
                   onMouseOver={e => {
-                    if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
+                    if(!tier.isTop) {
+                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
+                      // THE GLOW: Added here!
+                      e.currentTarget.style.boxShadow = `inset 0 0 30px rgba(2, 236, 100, 0.4)`;
+                    }
                   }}
                   onMouseOut={e => {
-                    if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
+                    if(!tier.isTop) {
+                      e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
+                      // REMOVE GLOW: Added here!
+                      e.currentTarget.style.boxShadow = 'none';
+                    }
                   }}
                 >
                   <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
