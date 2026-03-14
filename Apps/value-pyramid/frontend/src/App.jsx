@@ -28,7 +28,7 @@ function App() {
     bg: '#011e2b',
     cardBg: 'rgba(255, 255, 255, 0.05)',
     border: '#333',
-    accent: '#02ec64', // Updated signature green
+    accent: '#02ec64', // Signature green
     textMain: '#fff',
     textSub: '#bbb'
   };
@@ -131,14 +131,14 @@ function App() {
           </p>
         </div>
 
-        {/* MAIN CARD CONTAINER (Reduced height to prevent scrolling off screen) */}
+        {/* MAIN CARD CONTAINER (Increased height to allow for a taller pyramid) */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
           border: `1px solid ${theme.border}`, 
           borderRadius: '32px', 
           width: '100%',
           maxWidth: '1400px', 
-          minHeight: '600px', // REDUCED FROM 750px
+          minHeight: '750px', // INCREASED height for breathing room
           position: 'relative', 
           display: 'flex',
           justifyContent: 'center',
@@ -148,8 +148,8 @@ function App() {
           padding: '40px 0'
         }}>
           
-          {/* THE PYRAMID WRAPPER */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '520px' }}>
+          {/* THE PYRAMID WRAPPER (Taller, maintaining base width) */}
+          <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' /* INCREASED from 520px */ }}>
             
             {/* THE PERFECT TRIANGLE CLIP-PATH */}
             <div style={{
@@ -176,7 +176,7 @@ function App() {
                     alignItems: 'center',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
-                    paddingBottom: tier.isTop ? '20px' : '0' 
+                    paddingBottom: tier.isTop ? '25px' : '0' // Slightly more padding since it's taller
                   }}
                   onMouseOver={e => {
                     if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
@@ -197,7 +197,7 @@ function App() {
               ))}
             </div>
 
-            {/* GREEN SIDE BRACKET: BUSINESS CREDIBILITY (Spans Mission to Business Strategies) */}
+            {/* GREEN SIDE BRACKET: BUSINESS CREDIBILITY */}
             <div style={{ 
               position: 'absolute', right: '-120px', top: '0', height: '64.5%', width: '15px', 
               borderLeft: `2px dashed ${theme.accent}`, borderTop: `2px dashed ${theme.accent}`, borderBottom: `2px dashed ${theme.accent}`, 
@@ -208,9 +208,9 @@ function App() {
               </span>
             </div>
             
-            {/* GREEN SIDE BRACKET: TECHNICAL CREDIBILITY (Spans Technology Initiatives to Challenges) */}
+            {/* GREEN SIDE BRACKET: TECHNICAL CREDIBILITY */}
             <div style={{ 
-              position: 'absolute', right: '-120px', bottom: '0', height: '33.5%', width: '15px', 
+              position: 'absolute', right: '-120px', bottom: '0', height: '34.5%', width: '15px', 
               borderLeft: `2px dashed ${theme.accent}`, borderTop: `2px dashed ${theme.accent}`, borderBottom: `2px dashed ${theme.accent}`, 
               display: 'flex', alignItems: 'center' 
             }}>
