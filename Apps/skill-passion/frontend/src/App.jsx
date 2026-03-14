@@ -7,6 +7,31 @@ import jsPDF from 'jspdf';
 // const API_URL = 'http://localhost:5001/api/skills';
 const API_URL = '/api/skills';
 
+// GLOBAL RESET - Added the left-bouncing animation
+const GlobalReset = () => (
+  <style>{`
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #011e2b !important;
+      width: 100% !important;
+      height: 100% !important;
+      overflow-x: hidden !important;
+      border: none !important;
+      outline: none !important;
+    }
+    #root {
+      width: 100%;
+      height: 100%;
+      border: none !important;
+    }
+    @keyframes bounceTooltipLeft {
+      0%, 100% { transform: translate(0, -50%); }
+      50% { transform: translate(6px, -50%); }
+    }
+  `}</style>
+);
+
 const SkillItem = ({ skill, handleStop }) => {
   const nodeRef = useRef(null);
   return (
@@ -40,8 +65,9 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   const [expandedCats, setExpandedCats] = useState({});
+  const [hasExpandedCat, setHasExpandedCat] = useState(false); // Tracks if they've figured out how to expand categories
   
-  // NEW: Custom PDF Export Modal State
+  // Custom PDF Export Modal State
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportParams, setExportParams] = useState({ name: '', categories: '' });
 
@@ -77,6 +103,7 @@ function App() {
       setSkills([...skills, res.data]);
       setNewSkillName('');
       setExpandedCats(prev => ({ ...prev, Custom: true }));
+      setHasExpandedCat(true); // Dismisses tooltip if they add a custom skill
     } catch (error) { console.error("Failed to add skill", error); }
   };
 
@@ -140,7 +167,6 @@ function App() {
     } catch (error) {}
   };
 
-  // NEW: Handles the actual PDF generation after the modal is filled out
   const executeExport = async () => {
     if (!matrixRef.current) return;
 
@@ -161,7 +187,6 @@ function App() {
     const fileName = `${safeName}${categoryString}_${dateString}_skillsmatrix.pdf`;
 
     try {
-      // Hide the modal so it doesn't accidentally get caught in the screenshot
       setShowExportModal(false); 
       
       const canvas = await html2canvas(matrixRef.current, { backgroundColor: '#011e2b', scale: 2 });
@@ -173,7 +198,6 @@ function App() {
       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (pdf.internal.pageSize.getWidth() - imgWidth) / 2, margin, imgWidth, imgHeight);
       pdf.save(fileName);
       
-      // Clear the inputs for next time
       setExportParams({ name: '', categories: '' });
     } catch (error) { 
       console.error("Error generating PDF", error); 
@@ -193,6 +217,7 @@ function App() {
 
   const toggleCat = (cat) => {
     setExpandedCats(prev => ({ ...prev, [cat]: !prev[cat] }));
+    setHasExpandedCat(true); // Dismiss tooltip forever once they interact
   };
 
   const plottedSkills = skills.filter(s => s.status === 'plotted');
@@ -209,7 +234,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
-      
+      <GlobalReset />
       {/* SUBTLE NAVIGATION BAR */}
       <div style={{ 
         display: 'flex', 
@@ -259,11 +284,50 @@ function App() {
             <p style={{ fontSize: '11px', color: '#bbb', marginBottom: '10px' }}>Drag tags into the matrix. Toss them out to return them.</p>
             
             <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }}>
-              {categoryOrder.map(cat => {
+              {categoryOrder.map((cat, index) => {
                 if (!categorizedSkills[cat] || categorizedSkills[cat].length === 0) return null;
 
+                // Identify if this is the first category in the list to attach the tooltip
+                const isFirstCat = index === 0;
+
                 return (
-                  <div key={cat} style={{ marginBottom: '8px' }}>
+                  <div key={cat} style={{ marginBottom: '8px', position: 'relative' }}>
+                    
+                    {/* THE BOUNCING POINTER TOOLTIP (Only on the first category, and only if they haven't interacted) */}
+                    {isFirstCat && !hasExpandedCat && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: '-145px', // Positioned to the right of the button
+                        animation: 'bounceTooltipLeft 1.5s infinite ease-in-out',
+                        backgroundColor: '#00ed64',
+                        color: '#000',
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        whiteSpace: 'nowrap',
+                        boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
+                        zIndex: 50,
+                        pointerEvents: 'none'
+                      }}>
+                        👋 Click to expand!
+                        
+                        {/* The little left-pointing arrow */}
+                        <div style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '-5px', // Points out the left side
+                          transform: 'translateY(-50%)',
+                          width: 0,
+                          height: 0,
+                          borderTop: '6px solid transparent',
+                          borderBottom: '6px solid transparent',
+                          borderRight: `6px solid #00ed64`
+                        }}></div>
+                      </div>
+                    )}
+
                     <button 
                       onClick={() => toggleCat(cat)} 
                       style={{ width: '100%', textAlign: 'left', padding: '8px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00684a', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}
@@ -315,7 +379,6 @@ function App() {
                 {isAnalyzing ? '🧠 AI is thinking...' : '🧠 Get AI Career Analysis'}
               </button>
               
-              {/* TRIGGER CUSTOM EXPORT MODAL */}
               <button onClick={() => setShowExportModal(true)} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
                 Export to PDF
               </button>
@@ -416,7 +479,7 @@ function App() {
         </div>
       )}
 
-      {/* NEW: Custom PDF Export Modal */}
+      {/* Custom PDF Export Modal */}
       {showExportModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
           <div style={{ backgroundColor: '#011e2b', border: '2px solid #00ed64', padding: '30px', borderRadius: '8px', maxWidth: '400px', width: '100%', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
