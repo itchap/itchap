@@ -7,7 +7,26 @@ const GlobalStyles = () => (
       background-color: #011e2b;
       font-family: 'Inter', sans-serif;
       color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
+    }
+    .pyramid-tier {
+      clip-path: polygon(var(--tw) 0%, calc(100% - var(--tw)) 0%, 100% 100%, 0% 100%);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 4px;
+      position: relative;
+    }
+    .pyramid-tier:hover {
+      filter: brightness(1.2);
+      transform: scale(1.02);
+      z-index: 10;
+    }
+    .tier-top {
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     }
   `}</style>
 );
@@ -18,214 +37,123 @@ const App = () => {
   const theme = {
     bg: '#011e2b',
     accent: '#00ed64',
-    cardBg: 'rgba(255, 255, 255, 0.05)',
-    border: '#333'
+    cardBg: '#021a25',
   };
 
   const pyramidData = [
     {
-      id: 5,
-      title: "Corporate Objectives",
-      subtitle: "Industry Drivers & Leadership Vision",
-      detail: "This is the 'Why' behind the budget. Focus on global trends like Digital Transformation, ESG, or Market Expansion. To win here, you must speak the language of the CEO.",
-      width: '20%',
-      color: '#00ed64'
-    },
-    {
-      id: 4,
-      title: "Business Strategy",
-      subtitle: "Actionable Context & Objectives",
-      detail: "How the company intends to win. Are they cutting costs or driving innovation? Your solution must be the vehicle that drives this specific strategy.",
-      width: '35%',
-      color: '#00d65a'
-    },
-    {
       id: 3,
-      title: "Business Initiatives",
-      subtitle: "Projects to Implement Strategy",
-      detail: "The actual programs being funded. If your project isn't tied to an initiative, it's a 'nice-to-have' and will likely be cut.",
-      width: '50%',
-      color: '#00bd4f'
+      title: "Inspirational Value",
+      subtitle: "The Pinnacle: Vision & Partnership",
+      detail: "This level transcends functionality and emotion to inspire customers. You become a true partner helping them envision a better future, guiding long-term success, and strategic collaboration.",
+      taper: "0%", // Top tier is a triangle, not a trapezoid
+      height: '140px',
+      width: '200px',
+      isTop: true
     },
     {
       id: 2,
-      title: "Critical Capabilities",
-      subtitle: "Obstacles & Technical Challenges",
-      detail: "Where Business Credibility meets Technical Credibility. Define the specific capabilities they lack that prevent them from reaching their initiatives.",
-      width: '65%',
-      color: '#00a344'
+      title: "Emotional Value",
+      subtitle: "The Connection: Trust & Rapport",
+      detail: "Moving up the pyramid, Emotional Value creates trust, satisfaction, and loyalty. It involves building rapport, storytelling through success stories, and a customer-centric approach that taps into desires and aspirations.",
+      taper: "15%",
+      height: '120px',
+      width: '450px',
     },
     {
       id: 1,
-      title: "Your Solutions",
-      subtitle: "Mapping to Capabilities & Resolving Issues",
-      detail: "The foundation. Your product is not a set of features; it is the resolution to the obstacles identified above. This is where you prove it works.",
-      width: '80%',
-      color: '#008a3a'
+      title: "Functional Value",
+      subtitle: "The Foundation: Solving Core Problems",
+      detail: "The base of the pyramid. It addresses the fundamental requirements. Demonstrating Functional Value means showcasing product knowledge, effective problem-solving, and clear communication on how you meet essential needs.",
+      taper: "18%",
+      height: '120px',
+      width: '700px',
     }
   ];
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: '50px' }}>
       <GlobalStyles />
       
-      {/* HEADER */}
-      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', fontWeight: '800' }}>
-          Value <span style={{ color: theme.accent }}>Pyramid</span>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', margin: 0 }}>
+          THE <span style={{ color: theme.accent }}>VALUE PYRAMID</span>
         </h1>
-        <p style={{ color: '#bbb', fontSize: '1.1rem' }}>Click a tier to explode the business value detail.</p>
+        <p style={{ color: '#888', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem', marginTop: '10px' }}>
+          Based on SalesByLobo Framework
+        </p>
       </div>
 
-      {/* PYRAMID CONTAINER */}
-      <div style={{ 
-        position: 'relative', 
-        width: '100%', 
-        maxWidth: '900px', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center',
-        gap: '10px'
-      }}>
+      {/* THE PYRAMID CANVAS */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {pyramidData.map((tier) => (
           <div
             key={tier.id}
             onClick={() => setActiveTier(tier)}
+            className={`pyramid-tier ${tier.isTop ? 'tier-top' : ''}`}
             style={{
+              '--tw': tier.taper,
               width: tier.width,
-              height: '80px',
-              backgroundColor: tier.id === 5 ? theme.accent : 'rgba(255,255,255,0.03)',
-              border: `1px solid ${tier.id === 5 ? theme.accent : theme.border}`,
-              borderRadius: '12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              cursor: 'pointer',
-              transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              position: 'relative',
-              zIndex: 1,
-              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-              color: tier.id === 5 ? '#000' : '#fff'
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = `0 0 40px ${theme.accent}33`;
-              e.currentTarget.style.borderColor = theme.accent;
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
-              if(tier.id !== 5) e.currentTarget.style.borderColor = theme.border;
+              height: tier.height,
+              backgroundColor: tier.id === 3 ? theme.accent : 'rgba(0, 237, 100, 0.1)',
+              border: tier.id === 3 ? 'none' : `1px solid ${theme.accent}44`,
+              color: tier.id === 3 ? '#000' : '#fff',
+              boxShadow: tier.id === 3 ? `0 0 30px ${theme.accent}66` : 'none'
             }}
           >
-            <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>{tier.title}</span>
-            <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{tier.subtitle}</span>
+            <div style={{ textAlign: 'center', padding: '0 20px' }}>
+              <div style={{ fontWeight: '900', fontSize: tier.id === 3 ? '1.2rem' : '1.4rem', textTransform: 'uppercase' }}>{tier.title}</div>
+              <div style={{ fontSize: '0.7rem', opacity: 0.8, marginTop: '5px', fontWeight: 'bold' }}>{tier.subtitle}</div>
+            </div>
+            
+            {/* Glow effect inside trapezoid */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(to bottom, transparent, ${theme.accent}11)`,
+              pointerEvents: 'none'
+            }} />
           </div>
         ))}
-
-        {/* INDICATORS (CREDIBILITY) */}
-        <div style={{ 
-          position: 'absolute', 
-          right: '-120px', 
-          top: '20%', 
-          bottom: '20%', 
-          width: '100px', 
-          borderLeft: '2px dashed #444',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          paddingLeft: '15px',
-          fontSize: '0.8rem',
-          color: '#888',
-          textTransform: 'uppercase',
-          letterSpacing: '1px'
-        }}>
-          <div>Business Credibility</div>
-          <div>Technical Credibility</div>
-        </div>
       </div>
 
-      {/* EXPLODED DETAIL VIEW (OVERLAY) */}
+      {/* LEGEND BOXES */}
+      <div style={{ display: 'flex', gap: '40px', marginTop: '40px' }}>
+         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#888', fontSize: '0.8rem' }}>
+            <div style={{ width: '12px', height: '12px', backgroundColor: theme.accent }}></div> HIGH DIFFERENTIATION
+         </div>
+         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#888', fontSize: '0.8rem' }}>
+            <div style={{ width: '12px', height: '12px', border: `1px solid ${theme.accent}` }}></div> COMMODITY ZONE
+         </div>
+      </div>
+
+      {/* DETAIL OVERLAY */}
       {activeTier && (
         <div 
           onClick={() => setActiveTier(null)}
           style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(1, 30, 43, 0.95)',
-            backdropFilter: 'blur(15px)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-            padding: '20px'
+            position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.9)',
+            backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100
           }}
         >
           <div 
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#021a25',
-              border: `2px solid ${theme.accent}`,
-              borderRadius: '32px',
-              padding: '60px 40px',
-              maxWidth: '700px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: `0 0 100px ${theme.accent}22`,
-              position: 'relative'
+              backgroundColor: theme.cardBg, border: `2px solid ${theme.accent}`,
+              borderRadius: '24px', padding: '50px', maxWidth: '600px', textAlign: 'center',
+              boxShadow: `0 0 50px ${theme.accent}33`
             }}
           >
-            <div style={{ 
-              position: 'absolute', 
-              top: '-30px', 
-              left: '50%', 
-              transform: 'translateX(-50%)',
-              backgroundColor: theme.accent,
-              color: '#000',
-              padding: '10px 25px',
-              borderRadius: '50px',
-              fontWeight: '900',
-              fontSize: '0.9rem'
-            }}>
-              TIER {activeTier.id}
-            </div>
-
-            <h2 style={{ fontSize: '3rem', margin: '0 0 15px 0', color: theme.accent }}>{activeTier.title}</h2>
-            <h4 style={{ fontSize: '1.2rem', color: '#fff', marginBottom: '30px', opacity: 0.8 }}>{activeTier.subtitle}</h4>
-            
-            <div style={{ 
-              height: '2px', 
-              width: '60px', 
-              backgroundColor: theme.accent, 
-              margin: '0 auto 30px auto',
-              opacity: 0.5 
-            }} />
-
-            <p style={{ 
-              fontSize: '1.25rem', 
-              lineHeight: '1.8', 
-              color: '#eee',
-              marginBottom: '40px'
-            }}>
-              {activeTier.detail}
-            </p>
-
+            <h2 style={{ color: theme.accent, fontSize: '2.5rem', marginBottom: '10px' }}>{activeTier.title}</h2>
+            <p style={{ fontSize: '1.2rem', lineHeight: '1.6', color: '#ddd' }}>{activeTier.detail}</p>
             <button 
               onClick={() => setActiveTier(null)}
               style={{
-                backgroundColor: theme.accent,
-                color: '#000',
-                border: 'none',
-                padding: '18px 50px',
-                borderRadius: '12px',
-                fontWeight: '900',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                textTransform: 'uppercase'
+                marginTop: '30px', backgroundColor: theme.accent, color: '#000',
+                border: 'none', padding: '12px 30px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'
               }}
             >
-              Back to Pyramid
+              CLOSE DETAILS
             </button>
           </div>
         </div>
