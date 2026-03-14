@@ -22,7 +22,7 @@ function App() {
           {/* LOGO (Clickable to go back Home) */}
           <Link to="/" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
             <img 
-              src="https://i.postimg.cc/5N1gmQ10/ninja2.png" 
+              src="https://i.postimg.cc/hvPBkY0C/ninja.png" 
               alt="itchap" 
               style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
             />
