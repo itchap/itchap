@@ -37,7 +37,7 @@ function App() {
   const pyramidData = [
     {
       id: 5,
-      title: "The \nMission",
+      title: "The Mission",
       subtitle: "The Ultimate 'Why'",
       flex: 2.2, 
       isTop: true,
@@ -127,7 +127,7 @@ function App() {
             💎 The <span style={{ color: theme.accent }}>Value Pyramid</span>
           </h1>
           <p style={{ color: theme.textSub, fontSize: '1.1rem' }}>
-            Taking a Business View to elevate technical credibility. This framework helps SAs position their technical solutions with executive stakeholders in a way that directly supports the business's strategic objectives.
+            Taking a Business View to elevate technical credibility. This framework helps SAs position their technical solutions<br/>with executive stakeholders in a way that directly supports the business's strategic objectives.
           </p>
         </div>
 
