@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// GLOBAL RESET - Kills the phantom white lines on the edges
+// GLOBAL RESET - Kills the phantom white lines and adds the bounce animation
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -18,11 +18,16 @@ const GlobalReset = () => (
       height: 100%;
       border: none !important;
     }
+    @keyframes bounceTooltip {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -8px); }
+    }
   `}</style>
 );
 
 function App() {
   const [activeNode, setActiveNode] = useState(null);
+  const [hasInteracted, setHasInteracted] = useState(false); // Tracks if the user has clicked yet
 
   const theme = {
     bg: '#011e2b',
@@ -34,56 +39,56 @@ function App() {
   };
 
   // 1. UPDATED DATA SOURCE WITH STRUCTURED INSIGHTS
-const cycleData = [
-  { 
-    id: 1, 
-    title: 'Learn', 
-    top: '12%', 
-    left: '50%', 
-    desc: 'Consume knowledge and skills from various sources.',
-    guidance: {
-      theory: "Everyone consumes information and learnings differently. Whether it's books, videos, blogs, podcasts or hands-on practical work, you should learn the content in a way that works best for you to gain the knowledge. ",
-      action: "As you absorb the information, type or write notes, share your findings in realtime with people around you, or say it out loud to yourself as any of these methods will help you retain the information.",
-      outcome: "At this point you should have a good understanding of the subject matter and be able to explain it to a non-technical stakeholder in under 2 minutes."
+  const cycleData = [
+    { 
+      id: 1, 
+      title: 'Learn', 
+      top: '12%', 
+      left: '50%', 
+      desc: 'Consume knowledge and skills from various sources.',
+      guidance: {
+        theory: "Everyone consumes information and learnings differently. Whether it's books, videos, blogs, podcasts or hands-on practical work, you should learn the content in a way that works best for you to gain the knowledge. ",
+        action: "As you absorb the information, type or write notes, share your findings in realtime with people around you, or say it out loud to yourself as any of these methods will help you retain the information.",
+        outcome: "At this point you should have a good understanding of the subject matter and be able to explain it to a non-technical stakeholder in under 2 minutes."
+      }
+    },
+    { 
+      id: 2, 
+      title: 'Test', 
+      top: '50%', 
+      left: '88%', 
+      desc: 'Experiment, get feedback, tweak and retest.',
+      guidance: {
+        theory: "Once you've learned the subject matter or skills, it's time to put your knowledege to the test. Testing is about putting the learning into practice, de-risking any assumptions and seeing how well you understood the topic or skill.",
+        action: "Use what you've learned in a real scenario and see how well you can recall it and apply it. Detect any gaps in your knowledge and go back to the 'Learn' stage to fill those gaps. The idea is to test and restest until you can confidently apply the knowledge or skill.",
+        outcome: "At this point you are really well informed on the skill or subject matter and can apply it in real life scenarios with confidence. You should be able to troubleshoot and solve problems related to the topic without needing to refer back to your notes or resources."
+      }
+    },
+    { 
+      id: 3, 
+      title: 'Reflect', 
+      top: '88%', 
+      left: '50%', 
+      desc: 'Assess what worked, what didn\'t, and more importantly WHY.',
+      guidance: {
+        theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom. It allows you to identify patterns, understand your own thinking and decision-making processes, and make informed adjustments for future iterations.",
+        action: "After every scenario where you use the knowledge or skill, ask yourself 'What worked and why did it work?' or 'What didn't work and why didn't it work?'. Document your reflections in a journal and review it on a regular basis to identify patterns and insights.",
+        outcome: "At this point you have a deep understanding of the subject matter or skill, not just in theory but in practice. You can identify your own strengths and weaknesses, understand the nuances of the topic, and make informed decisions on how to apply it in different scenarios."
+      }
+    },
+    { 
+      id: 4, 
+      title: 'Teach', 
+      top: '50%', 
+      left: '12%', 
+      desc: 'Reinforce understanding by teaching others.',
+      guidance: {
+        theory: "Now you are ready to teach others and share your subject matter expertise. Teaching is the highest form of learning as it reinforces what you learned. It forces you to simplify and exposes your own hidden knowledge gaps.",
+        action: "Whether you demo to a customer, present internally to colleagues or give a public talk, the more you can do this in an unscripted way the better as it will force you to really understand the topic and be able to field any questions that come your way.",
+        outcome: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority will the point you can consider yourself a thought leader on any given subject matter or skill set."
+      }
     }
-  },
-  { 
-    id: 2, 
-    title: 'Test', 
-    top: '50%', 
-    left: '88%', 
-    desc: 'Experiment, get feedback, tweak and retest.',
-    guidance: {
-      theory: "Once you've learned the subject matter or skills, it's time to put your knowledege to the test. Testing is about putting the learning into practice, de-risking any assumptions and seeing how well you understood the topic or skill.",
-      action: "Use what you've learned in a real scenario and see how well you can recall it and apply it. Detect any gaps in your knowledge and go back to the 'Learn' stage to fill those gaps. The idea is to test and restest until you can confidently apply the knowledge or skill.",
-      outcome: "At this point you are really well informed on the skill or subject matter and can apply it in real life scenarios with confidence. You should be able to troubleshoot and solve problems related to the topic without needing to refer back to your notes or resources."
-    }
-  },
-  { 
-    id: 3, 
-    title: 'Reflect', 
-    top: '88%', 
-    left: '50%', 
-    desc: 'Assess what worked, what didn\'t, and more importantly WHY.',
-    guidance: {
-      theory: "Experience without reflection is just wasted time. Reflection converts data into wisdom. It allows you to identify patterns, understand your own thinking and decision-making processes, and make informed adjustments for future iterations.",
-      action: "After every scenario where you use the knowledge or skill, ask yourself 'What worked and why did it work?' or 'What didn't work and why didn't it work?'. Document your reflections in a journal and review it on a regular basis to identify patterns and insights.",
-      outcome: "At this point you have a deep understanding of the subject matter or skill, not just in theory but in practice. You can identify your own strengths and weaknesses, understand the nuances of the topic, and make informed decisions on how to apply it in different scenarios."
-    }
-  },
-  { 
-    id: 4, 
-    title: 'Teach', 
-    top: '50%', 
-    left: '12%', 
-    desc: 'Reinforce understanding by teaching others.',
-    guidance: {
-      theory: "Now you are ready to teach others and share your subject matter expertise. Teaching is the highest form of learning as it reinforces what you learned. It forces you to simplify and exposes your own hidden knowledge gaps.",
-      action: "Whether you demo to a customer, present internally to colleagues or give a public talk, the more you can do this in an unscripted way the better as it will force you to really understand the topic and be able to field any questions that come your way.",
-      outcome: "Number of 'Aha!' moments triggered in others or the ability to field unscripted Q&A with authority will the point you can consider yourself a thought leader on any given subject matter or skill set."
-    }
-  }
-];
+  ];
 
   return (
     <div style={{ 
@@ -149,15 +154,18 @@ const cycleData = [
                 stroke={theme.accent}
                 strokeWidth="1.5" 
                 strokeDasharray="5 4"
-                opacity="1" /* Increased visibility to match latest style */
+                opacity="1" 
               />
             </svg>
 
-            {/* NODES WITH DYNAMIC GLOW */}
+            {/* NODES WITH DYNAMIC GLOW AND TOOLTIP */}
             {cycleData.map((node) => (
               <div
                 key={node.id}
-                onClick={() => setActiveNode(node)}
+                onClick={() => {
+                  setActiveNode(node);
+                  setHasInteracted(true); // Dismisses the tooltip once they click anything
+                }}
                 style={{
                   position: 'absolute',
                   top: node.top,
@@ -173,12 +181,11 @@ const cycleData = [
                   textAlign: 'center',
                   zIndex: 10,
                   transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)' // Default subtle shadow
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
                 }}
                 onMouseOver={e => {
                   e.currentTarget.style.borderColor = theme.accent;
                   e.currentTarget.style.transform = 'translate(-50%, -55%) scale(1.02)';
-                  // GREEN NEON GLOW ADDED HERE
                   e.currentTarget.style.boxShadow = `0 20px 50px rgba(0, 237, 100, 0.2)`; 
                 }}
                 onMouseOut={e => {
@@ -187,6 +194,41 @@ const cycleData = [
                   e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
                 }}
               >
+                {/* BOUNCING POINTER - ONLY ON NODE 1 (Learn) AND BEFORE INTERACTION */}
+                {node.id === 1 && !hasInteracted && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-48px',
+                    left: '50%',
+                    animation: 'bounceTooltip 1.5s infinite ease-in-out',
+                    backgroundColor: theme.accent,
+                    color: '#000',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    fontSize: '13px',
+                    fontWeight: '900',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 4px 15px rgba(0,237,100,0.4)',
+                    zIndex: 50,
+                    pointerEvents: 'none' // Allows clicks to pass through to the card
+                  }}>
+                    👋 Start here: Click to explore!
+                    
+                    {/* The little down arrow */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '-6px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: 0,
+                      height: 0,
+                      borderLeft: '6px solid transparent',
+                      borderRight: '6px solid transparent',
+                      borderTop: `6px solid ${theme.accent}`
+                    }}></div>
+                  </div>
+                )}
+
                 <h3 style={{ margin: '0 0 10px 0', color: theme.accent, fontSize: '1.3rem', fontWeight: '800' }}>{node.title}</h3>
                 <p style={{ margin: 0, fontSize: '13px', color: theme.textSub, lineHeight: '1.5' }}>{node.desc}</p>
               </div>
@@ -195,12 +237,12 @@ const cycleData = [
         </div>
       </div>
       
-      {/* 2. UPDATED MODAL UI WITH FADED BACKGROUND FIX */}
+      {/* UPDATED MODAL UI WITH FADED BACKGROUND */}
       {activeNode && (
         <div style={{ 
           position: 'fixed', 
           inset: 0, 
-          backgroundColor: 'rgba(1, 30, 43, 0.65)', /* Changed from 0.98 to 0.65 */
+          backgroundColor: 'rgba(1, 30, 43, 0.65)', 
           backdropFilter: 'blur(15px)', 
           zIndex: 100, 
           display: 'flex', 
