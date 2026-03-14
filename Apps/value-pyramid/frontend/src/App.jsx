@@ -56,7 +56,7 @@ function App() {
     {
       id: 4,
       title: "Corporate Objectives",
-      subtitle: "Focus Shared by the leadership team and organisation",
+      subtitle: "Focus shared by the leadership team and organisation",
       flex: 1.2,
       textWidth: '380px', 
       guidance: {
