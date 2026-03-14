@@ -24,7 +24,7 @@ function App() {
             <img 
               src="https://i.postimg.cc/hvPBkY0C/ninja.png" 
               alt="itchap" 
-              style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${theme.accent}` }} 
+              style={{ height: '40px', width: '40px', borderRadius: '50%', objectFit: 'cover', border: `0px solid ${theme.accent}` }} 
             />
             itchap
           </Link>
