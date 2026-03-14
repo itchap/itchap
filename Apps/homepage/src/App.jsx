@@ -35,7 +35,7 @@ function App() {
             <Link to="/about" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>About</Link>
             
             {/* Standard Anchor Links for the Homepage sections */}
-            <a href="https://itchap.com/#apps" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>Apps</a>
+            <a href="/#apps" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>Apps</a>
             <a href="#blog" style={{ color: theme.textSub, textDecoration: 'none', cursor: 'not-allowed' }}>Blog (Soon)</a>
           </div>
         </nav>
