@@ -229,14 +229,12 @@ function App() {
                   onMouseOver={e => {
                     if(!tier.isTop) {
                       e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
-                      // THE GLOW: Added here! Using drop-shadow to glow OUTWARDS
                       e.currentTarget.style.filter = `drop-shadow(0 0 15px rgba(2, 236, 100, 0.5))`;
                     }
                   }}
                   onMouseOut={e => {
                     if(!tier.isTop) {
                       e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.05)';
-                      // REMOVE GLOW: Added here!
                       e.currentTarget.style.filter = 'none';
                     }
                   }}
@@ -279,9 +277,18 @@ function App() {
         </div>
       </div>
 
-      {/* MODAL UI */}
+      {/* MODAL UI WITH FADED BACKGROUND FIX */}
       {activeNode && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          backgroundColor: 'rgba(1, 30, 43, 0.65)', /* Changed from 0.98 to 0.65 so background shows through */
+          backdropFilter: 'blur(15px)', 
+          zIndex: 100, 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center' 
+        }}>
           <div style={{ 
             backgroundColor: '#021a25', 
             border: `2px solid ${theme.accent}`, 
