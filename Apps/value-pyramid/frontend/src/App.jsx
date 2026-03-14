@@ -33,14 +33,16 @@ function App() {
     textSub: '#bbb'
   };
 
-  // 1. DATA SOURCE UNIFIED WITH THE LEARNING APP SCHEMA
+  // 1. DATA SOURCE WITH DYNAMIC TEXT WIDTHS
+  // textWidth calculates the "safe zone" inside the clipped triangle at that specific height
   const pyramidData = [
     {
       id: 5,
       title: "Mission",
       subtitle: "The Ultimate 'Why'",
-      flex: 1.8, // Gives the top cap more room for text
+      flex: 2.2, // Gives the top cap plenty of room
       isTop: true,
+      textWidth: '220px', // Safe width at the top
       guidance: {
         theory: "The Mission defines the high-level, aspirational reason the company exists. It is the north star for the entire organization.",
         action: "As an SA, you must map your overarching technical vision to support this mission. If your solution doesn't ultimately serve the mission, it is expendable.",
@@ -51,7 +53,8 @@ function App() {
       id: 4,
       title: "Corporate Objectives",
       subtitle: "Focus Shared by the leadership team and organisation",
-      flex: 1,
+      flex: 1.2,
+      textWidth: '380px', // Safe width at the upper-middle
       guidance: {
         theory: "These are the quantifiable goals set by the board (e.g., ESG metrics, ROCE). This is what the C-suite is measured against and compensated for.",
         action: "Identify the top 2-3 company-wide metrics from their annual report. Frame your project's technical ROI entirely around moving these specific numbers.",
@@ -62,7 +65,8 @@ function App() {
       id: 3,
       title: "Business Strategies",
       subtitle: "Strategic actionable priorities to achieve defined objectives",
-      flex: 1,
+      flex: 1.2,
+      textWidth: '520px', // Safe width at the exact middle
       guidance: {
         theory: "This defines HOW the company will deliver on its overarching objectives. It dictates where budgets are allocated across business units.",
         action: "Map the specific business units you are selling to directly into these strategic pillars to ensure your deal has executive sponsorship.",
@@ -73,7 +77,8 @@ function App() {
       id: 2,
       title: "Technology Initiatives",
       subtitle: "Projects to implement the strategies",
-      flex: 1,
+      flex: 1.2,
+      textWidth: '680px', // Safe width at the lower-middle
       guidance: {
         theory: "These are the actual, funded technology projects designed to enable the business strategies. This is typically where IT and Engineering live.",
         action: "Position your solution as the primary accelerator for these specific funded initiatives. Do not pitch features; pitch initiative acceleration.",
@@ -84,7 +89,8 @@ function App() {
       id: 1,
       title: "Critical Challenges",
       subtitle: "Obstacles and issues to achieving strategy and required capabilities",
-      flex: 1,
+      flex: 1.2,
+      textWidth: '820px', // Safe width at the wide base
       guidance: {
         theory: "This is where the Business and Technical worlds collide. These are the specific blockers preventing progress on the funded initiatives.",
         action: "Perform deep discovery to uncover the technical limitations and immediately tie them to the business impact of a failed strategy.",
@@ -117,7 +123,7 @@ function App() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
         
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
+        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '40px' }}>
           <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' }}>
             The <span style={{ color: theme.accent }}>Value Pyramid</span>
           </h1>
@@ -126,7 +132,7 @@ function App() {
           </p>
         </div>
 
-        {/* MAIN CARD CONTAINER (Mirroring Learning App) */}
+        {/* MAIN CARD CONTAINER */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
           border: `1px solid ${theme.border}`, 
@@ -146,17 +152,14 @@ function App() {
           {/* THE PYRAMID WRAPPER */}
           <div style={{ position: 'relative', width: '100%', maxWidth: '900px', height: '550px' }}>
             
-            {/* THE PERFECT TRIANGLE CLIP-PATH
-              By applying the clip-path to the parent, the child divs are mathematically 
-              forced to have perfect diagonal edges. No uneven steps, no math errors. 
-            */}
+            {/* THE PERFECT TRIANGLE CLIP-PATH */}
             <div style={{
               width: '100%',
               height: '100%',
               clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '4px', // This creates the perfect horizontal transparent dividers
+              gap: '4px',
               backgroundColor: 'transparent'
             }}>
               {pyramidData.map((tier) => (
@@ -170,14 +173,13 @@ function App() {
                     color: tier.isTop ? '#000' : '#fff',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'center',
+                    // CRITICAL FIX: Push top tier text to the bottom where it's wider
+                    justifyContent: tier.isTop ? 'flex-end' : 'center', 
                     alignItems: 'center',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
-                    paddingTop: tier.isTop ? '40px' : '0', // Pushes text down into the wider part of the triangle
-                    paddingLeft: '10%',
-                    paddingRight: '10%',
-                    textAlign: 'center'
+                    // CRITICAL FIX: Add padding so it doesn't touch the bottom line
+                    paddingBottom: tier.isTop ? '20px' : '0' 
                   }}
                   onMouseOver={e => {
                     if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(0, 237, 100, 0.15)';
@@ -186,12 +188,15 @@ function App() {
                     if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(0, 237, 100, 0.05)';
                   }}
                 >
-                  <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    {tier.title}
-                  </h3>
-                  <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.85, fontWeight: '500' }}>
-                    {tier.subtitle}
-                  </p>
+                  {/* CRITICAL FIX: Constrain text to safe triangle width */}
+                  <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
+                    <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {tier.title}
+                    </h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.85, fontWeight: '500' }}>
+                      {tier.subtitle}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -209,7 +214,7 @@ function App() {
         </div>
       </div>
 
-      {/* 2. MODAL UI (Directly matching the Learning App schema & design) */}
+      {/* MODAL UI */}
       {activeNode && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ 
