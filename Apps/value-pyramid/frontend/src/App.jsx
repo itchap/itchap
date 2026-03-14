@@ -41,9 +41,9 @@ function App() {
 
   // Helper to apply the specific background colors based on tier ID
   const getTierBg = (id) => {
-    if (id === 5 || id === 4) return '#00694a'; // Top 2
-    if (id === 3 || id === 2) return '#005a3c'; // Next 2
-    return '#023430';                           // Bottom 1
+    if (id === 5) return '#00694a';             // Top tier
+    if (id === 4 || id === 3) return '#005a3c'; // Next 2 tiers
+    return '#023430';                           // Last 2 tiers
   };
 
   // DATA SOURCE
