@@ -48,9 +48,9 @@ function App() {
       isTop: true,
       textWidth: '220px', 
       guidance: {
-        theory: "The Mission defines the high-level, aspirational reason the company exists. It is the north star for the entire organization.",
-        action: "As an SA, you must map your overarching technical vision to support this mission. If your solution doesn't ultimately serve the mission, it is expendable.",
-        outcome: "Examples: 'To be the premier provider of sustainable mobility...' or 'Innovate to lead the industry in ESG standards.'"
+        theory: "The Mission is the ultimate 'Why' behind a company's existence—the aspirational north star driving their market strategy. For SAs, this represents the highest level of executive context.",
+        action: "Elevate your engagement from a technical evaluation to a strategic partnership. You must draw a direct line from your platform's capabilities to this core mission. Solutions that only solve IT problems get commoditized; solutions that enable the company's ultimate mission secure executive sponsorship.",
+        outcome: "Mapping Example: If the mission is 'To be the premier provider of sustainable mobility,' your outcome is showing how modernizing their infrastructure enables real-time analytics that directly reduce their carbon footprint."
       }
     },
     {
@@ -60,9 +60,9 @@ function App() {
       flex: 1.2,
       textWidth: '380px', 
       guidance: {
-        theory: "These are the quantifiable goals set by the board (e.g., ESG metrics, ROCE). This is what the C-suite is measured against and compensated for.",
-        action: "Identify the top 2-3 company-wide metrics from their annual report. Frame your project's technical ROI entirely around moving these specific numbers.",
-        outcome: "Examples: 'Advance Sustainable Materials: 40% renewable by 2030' or 'Cut CO2 emissions by 47.2% by 2030.'"
+        theory: "These are the high-level, quantifiable goals set by the board and shareholders (e.g., revenue growth, margin expansion, ESG metrics). This is exactly what the C-suite is actively measured against and compensated for.",
+        action: "Review their annual reports, 10-K filings, or recent earnings calls to identify their top 2-3 metrics. To capture executive attention, you must anchor your technical ROI directly to moving the needle on these specific KPIs.",
+        outcome: "Mapping Example: If the objective is to 'Cut operational costs by 15% by 2026,' your outcome is showing how consolidating fragmented legacy systems onto your platform permanently eliminates crippling maintenance and licensing overhead."
       }
     },
     {
@@ -72,9 +72,9 @@ function App() {
       flex: 1.2,
       textWidth: '520px', 
       guidance: {
-        theory: "This defines HOW the company will deliver on its overarching objectives. It dictates where budgets are allocated across business units.",
-        action: "Map the specific business units you are selling to directly into these strategic pillars to ensure your deal has executive sponsorship.",
-        outcome: "Examples: 'Focus on premium and speciality tires' or 'Revenue Diversification: 30% non-tire sales.'"
+        theory: "This defines HOW the organization plans to execute and deliver on its corporate objectives. Business strategies dictate exactly where budget, headcount, and resources are allocated across the enterprise.",
+        action: "Map your technical capabilities directly to these strategic pillars. To secure funding and bypass IT budget constraints, you must prove that your solution is the most efficient vehicle to execute their chosen strategy.",
+        outcome: "Mapping Example: If the strategy is 'Revenue Diversification through digital subscriptions,' demonstrate how your platform accelerates time-to-market for new digital products, transforming IT from a cost center into a revenue driver."
       }
     },
     {
@@ -84,9 +84,9 @@ function App() {
       flex: 1.2,
       textWidth: '680px', 
       guidance: {
-        theory: "These are the actual, funded technology projects designed to enable the business strategies. This is typically where IT and Engineering live.",
-        action: "Position your solution as the primary accelerator for these specific funded initiatives. Do not pitch features; pitch initiative acceleration.",
-        outcome: "Examples: 'Cloud Migration of Core Payments & Wallets' or 'Data Layer Consolidation & Governance Upgrade.'"
+        theory: "These are the active, funded technology projects (e.g., Cloud Migration, GenAI Adoption, Core Modernization) designed to enable the business strategy. This is the SA's primary operating theater.",
+        action: "Resist the urge to just pitch technical features. Instead, position your platform as the ultimate de-risker and accelerator for these specific funded initiatives. Prove how you ensure the project is delivered on time and at scale.",
+        outcome: "Mapping Example: If the initiative is 'Cloud-Native Modernization,' validate how your distributed architecture natively supports their microservices transition, dramatically reducing the friction and risk of their cloud journey."
       }
     },
     {
@@ -96,9 +96,9 @@ function App() {
       flex: 1.2,
       textWidth: '820px', 
       guidance: {
-        theory: "This is where the Business and Technical worlds collide. These are the specific blockers preventing progress on the funded initiatives.",
-        action: "Perform deep discovery to uncover the technical limitations and immediately tie them to the business impact of a failed strategy.",
-        outcome: "Examples: 'Legacy Infrastructure & Fragmented Cloud Adoption' or 'Architectural Fragmentation hindering horizontal scale.'"
+        theory: "This is the foundation of your deal. These are the specific technical and operational bottlenecks currently preventing the customer from executing their technology initiatives—and therefore threatening the business strategy.",
+        action: "Conduct deep, empathetic discovery to uncover the root cause of these limitations. Your job is to quantify the pain: translating technical debt, scale limits, or operational silos into unacceptable business risk.",
+        outcome: "Mapping Example: If the challenge is 'Architectural fragmentation preventing horizontal scale,' prove how your unified platform eliminates these silos, resolving the bottleneck and instantly unblocking their strategic growth."
       }
     }
   ];
