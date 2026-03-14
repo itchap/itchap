@@ -37,7 +37,7 @@ function App() {
   const pyramidData = [
     {
       id: 5,
-      title: "Mission",
+      title: "The \nMission",
       subtitle: "The Ultimate 'Why'",
       flex: 2.2, 
       isTop: true,
@@ -116,20 +116,21 @@ function App() {
       {/* NAV BAR */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 30px', fontSize: '12px', opacity: 0.7 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>← Home</a>
-        <a href="https://github.com/itchap" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>View Source on GitHub ↗</a>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/value-pyramid/frontend" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>View Source on GitHub ↗</a>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
-        
+
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '30px' }}>
-          <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' }}>
-            The <span style={{ color: theme.accent }}>Value Pyramid</span>
+        <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
+          <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '800' }}>
+            💎 The <span style={{ color: theme.accent }}>Value Pyramid</span>
           </h1>
           <p style={{ color: theme.textSub, fontSize: '1.1rem' }}>
-            Taking a Business View to elevate technical credibility.
+            Taking a Business View to elevate technical credibility. This framework helps SAs position their technical solutions with executive stakeholders in a way that directly supports the business's strategic objectives.
           </p>
         </div>
+
 
         {/* MAIN CARD CONTAINER (Increased height to allow for a taller pyramid) */}
         <div style={{ 
