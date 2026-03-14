@@ -112,14 +112,13 @@ function App() {
       fontFamily: 'Inter, system-ui, sans-serif'
     }}>
       <GlobalReset />
-
       {/* NAV BAR */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 30px', fontSize: '12px', opacity: 0.7 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>← Home</a>
         <a href="https://github.com/itchap/itchap/tree/main/Apps/value-pyramid/frontend" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>View Source on GitHub ↗</a>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}></div>
 
         {/* HEADER */}
         <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>
