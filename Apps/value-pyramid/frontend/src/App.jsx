@@ -29,7 +29,6 @@ const App = () => {
     border: '#333'
   };
 
-  // Content mapped EXACTLY from image_1.png structure
   const pyramidData = [
     {
       id: 6,
@@ -46,7 +45,7 @@ const App = () => {
       label: "Objectives",
       subtitle: "Focus Shared by the Leadership",
       detail: "Quantifiable goals set by the board (e.g., ESG, ROCE). This is what leadership is measured against. Your project must help them 'check these boxes'.",
-      examples: ["Cut CO₂ by 47% by 2030", "Achieve 12% ROCE"],
+      examples: ["Cut CO₂ by 47% by 2030", "Achieve 12.5% ROCE by 2027"],
       width: '30%', height: '90px', taper: '20px'
     },
     {
@@ -55,7 +54,7 @@ const App = () => {
       label: "Strategy",
       subtitle: "Actionable Context to Achieve Objectives",
       detail: "The 'How'. How the company will deliver on objectives. (e.g., diversifying revenue, focus on premium markets).",
-      examples: ["Focus on Premium Tyres", "Diversify: 30% Non-Tyre Revenue"],
+      examples: ["Focus on premium and speciality tires", "Diversification: 30% non-tire sales"],
       width: '45%', height: '100px', taper: '25px'
     },
     {
@@ -64,7 +63,7 @@ const App = () => {
       label: "Technology",
       subtitle: "Projects to Implement the Strategies",
       detail: "Where we live. The actual technology projects (Cloud Migration, Consolidation, App Dev) funded to enable the business strategies.",
-      examples: ["Cloud Migration of Payments", "Consolidate fragmented datastores"],
+      examples: ["Cloud Migration of Core Payments", "Data Layer Consolidation & Governance"],
       width: '60%', height: '110px', taper: '30px'
     },
     {
@@ -72,8 +71,8 @@ const App = () => {
       title: "Critical Capabilities and Challenges",
       label: "Challenges",
       subtitle: "Obstacles to Achieving the Strategy",
-      detail: "Where Business and Technical worlds collide. Define the blockers preventing progress on initiatives. This is the PAIN.",
-      examples: ["Legacy Infrastructure inhibiting scale", "Operational Overhead/Complexity"],
+      detail: "Where Business and Technical worlds collide. Define the blockers preventing progress on initiatives.",
+      examples: ["Legacy Infrastructure inhibiting scale", "Architectural Fragmentation & Complexity"],
       width: '75%', height: '120px', taper: '35px'
     },
     {
@@ -81,8 +80,8 @@ const App = () => {
       title: "Your Company's Solutions",
       label: "Solutions",
       subtitle: "Mapping Capabilities to Resolve Issues",
-      detail: "The foundation. SAs must PROVE their product resolves the critical challenges, which unblocks the technological initiatives, which enables the strategy, and ultimately fulfills the mission.",
-      examples: ["Atlas as-a-Service, not IaaS", "Global, Multi-Region Clusters"],
+      detail: "The foundation. SAs must PROVE their product resolves the critical challenges, which unblocks the technological initiatives.",
+      examples: ["Atlas Global Clusters", "Automated Scalability & Operational Efficiency"],
       width: '90%', height: '130px', taper: '0px'
     }
   ];
@@ -91,17 +90,13 @@ const App = () => {
     <div style={{ minHeight: '100vh', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <GlobalStyles />
       
-      {/* HEADER (Optional title/logo section from top right of image_1.png) */}
-      <div style={{ textAlign: 'center', marginBottom: '60px', width: '100%', maxWidth: '1000px', display: 'flex', justifyContent: 'center' }}>
-        <div>
-          <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', fontWeight: '800' }}>
-            The <span style={{ color: theme.accent }}>Executive</span> Value Pyramid
-          </h1>
-          <p style={{ color: '#bbb', fontSize: '1.1rem' }}>Click a tier to structure the deep business value.</p>
-        </div>
+      <div style={{ textAlign: 'center', marginBottom: '60px', width: '100%', maxWidth: '1000px' }}>
+        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0', fontWeight: '800' }}>
+          THE <span style={{ color: theme.accent }}>VALUE PYRAMID</span>
+        </h1>
+        <p style={{ color: '#bbb', fontSize: '1.1rem' }}>Taking a Business View...</p>
       </div>
 
-      {/* PYRAMID CANVAS */}
       <div style={{ position: 'relative', width: '100%', maxWidth: '900px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
         {pyramidData.map((tier) => (
           <div
@@ -119,40 +114,36 @@ const App = () => {
               zIndex: 1,
             }}
             onMouseOver={e => {
-              e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = `0 0 40px ${theme.accent}33`;
+              e.currentTarget.style.transform = 'scale(1.03)';
               e.currentTarget.style.borderColor = theme.accent;
             }}
             onMouseOut={e => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
               if(tier.id !== 6) e.currentTarget.style.borderColor = theme.border;
             }}
           >
-            {/* The side-aligned label seen in image_1.png */}
             <div className="tier-label" style={{ color: tier.id === 6 ? theme.accent : '#888' }}>
               {tier.label}
             </div>
 
+            {/* FIXED TAGS HERE */}
             <span style={{ fontWeight: '800', fontSize: '1.1rem', textAlign: 'center', padding: '0 10px' }}>
               {tier.title}
-            </div>
+            </span>
             <span style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '5px' }}>
               {tier.subtitle}
-            </div>
+            </span>
           </div>
         ))}
         
-        {/* CREDIBILITY INDICATORS (Mapping from image_1.png) */}
-        <div style={{ position: 'absolute', right: '-100px', top: '15%', height: '50%', width: '100px', borderLeft: '2px dashed #444', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '15px', fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div style={{ position: 'absolute', right: '-120px', top: '15%', height: '50%', width: '100px', borderLeft: '2px dashed #444', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '15px', fontSize: '0.8rem', color: '#888', textTransform: 'uppercase' }}>
           <div>Business<br/>Credibility</div>
         </div>
-        <div style={{ position: 'absolute', right: '-100px', bottom: '15%', height: '40%', width: '100px', borderLeft: '2px dashed #444', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '15px', fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div style={{ position: 'absolute', right: '-120px', bottom: '10%', height: '35%', width: '100px', borderLeft: '2px dashed #444', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: '15px', fontSize: '0.8rem', color: '#888', textTransform: 'uppercase' }}>
           <div>Technical<br/>Credibility</div>
         </div>
       </div>
 
-      {/* EXPLODED DETAIL MODAL */}
       {activeTier && (
         <div 
           onClick={() => setActiveTier(null)}
@@ -164,38 +155,26 @@ const App = () => {
           <div 
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#021a25', border: `2px solid ${theme.accent}`, borderRadius: '32px',
-              padding: '60px', maxWidth: '800px', width: '100%', boxShadow: `0 0 100px ${theme.accent}22`,
-              position: 'relative'
+              backgroundColor: '#021a25', border: `2px solid ${theme.accent}`, borderRadius: '24px',
+              padding: '60px', maxWidth: '800px', width: '100%', position: 'relative'
             }}
           >
-            <div style={{ position: 'absolute', top: '20px', left: '40px', color: theme.accent, textTransform: 'uppercase', fontWeight: '900', letterSpacing: '2px', fontSize: '0.9rem' }}>
-              {activeTier.label} TIER
-            </div>
+            <h2 style={{ fontSize: '2.5rem', margin: '0 0 10px 0', color: '#fff' }}>{activeTier.title}</h2>
+            <h4 style={{ color: theme.accent, marginBottom: '30px' }}>{activeTier.subtitle}</h4>
+            <p style={{ fontSize: '1.2rem', lineHeight: '1.8', color: '#eee', marginBottom: '30px' }}>{activeTier.detail}</p>
 
-            <h2 style={{ fontSize: '2.5rem', margin: '0 0 10px 0', color: '#fff' }}>
-              {activeTier.title}
-            </h2>
-            <h4 style={{ fontSize: '1rem', color: theme.accent, marginBottom: '30px', fontWeight: 'bold' }}>
-              ({activeTier.subtitle})
-            </h4>
-            
-            <p style={{ fontSize: '1.25rem', lineHeight: '1.8', color: '#eee', marginBottom: '40px', paddingLeft: '20px', borderLeft: `2px solid ${theme.accent}33` }}>
-              {activeTier.detail}
-            </p>
-
-            <div style={{ marginTop: '30px', textAlign: 'left', padding: '30px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: `1px solid ${theme.border}` }}>
-              <h5 style={{ margin: '0 0 15px 0', textTransform: 'uppercase', color: '#888', letterSpacing: '1px' }}>Examples:</h5>
-              <ul style={{ color: '#ccc', fontSize: '1.1rem', margin: 0, paddingLeft: '20px', lineHeight: '1.8' }}>
+            <div style={{ textAlign: 'left', padding: '20px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: `1px solid ${theme.border}` }}>
+              <h5 style={{ margin: '0 0 10px 0', color: '#888' }}>KEY EXAMPLES:</h5>
+              <ul style={{ color: '#ccc', fontSize: '1rem', lineHeight: '1.8' }}>
                 {activeTier.examples.map(ex => <li key={ex}>{ex}</li>)}
               </ul>
             </div>
 
             <button 
               onClick={() => setActiveTier(null)}
-              style={{ position: 'absolute', top: '20px', right: '40px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, padding: '10px 20px', borderRadius: '8px', fontWeight: '900', fontSize: '0.9rem', cursor: 'pointer', textTransform: 'uppercase' }}
+              style={{ marginTop: '40px', backgroundColor: theme.accent, color: '#000', border: 'none', padding: '12px 30px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
             >
-              Close
+              CLOSE
             </button>
           </div>
         </div>
