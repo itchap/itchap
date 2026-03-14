@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// GLOBAL RESET - Kills the phantom white lines on the edges
+// GLOBAL RESET - Added the bounceTooltip keyframes here
 const GlobalReset = () => (
   <style>{`
     html, body {
@@ -18,11 +18,16 @@ const GlobalReset = () => (
       height: 100%;
       border: none !important;
     }
+    @keyframes bounceTooltip {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -8px); }
+    }
   `}</style>
 );
 
 function App() {
   const [activeNode, setActiveNode] = useState(null);
+  const [hasInteracted, setHasInteracted] = useState(false); // Tracks if they've clicked yet
 
   const theme = {
     bg: '#011e2b',
@@ -136,14 +141,14 @@ function App() {
         </div>
 
 
-        {/* MAIN CARD CONTAINER (Increased height to allow for a taller pyramid) */}
+        {/* MAIN CARD CONTAINER */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
           border: `1px solid ${theme.border}`, 
           borderRadius: '32px', 
           width: '100%',
           maxWidth: '1400px', 
-          minHeight: '700px', // INCREASED height for breathing room
+          minHeight: '700px', 
           position: 'relative', 
           display: 'flex',
           justifyContent: 'center',
@@ -153,9 +158,45 @@ function App() {
           padding: '40px 0'
         }}>
           
-          {/* THE PYRAMID WRAPPER (Taller, maintaining base width) */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' /* INCREASED from 520px */ }}>
+          {/* THE PYRAMID WRAPPER */}
+          <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '680px' }}>
             
+            {/* BOUNCING POINTER (Hides after first click, absolute positioned to avoid clipping) */}
+            {!hasInteracted && (
+              <div style={{
+                position: 'absolute',
+                top: '-45px', // Positions it right above the apex
+                left: '50%',
+                animation: 'bounceTooltip 1.5s infinite ease-in-out',
+                backgroundColor: theme.accent,
+                color: '#000',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: '900',
+                whiteSpace: 'nowrap',
+                boxShadow: `0 4px 15px rgba(2, 236, 100, 0.4)`,
+                zIndex: 50,
+                cursor: 'default',
+                pointerEvents: 'none' // Ensures clicks pass through it to the pyramid if they misclick
+              }}>
+                👋 Start here: Click a tier to explore!
+                
+                {/* The little down arrow */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-6px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '6px solid transparent',
+                  borderRight: '6px solid transparent',
+                  borderTop: `6px solid ${theme.accent}`
+                }}></div>
+              </div>
+            )}
+
             {/* THE PERFECT TRIANGLE CLIP-PATH */}
             <div style={{
               width: '100%',
@@ -169,7 +210,10 @@ function App() {
               {pyramidData.map((tier) => (
                 <div
                   key={tier.id}
-                  onClick={() => setActiveNode(tier)}
+                  onClick={() => {
+                    setActiveNode(tier);
+                    setHasInteracted(true); // Dismisses tooltip
+                  }}
                   style={{
                     flex: tier.flex,
                     width: '100%',
@@ -181,7 +225,7 @@ function App() {
                     alignItems: 'center',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
-                    paddingBottom: tier.isTop ? '25px' : '0' // Slightly more padding since it's taller
+                    paddingBottom: tier.isTop ? '25px' : '0'
                   }}
                   onMouseOver={e => {
                     if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(2, 236, 100, 0.15)';
