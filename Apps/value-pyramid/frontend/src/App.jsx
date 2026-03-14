@@ -122,7 +122,7 @@ function App() {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' }}>
 
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '60px' }}>
+        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '30px' }}>
           <h1 style={{ margin: '0 0 10px 0', fontSize: '2.5rem', fontWeight: '800' }}>
             💎 The <span style={{ color: theme.accent }}>Value Pyramid</span>
           </h1>
