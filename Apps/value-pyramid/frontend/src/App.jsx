@@ -33,16 +33,16 @@ function App() {
     textSub: '#bbb'
   };
 
-  // 1. DATA SOURCE WITH DYNAMIC TEXT WIDTHS
-  // textWidth calculates the "safe zone" inside the clipped triangle at that specific height
+  // 1. DATA SOURCE UNIFIED WITH THE LEARNING APP SCHEMA & DYNAMIC WIDTHS
+  // textWidth defines the maximum safe width for text within the clipped triangle
   const pyramidData = [
     {
       id: 5,
       title: "Mission",
       subtitle: "The Ultimate 'Why'",
-      flex: 2.2, // Gives the top cap plenty of room
+      flex: 2.2, // Gives the top cap plenty of room for text
       isTop: true,
-      textWidth: '220px', // Safe width at the top
+      textWidth: '220px', // Safe zone at the point
       guidance: {
         theory: "The Mission defines the high-level, aspirational reason the company exists. It is the north star for the entire organization.",
         action: "As an SA, you must map your overarching technical vision to support this mission. If your solution doesn't ultimately serve the mission, it is expendable.",
@@ -54,7 +54,7 @@ function App() {
       title: "Corporate Objectives",
       subtitle: "Focus Shared by the leadership team and organisation",
       flex: 1.2,
-      textWidth: '380px', // Safe width at the upper-middle
+      textWidth: '380px', // Safe zone at the upper-middle
       guidance: {
         theory: "These are the quantifiable goals set by the board (e.g., ESG metrics, ROCE). This is what the C-suite is measured against and compensated for.",
         action: "Identify the top 2-3 company-wide metrics from their annual report. Frame your project's technical ROI entirely around moving these specific numbers.",
@@ -66,7 +66,7 @@ function App() {
       title: "Business Strategies",
       subtitle: "Strategic actionable priorities to achieve defined objectives",
       flex: 1.2,
-      textWidth: '520px', // Safe width at the exact middle
+      textWidth: '520px', // Safe zone at the exact middle
       guidance: {
         theory: "This defines HOW the company will deliver on its overarching objectives. It dictates where budgets are allocated across business units.",
         action: "Map the specific business units you are selling to directly into these strategic pillars to ensure your deal has executive sponsorship.",
@@ -78,7 +78,7 @@ function App() {
       title: "Technology Initiatives",
       subtitle: "Projects to implement the strategies",
       flex: 1.2,
-      textWidth: '680px', // Safe width at the lower-middle
+      textWidth: '680px', // Safe zone at the lower-middle
       guidance: {
         theory: "These are the actual, funded technology projects designed to enable the business strategies. This is typically where IT and Engineering live.",
         action: "Position your solution as the primary accelerator for these specific funded initiatives. Do not pitch features; pitch initiative acceleration.",
@@ -90,7 +90,7 @@ function App() {
       title: "Critical Challenges",
       subtitle: "Obstacles and issues to achieving strategy and required capabilities",
       flex: 1.2,
-      textWidth: '820px', // Safe width at the wide base
+      textWidth: '820px', // Safe zone at the wide base
       guidance: {
         theory: "This is where the Business and Technical worlds collide. These are the specific blockers preventing progress on the funded initiatives.",
         action: "Perform deep discovery to uncover the technical limitations and immediately tie them to the business impact of a failed strategy.",
@@ -132,14 +132,14 @@ function App() {
           </p>
         </div>
 
-        {/* MAIN CARD CONTAINER */}
+        {/* MAIN CARD CONTAINER (Mirroring Learning App and making it wider) */}
         <div style={{ 
           backgroundColor: theme.cardBg, 
           border: `1px solid ${theme.border}`, 
           borderRadius: '32px', 
           width: '100%',
-          maxWidth: '1200px',
-          minHeight: '650px',
+          maxWidth: '1400px', // EXPANDED FRAME WIDTH
+          minHeight: '750px', // EXPANDED FRAME HEIGHT
           position: 'relative', 
           display: 'flex',
           justifyContent: 'center',
@@ -150,16 +150,19 @@ function App() {
         }}>
           
           {/* THE PYRAMID WRAPPER */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '900px', height: '550px' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '650px' }}>
             
-            {/* THE PERFECT TRIANGLE CLIP-PATH */}
+            {/* THE PERFECT TRIANGLE CLIP-PATH (FLAWLESS DIAGONAL LINES)
+              By applying the clip-path to the parent, the child divs are mathematically 
+              forced to have perfect diagonal edges. No stepped edge is possible. 
+            */}
             <div style={{
               width: '100%',
               height: '100%',
               clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '4px',
+              gap: '4px', // Perfect horizontal transparent dividers
               backgroundColor: 'transparent'
             }}>
               {pyramidData.map((tier) => (
@@ -173,12 +176,13 @@ function App() {
                     color: tier.isTop ? '#000' : '#fff',
                     display: 'flex',
                     flexDirection: 'column',
-                    // CRITICAL FIX: Push top tier text to the bottom where it's wider
-                    justifyContent: tier.isTop ? 'flex-end' : 'center', 
+                    // CRITICAL FIX: The top point is 0px wide. We push the text down
+                    // into the wider part of the green cap so it fits perfectly.
+                    justifyContent: tier.isTop ? 'flex-end' : 'center',
                     alignItems: 'center',
                     cursor: 'pointer',
                     transition: 'background-color 0.3s ease',
-                    // CRITICAL FIX: Add padding so it doesn't touch the bottom line
+                    // CRITICAL FIX: Add padding so it doesn't touch the bottom edge of its cap
                     paddingBottom: tier.isTop ? '20px' : '0' 
                   }}
                   onMouseOver={e => {
@@ -188,7 +192,7 @@ function App() {
                     if(!tier.isTop) e.currentTarget.style.backgroundColor = 'rgba(0, 237, 100, 0.05)';
                   }}
                 >
-                  {/* CRITICAL FIX: Constrain text to safe triangle width */}
+                  {/* CRITICAL FIX: Dynamic MaxWidth constraint protects text from clipping */}
                   <div style={{ maxWidth: tier.textWidth, textAlign: 'center' }}>
                     <h3 style={{ margin: '0 0 5px 0', fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       {tier.title}
@@ -201,12 +205,12 @@ function App() {
               ))}
             </div>
 
-            {/* SIDE GAUGES */}
-            <div style={{ position: 'absolute', right: '-80px', top: '20%', height: '40%', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderLeft: `2px dashed rgba(255,255,255,0.15)`, paddingLeft: '20px' }}>
+            {/* SIDE GAUGES (Re-positioned for wider frame) */}
+            <div style={{ position: 'absolute', right: '-120px', top: '25%', height: '35%', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderLeft: `2px dashed rgba(255,255,255,0.15)`, paddingLeft: '20px' }}>
               <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '1px' }}>BUSINESS<br/>CREDIBILITY</span>
             </div>
             
-            <div style={{ position: 'absolute', right: '-80px', bottom: '10%', height: '30%', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderLeft: `2px dashed rgba(255,255,255,0.15)`, paddingLeft: '20px' }}>
+            <div style={{ position: 'absolute', right: '-120px', bottom: '15%', height: '30%', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderLeft: `2px dashed rgba(255,255,255,0.15)`, paddingLeft: '20px' }}>
               <span style={{ color: '#888', fontSize: '0.8rem', fontWeight: '800', letterSpacing: '1px' }}>TECHNICAL<br/>CREDIBILITY</span>
             </div>
 
@@ -214,7 +218,7 @@ function App() {
         </div>
       </div>
 
-      {/* MODAL UI */}
+      {/* MODAL UI (Directly matching the Learning App schema & design) */}
       {activeNode && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(1, 30, 43, 0.98)', backdropFilter: 'blur(15px)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ 
