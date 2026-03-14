@@ -1,21 +1,20 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
+// Uses the PORT from .env (5002), or defaults to 5002 as a fallback
 const PORT = process.env.PORT || 5002;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection (Update with your actual connection string if using Atlas, or localhost)
-mongoose.connect('mongodb://127.0.0.1:27017/itchap_blog', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Blog MongoDB Connected'))
-.catch(err => console.error('❌ MongoDB Connection Error:', err));
+// MongoDB Connection using your Atlas URI
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Blog MongoDB Connected'))
+  .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 const Post = require('./models/Post');
 
