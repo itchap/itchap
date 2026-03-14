@@ -217,7 +217,7 @@ function App() {
                     flex: tier.flex,
                     width: '100%',
                     backgroundColor: tier.isTop ? theme.accent : 'rgba(2, 236, 100, 0.05)',
-                    color: tier.isTop ? '#000' : '#fff',
+                    color: tier.isTop ? '#011e2c' : '#fff',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: tier.isTop ? 'flex-end' : 'center',
