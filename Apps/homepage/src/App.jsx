@@ -36,7 +36,16 @@ function App() {
             
             {/* Standard Anchor Links for the Homepage sections */}
             <a href="/#apps" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer' }}>Apps</a>
-            <a href="#blog" style={{ color: theme.textSub, textDecoration: 'none', cursor: 'not-allowed' }}>Blog (Soon)</a>
+            
+            {/* UPDATED: Hard link to escape the SPA and hit the Apache /blog alias */}
+            <a 
+              href="/blog" 
+              style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+              onMouseOver={e => e.target.style.color = theme.accent} 
+              onMouseOut={e => e.target.style.color = theme.textMain}
+            >
+              Blog
+            </a>
           </div>
         </nav>
 
