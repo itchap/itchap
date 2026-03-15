@@ -174,7 +174,9 @@ const BlogList = () => {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
       <header style={{ marginBottom: '60px', borderBottom: `2px solid ${theme.border}`, paddingBottom: '30px' }}>
         <h1 style={{ fontSize: '3.5rem', margin: '0 0 10px 0', letterSpacing: '-1px' }}>SA Stories<span style={{ color: theme.accent }}> from the Field</span></h1>
-        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400 }}>Solution Architect field notes on solution architecture, technical sales, and leadership.</p>
+        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400, lineHeight: 1.5, maxWidth: '750px' }}>
+          Tactical playbooks and strategic insights for the modern Solutions Architect. Covering enterprise system design, the psychology of technical sales, and how to elevate technical credibility in the C-suite.
+        </p>
       </header>
 
       <div style={{ display: 'grid', gap: '40px' }}>
