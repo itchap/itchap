@@ -10,6 +10,7 @@ const theme = {
   accent: '#00ed64', 
   textMain: '#fff',
   textSub: '#bbb',
+  textRead: '#e2e8f0', // Brighter, softer white for long-form reading
   inputBg: '#01121a'
 };
 
@@ -22,7 +23,8 @@ const GlobalStyle = () => (
       color: ${theme.textMain}; 
       font-family: 'Inter', system-ui, sans-serif; 
       -webkit-font-smoothing: antialiased;
-      text-align: left !important; /* Kills any lingering Vite centering */
+      -moz-osx-font-smoothing: grayscale;
+      text-align: left !important;
       width: 100%;
       min-height: 100vh;
     }
@@ -50,18 +52,92 @@ const GlobalStyle = () => (
     }
     textarea { resize: vertical; }
 
-    /* Markdown Styling */
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: ${theme.textMain}; margin-top: 1.8em; margin-bottom: 0.5em; font-weight: 700; }
-    .markdown-body h1 { font-size: 2.2rem; }
-    .markdown-body h2 { font-size: 1.8rem; border-bottom: 1px solid ${theme.border}; padding-bottom: 0.3em; }
-    .markdown-body p { line-height: 1.8; color: ${theme.textSub}; font-size: 1.1rem; margin-bottom: 1.5em; }
-    .markdown-body ul, .markdown-body ol { color: ${theme.textSub}; line-height: 1.8; font-size: 1.1rem; margin-bottom: 1.5em; padding-left: 20px; }
+    /* --- OPTIMIZED READING STYLES --- */
+    .markdown-body {
+      font-size: 1.125rem; /* 18px base size for comfortable reading */
+      line-height: 1.75;
+      color: ${theme.textRead};
+    }
+    
+    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { 
+      color: ${theme.textMain}; 
+      font-weight: 700; 
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    
+    .markdown-body h2 { 
+      font-size: 1.8rem; 
+      margin-top: 2em; /* Extra space above headings for clear sections */
+      margin-bottom: 0.8em; 
+      border-bottom: 1px solid rgba(255,255,255,0.1); 
+      padding-bottom: 0.4em; 
+    }
+    
+    .markdown-body h3 {
+      font-size: 1.4rem;
+      margin-top: 1.8em;
+      margin-bottom: 0.6em;
+    }
+    
+    .markdown-body p, .markdown-body ul, .markdown-body ol { 
+      margin-bottom: 1.6em; 
+      color: ${theme.textRead}; 
+    }
+    
     .markdown-body li { margin-bottom: 0.5em; }
-    .markdown-body code { background: rgba(0,0,0,0.5); padding: 3px 6px; border-radius: 4px; color: ${theme.accent}; font-family: monospace; font-size: 0.9em; }
-    .markdown-body pre { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; overflow-x: auto; border: 1px solid ${theme.border}; margin: 25px 0; }
-    .markdown-body pre code { color: #fff; background: none; padding: 0; }
-    .markdown-body blockquote { border-left: 4px solid ${theme.accent}; margin: 0 0 1.5em 0; padding: 10px 20px; background: rgba(0, 237, 100, 0.05); border-radius: 0 8px 8px 0; color: #fff; font-style: italic; }
-    .markdown-body img { max-width: 100%; border-radius: 8px; border: 1px solid ${theme.border}; }
+    
+    /* Elegant inline links */
+    .markdown-body a {
+      color: ${theme.accent};
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+    
+    .markdown-body code { 
+      background: rgba(0,0,0,0.5); 
+      padding: 0.2em 0.4em; 
+      border-radius: 4px; 
+      color: ${theme.accent}; 
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; 
+      font-size: 0.9em; 
+    }
+    
+    .markdown-body pre { 
+      background: rgba(0,0,0,0.6); 
+      padding: 24px; 
+      border-radius: 12px; 
+      overflow-x: auto; 
+      border: 1px solid ${theme.border}; 
+      margin: 2em 0; 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .markdown-body pre code { 
+      color: #e2e8f0; 
+      background: none; 
+      padding: 0; 
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+    
+    .markdown-body blockquote { 
+      border-left: 4px solid ${theme.accent}; 
+      margin: 2em 0; 
+      padding: 16px 24px; 
+      background: rgba(0, 237, 100, 0.03); 
+      border-radius: 0 12px 12px 0; 
+      color: ${theme.textRead}; 
+      font-style: italic; 
+    }
+    
+    .markdown-body img { 
+      max-width: 100%; 
+      border-radius: 12px; 
+      border: 1px solid ${theme.border}; 
+      margin: 2em 0;
+    }
   `}</style>
 );
 
@@ -84,8 +160,8 @@ const BlogList = () => {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
       <header style={{ marginBottom: '60px', borderBottom: `2px solid ${theme.border}`, paddingBottom: '30px' }}>
-        <h1 style={{ fontSize: '3.5rem', margin: '0 0 10px 0', letterSpacing: '-1px' }}>SA <span style={{ color: theme.accent }}>Insights</span></h1>
-        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400 }}>Field notes on solution architecture, technical sales, and leadership.</p>
+        <h1 style={{ fontSize: '3.5rem', margin: '0 0 10px 0', letterSpacing: '-1px' }}>SA Stories<span style={{ color: theme.accent }}> from the Field</span></h1>
+        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400 }}>Solution Architect field notes on solution architecture, technical sales, and leadership.</p>
       </header>
 
       <div style={{ display: 'grid', gap: '40px' }}>
@@ -130,7 +206,7 @@ const BlogList = () => {
   );
 };
 
-// 2. THE ARTICLE VIEW
+// 2. THE ARTICLE VIEW (Constrained to 680px for reading)
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -144,15 +220,15 @@ const BlogPost = () => {
   if (!post) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.textSub }}>Loading article...</div>;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
-      <Link to="/" style={{ color: theme.textSub, display: 'inline-block', marginBottom: '30px', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
+    <div style={{ maxWidth: '680px', margin: '0 auto', padding: '60px 20px' }}>
+      <Link to="/" style={{ color: theme.textSub, display: 'inline-block', marginBottom: '40px', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
         ← Back to Articles
       </Link>
       
       <article>
-        <header style={{ marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '3rem', margin: '0 0 15px 0', lineHeight: 1.2, letterSpacing: '-1px' }}>{post.title}</h1>
-          <div style={{ color: theme.textSub, fontSize: '0.9rem', display: 'flex', gap: '15px', alignItems: 'center' }}>
+        <header style={{ marginBottom: '50px' }}>
+          <h1 style={{ fontSize: '3rem', margin: '0 0 20px 0', lineHeight: 1.15, letterSpacing: '-1px' }}>{post.title}</h1>
+          <div style={{ color: theme.textSub, fontSize: '0.95rem', display: 'flex', gap: '15px', alignItems: 'center', fontWeight: 500 }}>
             <span>{new Date(post.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
             <span style={{ color: theme.border }}>|</span>
             <span style={{ color: theme.accent }}>ITChap</span>
@@ -167,7 +243,7 @@ const BlogPost = () => {
   );
 };
 
-// 3. THE ADMIN DASHBOARD (WIDENED & LEFT ALIGNED)
+// 3. THE ADMIN DASHBOARD
 const Admin = () => {
   const [form, setForm] = useState({ title: '', slug: '', excerpt: '', content: '', tags: '' });
   const [msg, setMsg] = useState('');
