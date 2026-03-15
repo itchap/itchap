@@ -15,13 +15,16 @@ const theme = {
 
 const GlobalStyle = () => (
   <style>{`
-    html, body { 
+    html, body, #root { 
       margin: 0; 
       padding: 0; 
       background-color: ${theme.bg}; 
       color: ${theme.textMain}; 
       font-family: 'Inter', system-ui, sans-serif; 
       -webkit-font-smoothing: antialiased;
+      text-align: left !important; /* Kills any lingering Vite centering */
+      width: 100%;
+      min-height: 100vh;
     }
     
     a { color: ${theme.accent}; text-decoration: none; transition: opacity 0.2s; }
@@ -164,7 +167,7 @@ const BlogPost = () => {
   );
 };
 
-// 3. THE ADMIN DASHBOARD
+// 3. THE ADMIN DASHBOARD (WIDENED & LEFT ALIGNED)
 const Admin = () => {
   const [form, setForm] = useState({ title: '', slug: '', excerpt: '', content: '', tags: '' });
   const [msg, setMsg] = useState('');
@@ -184,8 +187,8 @@ const Admin = () => {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '60px auto', padding: '0 20px' }}>
-      <div style={{ background: theme.cardBg, padding: '40px', borderRadius: '16px', border: `1px solid ${theme.border}` }}>
+    <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
+      <div style={{ background: theme.cardBg, padding: '50px', borderRadius: '16px', border: `1px solid ${theme.border}`, textAlign: 'left' }}>
         <h2 style={{ color: theme.accent, marginTop: 0, marginBottom: '30px', fontSize: '2rem', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px' }}>Publish New Article</h2>
         
         <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
@@ -206,7 +209,7 @@ const Admin = () => {
           
           <div>
             <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Content (Markdown format)</label>
-            <textarea placeholder="Write your post here..." value={form.content} onChange={e => setForm({...form, content: e.target.value})} required style={{ minHeight: '400px', fontFamily: 'monospace', lineHeight: 1.6 }} />
+            <textarea placeholder="Write your post here..." value={form.content} onChange={e => setForm({...form, content: e.target.value})} required style={{ minHeight: '500px', fontFamily: 'monospace', lineHeight: 1.6 }} />
           </div>
           
           <div>
