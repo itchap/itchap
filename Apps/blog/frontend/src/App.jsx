@@ -222,7 +222,6 @@ const BlogPost = () => {
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto', padding: '60px 20px' }}>
       
-      {/* UPDATED: Green Hover on "Back to Articles" */}
       <Link 
         to="/" 
         style={{ 
@@ -305,7 +304,7 @@ const Admin = () => {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Send the secure token!
+        'Authorization': `Bearer ${token}` 
       },
       body: JSON.stringify({ ...form, tags: form.tags.split(',').map(t => t.trim()), published: true })
     });
@@ -384,50 +383,6 @@ const Admin = () => {
   );
 };
 
-  return (
-    <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
-      <div style={{ background: theme.cardBg, padding: '50px', borderRadius: '16px', border: `1px solid ${theme.border}`, textAlign: 'left' }}>
-        <h2 style={{ color: theme.accent, marginTop: 0, marginBottom: '30px', fontSize: '2rem', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px' }}>Publish New Article</h2>
-        
-        <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-          <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Article Title</label>
-            <input placeholder="e.g. The Value Pyramid" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>URL Slug</label>
-            <input placeholder="e.g. value-pyramid" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={{ fontFamily: 'monospace' }} />
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Summary (Excerpt)</label>
-            <textarea placeholder="A short summary for the feed..." value={form.excerpt} onChange={e => setForm({...form, excerpt: e.target.value})} required style={{ minHeight: '100px' }} />
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Content (Markdown format)</label>
-            <textarea placeholder="Write your post here..." value={form.content} onChange={e => setForm({...form, content: e.target.value})} required style={{ minHeight: '500px', fontFamily: 'monospace', lineHeight: 1.6 }} />
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Tags</label>
-            <input placeholder="e.g. Strategy, Leadership, Discovery" value={form.tags} onChange={e => setForm({...form, tags: e.target.value})} />
-          </div>
-          
-          <button type="submit" style={{ background: theme.accent, color: '#000', padding: '18px', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '8px', cursor: 'pointer', marginTop: '10px', transition: 'background 0.2s' }}
-            onMouseOver={e => e.target.style.background = '#00c753'}
-            onMouseOut={e => e.target.style.background = theme.accent}
-          >
-            Publish to Blog
-          </button>
-        </form>
-        {msg && <p style={{ color: theme.accent, textAlign: 'center', marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem' }}>{msg}</p>}
-      </div>
-    </div>
-  );
-};
-
 // --- APP CORE ---
 function App() {
   return (
@@ -441,7 +396,7 @@ function App() {
           itchap
         </a>
 
-        {/* UPDATED: RIGHT ALIGNED MENU */}
+        {/* RIGHT ALIGNED MENU */}
         <div style={{ display: 'flex', gap: '25px', alignItems: 'center', fontSize: '14px', fontWeight: 'bold' }}>
           <a 
             href="/" 
