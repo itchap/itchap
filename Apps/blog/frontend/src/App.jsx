@@ -76,13 +76,13 @@ const BlogList = () => {
       .catch(err => { console.error(err); setLoading(false); });
   }, []);
 
-  if (loading) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.accent, fontSize: '1.2rem', fontWeight: 'bold' }}>Scanning for Transmissions...</div>;
+  if (loading) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.accent, fontSize: '1.2rem', fontWeight: 'bold' }}>Loading articles...</div>;
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
       <header style={{ marginBottom: '60px', borderBottom: `2px solid ${theme.border}`, paddingBottom: '30px' }}>
-        <h1 style={{ fontSize: '3.5rem', margin: '0 0 10px 0', letterSpacing: '-1px' }}>Field <span style={{ color: theme.accent }}>Notes</span></h1>
-        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400 }}>Insights and strategies from the command line.</p>
+        <h1 style={{ fontSize: '3.5rem', margin: '0 0 10px 0', letterSpacing: '-1px' }}>SA <span style={{ color: theme.accent }}>Insights</span></h1>
+        <p style={{ color: theme.textSub, fontSize: '1.2rem', margin: 0, fontWeight: 400 }}>Field notes on solution architecture, technical sales, and leadership.</p>
       </header>
 
       <div style={{ display: 'grid', gap: '40px' }}>
@@ -117,7 +117,7 @@ const BlogList = () => {
                     </span>
                   ))}
                 </div>
-                <span style={{ fontSize: '0.9rem', color: '#555', fontWeight: 'bold' }}>READ →</span>
+                <span style={{ fontSize: '0.9rem', color: '#555', fontWeight: 'bold' }}>Read Article →</span>
               </div>
             </div>
           </Link>
@@ -138,12 +138,12 @@ const BlogPost = () => {
       .then(data => setPost(data));
   }, [slug]);
 
-  if (!post) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.textSub }}>Decrypting file...</div>;
+  if (!post) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.textSub }}>Loading article...</div>;
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
       <Link to="/" style={{ color: theme.textSub, display: 'inline-block', marginBottom: '30px', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
-        ← Return to Index
+        ← Back to Articles
       </Link>
       
       <article>
@@ -175,10 +175,10 @@ const Admin = () => {
     const res = await fetch('/api/blog/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, tags: form.tags.split(','), published: true })
+      body: JSON.stringify({ ...form, tags: form.tags.split(',').map(t => t.trim()), published: true })
     });
     if (res.ok) {
-      setMsg('✅ Transmission Successful');
+      setMsg('✅ Article Published Successfully');
       setTimeout(() => navigate('/'), 1500);
     }
   };
@@ -186,11 +186,11 @@ const Admin = () => {
   return (
     <div style={{ maxWidth: '800px', margin: '60px auto', padding: '0 20px' }}>
       <div style={{ background: theme.cardBg, padding: '40px', borderRadius: '16px', border: `1px solid ${theme.border}` }}>
-        <h2 style={{ color: theme.accent, marginTop: 0, marginBottom: '30px', fontSize: '2rem', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px' }}>Initialize Payload</h2>
+        <h2 style={{ color: theme.accent, marginTop: 0, marginBottom: '30px', fontSize: '2rem', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px' }}>Publish New Article</h2>
         
         <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
           <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Title</label>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Article Title</label>
             <input placeholder="e.g. The Value Pyramid" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
           </div>
           
@@ -200,25 +200,25 @@ const Admin = () => {
           </div>
           
           <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Excerpt</label>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Summary (Excerpt)</label>
             <textarea placeholder="A short summary for the feed..." value={form.excerpt} onChange={e => setForm({...form, excerpt: e.target.value})} required style={{ minHeight: '100px' }} />
           </div>
           
           <div>
-            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Content (Markdown)</label>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Content (Markdown format)</label>
             <textarea placeholder="Write your post here..." value={form.content} onChange={e => setForm({...form, content: e.target.value})} required style={{ minHeight: '400px', fontFamily: 'monospace', lineHeight: 1.6 }} />
           </div>
           
           <div>
             <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Tags</label>
-            <input placeholder="e.g. Strategy, Leadership, Code" value={form.tags} onChange={e => setForm({...form, tags: e.target.value})} />
+            <input placeholder="e.g. Strategy, Leadership, Discovery" value={form.tags} onChange={e => setForm({...form, tags: e.target.value})} />
           </div>
           
           <button type="submit" style={{ background: theme.accent, color: '#000', padding: '18px', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '8px', cursor: 'pointer', marginTop: '10px', transition: 'background 0.2s' }}
             onMouseOver={e => e.target.style.background = '#00c753'}
             onMouseOut={e => e.target.style.background = theme.accent}
           >
-            Deploy to Live
+            Publish to Blog
           </button>
         </form>
         {msg && <p style={{ color: theme.accent, textAlign: 'center', marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem' }}>{msg}</p>}
@@ -238,7 +238,7 @@ function App() {
           itchap
         </a>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <Link to="/admin" style={{ fontSize: '0.9rem', color: theme.textSub, fontWeight: 'bold' }}>Admin</Link>
+          <Link to="/admin" style={{ fontSize: '0.9rem', color: theme.textSub, fontWeight: 'bold' }}>Admin Dashboard</Link>
         </div>
       </nav>
 
