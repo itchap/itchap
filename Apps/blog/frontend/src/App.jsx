@@ -11,7 +11,8 @@ const theme = {
   textMain: '#fff',
   textSub: '#bbb',
   textRead: '#e2e8f0', 
-  inputBg: '#01121a'
+  inputBg: '#01121a',
+  danger: '#ff4d4d' // Added a red color for deletes
 };
 
 const GlobalStyle = () => (
@@ -51,8 +52,8 @@ const GlobalStyle = () => (
     }
     textarea { resize: vertical; }
 
-    /* --- SHARED BUTTON STYLE (Logout & Edit) --- */
-    .action-button {
+    /* --- SHARED BUTTON STYLES --- */
+    .action-button, .danger-button {
       background: transparent;
       color: ${theme.textSub};
       border: 1px solid ${theme.border};
@@ -68,6 +69,10 @@ const GlobalStyle = () => (
     .action-button:hover {
       color: ${theme.accent};
       border-color: ${theme.accent};
+    }
+    .danger-button:hover {
+      color: ${theme.danger};
+      border-color: ${theme.danger};
     }
 
     /* --- OPTIMIZED READING STYLES --- */
@@ -92,12 +97,11 @@ const Navigation = () => {
   const location = useLocation();
   const token = localStorage.getItem('itchap_blog_token');
   
-  // Check if we are currently on the publish or edit page
   const isPostMode = location.pathname.startsWith('/admin');
 
   const handleLogout = () => {
     localStorage.removeItem('itchap_blog_token');
-    window.location.href = '/blog'; // Force refresh to clear state globally
+    window.location.href = '/blog'; 
   };
 
   return (
@@ -115,15 +119,16 @@ const Navigation = () => {
         <Link to="/" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
           onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Blog</Link>
 
-        {/* Dynamic Post/Cancel Link */}
-        <Link to={isPostMode ? "/" : "/admin"} style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
-          onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>
-          {isPostMode ? 'Cancel' : 'Post'}
-        </Link>
-
-        {/* Dynamic Logout Button */}
-        {token && (
-          <button onClick={handleLogout} className="action-button" style={{ marginLeft: '10px' }}>Logout</button>
+        {token ? (
+          <>
+            <Link to={isPostMode ? "/" : "/admin"} style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+              onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>
+              {isPostMode ? 'Cancel' : 'Post'}
+            </Link>
+            <button onClick={handleLogout} className="action-button" style={{ marginLeft: '10px' }}>Logout</button>
+          </>
+        ) : (
+          <Link to="/admin" className="action-button" style={{ marginLeft: '10px' }}>Login</Link>
         )}
       </div>
     </nav>
@@ -145,6 +150,23 @@ const BlogList = () => {
       .then(data => { setPosts(data); setLoading(false); })
       .catch(err => { console.error(err); setLoading(false); });
   }, []);
+
+  const handleDelete = async (e, id) => {
+    e.stopPropagation(); // Prevents clicking the card and opening the post
+    if (!window.confirm("Are you sure you want to delete this article? This cannot be undone.")) return;
+    
+    try {
+      const res = await fetch(`/api/blog/posts/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setPosts(posts.filter(post => post._id !== id)); // Remove from screen instantly
+      }
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
 
   if (loading) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.accent, fontSize: '1.2rem', fontWeight: 'bold' }}>Loading articles...</div>;
 
@@ -177,14 +199,22 @@ const BlogList = () => {
               
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                 {token && (
-                  <button onClick={(e) => { e.stopPropagation(); navigate(`/admin/edit/${post.slug}`); }} 
-                    style={{ background: 'none', border: 'none', color: theme.textSub, cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem', transition: 'color 0.2s' }}
-                    onMouseOver={e => e.target.style.color = theme.accent}
-                    onMouseOut={e => e.target.style.color = theme.textSub}>
-                    [ Edit ]
-                  </button>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button onClick={(e) => { e.stopPropagation(); navigate(`/admin/edit/${post.slug}`); }} 
+                      style={{ background: 'none', border: 'none', color: theme.textSub, cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem', transition: 'color 0.2s' }}
+                      onMouseOver={e => e.target.style.color = theme.accent}
+                      onMouseOut={e => e.target.style.color = theme.textSub}>
+                      [ Edit ]
+                    </button>
+                    <button onClick={(e) => handleDelete(e, post._id)} 
+                      style={{ background: 'none', border: 'none', color: theme.textSub, cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem', transition: 'color 0.2s' }}
+                      onMouseOver={e => e.target.style.color = theme.danger}
+                      onMouseOut={e => e.target.style.color = theme.textSub}>
+                      [ Delete ]
+                    </button>
+                  </div>
                 )}
-                <span style={{ fontSize: '0.9rem', color: '#555', fontWeight: 'bold' }}>Read Article →</span>
+                <span style={{ fontSize: '0.9rem', color: '#555', fontWeight: 'bold', marginLeft: '10px' }}>Read Article →</span>
               </div>
             </div>
           </div>
@@ -198,6 +228,7 @@ const BlogList = () => {
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
+  const navigate = useNavigate();
   const token = localStorage.getItem('itchap_blog_token'); 
 
   useEffect(() => {
@@ -205,6 +236,22 @@ const BlogPost = () => {
       .then(res => res.json())
       .then(data => setPost(data));
   }, [slug]);
+
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this article? This cannot be undone.")) return;
+    
+    try {
+      const res = await fetch(`/api/blog/posts/${post._id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        navigate('/'); // Go back to feed after delete
+      }
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
 
   if (!post) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.textSub }}>Loading article...</div>;
 
@@ -218,7 +265,10 @@ const BlogPost = () => {
         </Link>
         
         {token && (
-          <Link to={`/admin/edit/${post.slug}`} className="action-button">Edit Article</Link>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <Link to={`/admin/edit/${post.slug}`} className="action-button">Edit Article</Link>
+            <button onClick={handleDelete} className="danger-button">Delete Article</button>
+          </div>
         )}
       </div>
       
@@ -275,7 +325,7 @@ const Admin = () => {
       const data = await res.json();
       if (res.ok && data.auth) {
         localStorage.setItem('itchap_blog_token', data.token);
-        window.location.reload(); // Force refresh to update Navigation menu globally
+        window.location.reload(); 
       } else {
         setLoginError('Access Denied. Invalid credentials.');
       }
@@ -326,7 +376,6 @@ const Admin = () => {
     <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
       <div style={{ background: theme.cardBg, padding: '50px', borderRadius: '16px', border: `1px solid ${theme.border}`, textAlign: 'left' }}>
         
-        {/* Removed internal logout button; now lives in the global Navigation */}
         <div style={{ borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px', marginBottom: '30px' }}>
           <h2 style={{ color: theme.accent, margin: 0, fontSize: '2rem' }}>{editId ? 'Edit Article' : 'Publish New Article'}</h2>
         </div>
@@ -375,7 +424,6 @@ function App() {
   return (
     <Router basename="/blog">
       <GlobalStyle />
-      {/* Dynamic Navigation Component */}
       <Navigation />
 
       <Routes>

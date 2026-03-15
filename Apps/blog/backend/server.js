@@ -87,4 +87,15 @@ app.put('/api/blog/posts/:id', verifyToken, async (req, res) => {
   }
 });
 
+// DELETE POST (Protected by verifyToken)
+app.delete('/api/blog/posts/:id', verifyToken, async (req, res) => {
+  try {
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    if (!deletedPost) return res.status(404).json({ msg: 'Post not found' });
+    res.json({ msg: 'Post deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => console.log(`🚀 Blog API running on port ${PORT}`));
