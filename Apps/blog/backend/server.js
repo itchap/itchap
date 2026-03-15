@@ -73,4 +73,18 @@ app.post('/api/blog/posts', verifyToken, async (req, res) => {
   }
 });
 
+// UPDATE POST (Protected by verifyToken)
+app.put('/api/blog/posts/:id', verifyToken, async (req, res) => {
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { new: true } // Returns the updated document
+    );
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => console.log(`🚀 Blog API running on port ${PORT}`));
