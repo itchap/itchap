@@ -10,7 +10,7 @@ const theme = {
   accent: '#00ed64', 
   textMain: '#fff',
   textSub: '#bbb',
-  textRead: '#e2e8f0', // Brighter, softer white for long-form reading
+  textRead: '#e2e8f0', 
   inputBg: '#01121a'
 };
 
@@ -30,7 +30,6 @@ const GlobalStyle = () => (
     }
     
     a { color: ${theme.accent}; text-decoration: none; transition: opacity 0.2s; }
-    a:hover { opacity: 0.8; }
     
     /* Input Styling */
     input, textarea { 
@@ -54,7 +53,7 @@ const GlobalStyle = () => (
 
     /* --- OPTIMIZED READING STYLES --- */
     .markdown-body {
-      font-size: 1.125rem; /* 18px base size for comfortable reading */
+      font-size: 1.125rem; 
       line-height: 1.75;
       color: ${theme.textRead};
     }
@@ -68,7 +67,7 @@ const GlobalStyle = () => (
     
     .markdown-body h2 { 
       font-size: 1.8rem; 
-      margin-top: 2em; /* Extra space above headings for clear sections */
+      margin-top: 2em; 
       margin-bottom: 0.8em; 
       border-bottom: 1px solid rgba(255,255,255,0.1); 
       padding-bottom: 0.4em; 
@@ -94,6 +93,7 @@ const GlobalStyle = () => (
       text-decoration-thickness: 1px;
       text-underline-offset: 4px;
     }
+    .markdown-body a:hover { opacity: 0.8; }
     
     .markdown-body code { 
       background: rgba(0,0,0,0.5); 
@@ -166,7 +166,7 @@ const BlogList = () => {
 
       <div style={{ display: 'grid', gap: '40px' }}>
         {posts.map(post => (
-          <Link to={`/post/${post.slug}`} key={post._id} style={{ display: 'block' }}>
+          <Link to={`/post/${post.slug}`} key={post._id} style={{ display: 'block', textDecoration: 'none' }}>
             <div style={{ 
               padding: '30px', 
               backgroundColor: theme.cardBg, 
@@ -221,7 +221,24 @@ const BlogPost = () => {
 
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto', padding: '60px 20px' }}>
-      <Link to="/" style={{ color: theme.textSub, display: 'inline-block', marginBottom: '40px', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
+      
+      {/* UPDATED: Green Hover on "Back to Articles" */}
+      <Link 
+        to="/" 
+        style={{ 
+          color: theme.textSub, 
+          display: 'inline-block', 
+          marginBottom: '40px', 
+          fontWeight: 'bold', 
+          fontSize: '0.9rem', 
+          letterSpacing: '1px', 
+          textTransform: 'uppercase',
+          textDecoration: 'none',
+          transition: 'color 0.2s ease-in-out'
+        }}
+        onMouseOver={e => e.target.style.color = theme.accent} 
+        onMouseOut={e => e.target.style.color = theme.textSub}
+      >
         ← Back to Articles
       </Link>
       
@@ -312,13 +329,43 @@ function App() {
     <Router basename="/blog">
       <GlobalStyle />
       <nav style={{ padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(1,30,43,0.95)', position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(10px)' }}>
+        
+        {/* LOGO */}
         <a href="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
           <img src="https://i.postimg.cc/hvPBkY0C/ninja.png" style={{ height: '35px', borderRadius: '50%' }} alt="logo" />
           itchap
         </a>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <Link to="/admin" style={{ fontSize: '0.9rem', color: theme.textSub, fontWeight: 'bold' }}>Admin Dashboard</Link>
+
+        {/* UPDATED: RIGHT ALIGNED MENU */}
+        <div style={{ display: 'flex', gap: '25px', alignItems: 'center', fontSize: '14px', fontWeight: 'bold' }}>
+          <a 
+            href="/" 
+            style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+            onMouseOver={e => e.target.style.color = theme.accent} 
+            onMouseOut={e => e.target.style.color = theme.textMain}
+          >
+            Home
+          </a>
+          
+          <Link 
+            to="/" 
+            style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+            onMouseOver={e => e.target.style.color = theme.accent} 
+            onMouseOut={e => e.target.style.color = theme.textMain}
+          >
+            Blog
+          </Link>
+
+          <Link 
+            to="/admin" 
+            style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+            onMouseOver={e => e.target.style.color = theme.accent} 
+            onMouseOut={e => e.target.style.color = theme.textMain}
+          >
+            Admin
+          </Link>
         </div>
+
       </nav>
 
       <Routes>
