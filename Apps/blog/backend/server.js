@@ -2,25 +2,46 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken'); // NEW
 
 const app = express();
-// Uses the PORT from .env (5002), or defaults to 5002 as a fallback
 const PORT = process.env.PORT || 5002;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection using your Atlas URI
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Blog MongoDB Connected'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 const Post = require('./models/Post');
 
+// --- SECURITY MIDDLEWARE ---
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(403).json({ msg: 'No token provided.' });
+
+  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).json({ msg: 'Failed to authenticate token.' });
+    next();
+  });
+};
+
 // --- ROUTES ---
 
-// 1. Get all published posts (for the blog feed)
+// LOGIN ROUTE
+app.post('/api/blog/login', (req, res) => {
+  const { username, password } = req.body;
+  
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+    const token = jwt.sign({ id: username }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    res.json({ auth: true, token });
+  } else {
+    res.status(401).json({ auth: false, msg: 'Invalid credentials' });
+  }
+});
+
+// GET ALL POSTS (Public)
 app.get('/api/blog/posts', async (req, res) => {
   try {
     const posts = await Post.find({ published: true }).sort({ createdAt: -1 });
@@ -30,7 +51,7 @@ app.get('/api/blog/posts', async (req, res) => {
   }
 });
 
-// 2. Get a single post by slug (for the article page)
+// GET SINGLE POST (Public)
 app.get('/api/blog/posts/:slug', async (req, res) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug });
@@ -41,8 +62,8 @@ app.get('/api/blog/posts/:slug', async (req, res) => {
   }
 });
 
-// 3. Create a new post (Admin only - we'll secure this later)
-app.post('/api/blog/posts', async (req, res) => {
+// CREATE POST (Protected by verifyToken)
+app.post('/api/blog/posts', verifyToken, async (req, res) => {
   try {
     const newPost = new Post(req.body);
     const savedPost = await newPost.save();

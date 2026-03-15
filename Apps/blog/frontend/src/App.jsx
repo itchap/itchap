@@ -260,24 +260,129 @@ const BlogPost = () => {
   );
 };
 
-// 3. THE ADMIN DASHBOARD
+// 3. THE SECURE ADMIN DASHBOARD
 const Admin = () => {
+  const [token, setToken] = useState(localStorage.getItem('itchap_blog_token'));
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  
   const [form, setForm] = useState({ title: '', slug: '', excerpt: '', content: '', tags: '' });
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
+  // --- LOGIN HANDLER ---
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    try {
+      const res = await fetch('/api/blog/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.auth) {
+        setToken(data.token);
+        localStorage.setItem('itchap_blog_token', data.token);
+      } else {
+        setLoginError('Access Denied. Invalid credentials.');
+      }
+    } catch (err) {
+      setLoginError('Server error.');
+    }
+  };
+
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.removeItem('itchap_blog_token');
+  };
+
+  // --- PUBLISH HANDLER ---
   const publish = async (e) => {
     e.preventDefault();
     const res = await fetch('/api/blog/posts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Send the secure token!
+      },
       body: JSON.stringify({ ...form, tags: form.tags.split(',').map(t => t.trim()), published: true })
     });
+    
     if (res.ok) {
       setMsg('✅ Article Published Successfully');
       setTimeout(() => navigate('/'), 1500);
+    } else {
+      setMsg('❌ Transmission Failed. Token may be expired.');
     }
   };
+
+  // IF NOT LOGGED IN: SHOW LOGIN FORM
+  if (!token) {
+    return (
+      <div style={{ maxWidth: '400px', width: '100%', margin: '100px auto', padding: '0 20px', boxSizing: 'border-box' }}>
+        <div style={{ background: theme.cardBg, padding: '40px', borderRadius: '16px', border: `1px solid ${theme.border}` }}>
+          <h2 style={{ color: theme.accent, marginTop: 0, marginBottom: '30px', textAlign: 'center' }}>Admin Access</h2>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <input type="text" placeholder="Username" value={credentials.username} onChange={e => setCredentials({...credentials, username: e.target.value})} required />
+            <input type="password" placeholder="Password" value={credentials.password} onChange={e => setCredentials({...credentials, password: e.target.value})} required />
+            <button type="submit" style={{ background: theme.accent, color: '#000', padding: '15px', fontWeight: 'bold', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Authenticate</button>
+          </form>
+          {loginError && <p style={{ color: '#ff4d4d', textAlign: 'center', marginTop: '20px', fontWeight: 'bold' }}>{loginError}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  // IF LOGGED IN: SHOW PUBLISHING DASHBOARD
+  return (
+    <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
+      <div style={{ background: theme.cardBg, padding: '50px', borderRadius: '16px', border: `1px solid ${theme.border}`, textAlign: 'left' }}>
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px', marginBottom: '30px' }}>
+          <h2 style={{ color: theme.accent, margin: 0, fontSize: '2rem' }}>Publish New Article</h2>
+          <button onClick={handleLogout} style={{ background: 'transparent', color: theme.textSub, border: `1px solid ${theme.border}`, padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>Logout</button>
+        </div>
+        
+        <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+          <div>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Article Title</label>
+            <input placeholder="e.g. The Value Pyramid" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>URL Slug</label>
+            <input placeholder="e.g. value-pyramid" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={{ fontFamily: 'monospace' }} />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Summary (Excerpt)</label>
+            <textarea placeholder="A short summary for the feed..." value={form.excerpt} onChange={e => setForm({...form, excerpt: e.target.value})} required style={{ minHeight: '100px' }} />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Content (Markdown format)</label>
+            <textarea placeholder="Write your post here..." value={form.content} onChange={e => setForm({...form, content: e.target.value})} required style={{ minHeight: '500px', fontFamily: 'monospace', lineHeight: 1.6 }} />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', color: theme.textSub, marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Tags</label>
+            <input placeholder="e.g. Strategy, Leadership, Discovery" value={form.tags} onChange={e => setForm({...form, tags: e.target.value})} />
+          </div>
+          
+          <button type="submit" style={{ background: theme.accent, color: '#000', padding: '18px', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '8px', cursor: 'pointer', marginTop: '10px', transition: 'background 0.2s' }}
+            onMouseOver={e => e.target.style.background = '#00c753'}
+            onMouseOut={e => e.target.style.background = theme.accent}
+          >
+            Publish to Blog
+          </button>
+        </form>
+        {msg && <p style={{ color: theme.accent, textAlign: 'center', marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem' }}>{msg}</p>}
+      </div>
+    </div>
+  );
+};
 
   return (
     <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
