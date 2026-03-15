@@ -5,62 +5,108 @@ import ReactMarkdown from 'react-markdown';
 // --- THEME CONFIG ---
 const theme = {
   bg: '#011e2b',
-  cardBg: 'rgba(255, 255, 255, 0.05)',
-  border: '#333',
-  accent: '#02ec64', // Your neon green
-  textMain: '#fff',
-  textSub: '#bbb'
+  cardBg: '#022a3b', // Slightly lighter than BG for depth
+  border: '#0a3d56',
+  accent: '#02ec64', 
+  textMain: '#f0f4f8',
+  textSub: '#94a3b8',
+  headerSize: 'clamp(2rem, 5vw, 3.5rem)'
 };
 
 const GlobalStyle = () => (
   <style>{`
-    html, body { margin: 0; padding: 0; background-color: ${theme.bg}; color: ${theme.textMain}; font-family: 'Inter', system-ui, sans-serif; }
-    a { color: ${theme.accent}; text-decoration: none; transition: 0.2s; }
-    a:hover { opacity: 0.8; }
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: ${theme.accent}; margin-top: 1.5em; }
-    .markdown-body p { line-height: 1.8; color: ${theme.textSub}; font-size: 1.1rem; }
-    .markdown-body code { background: #000; padding: 2px 6px; border-radius: 4px; color: #ff4d4d; }
-    .markdown-body pre { background: #000; padding: 20px; border-radius: 8px; overflow-x: auto; border: 1px solid ${theme.border}; margin: 20px 0; }
-    .markdown-body pre code { color: #fff; background: none; padding: 0; }
-    input, textarea { width: 100%; background: #000; border: 1px solid ${theme.border}; color: #fff; padding: 12px; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-    input:focus, textarea:focus { border-color: ${theme.accent}; outline: none; }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      background-color: ${theme.bg}; 
+      color: ${theme.textMain}; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Layout Containers */
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Typography & Markdown */
+    .markdown-body h1 { font-size: 2.5rem; margin-bottom: 0.5em; }
+    .markdown-body h2 { font-size: 1.8rem; color: ${theme.accent}; border-bottom: 1px solid ${theme.border}; padding-bottom: 0.3em; }
+    .markdown-body p { line-height: 1.8; color: ${theme.textSub}; font-size: 1.15rem; margin-bottom: 1.5em; }
+    
+    /* Code Blocks */
+    .markdown-body pre { 
+      background: #000c14; 
+      padding: 24px; 
+      border-radius: 12px; 
+      border: 1px solid ${theme.border};
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Admin Form Refinement */
+    .admin-card {
+      background: ${theme.cardBg};
+      border: 1px solid ${theme.border};
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; color: ${theme.accent}; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
   `}</style>
 );
 
 // --- COMPONENTS ---
 
-// 1. THE FEED
+// 1. REFINED FEED
 const BlogList = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    fetch('/api/blog/posts')
-      .then(res => res.json())
-      .then(data => { setPosts(data); setLoading(false); })
-      .catch(err => { console.error(err); setLoading(false); });
+    fetch('/api/blog/posts').then(res => res.json()).then(setPosts);
   }, []);
 
-  if (loading) return <div style={{ textAlign: 'center', marginTop: '100px', color: theme.accent }}>Initializing Intel Feed...</div>;
-
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 20px' }}>
-      <header style={{ marginBottom: '50px' }}>
-        <h1 style={{ fontSize: '3.5rem', margin: 0 }}>ITChap <span style={{ color: theme.accent }}>Blog</span></h1>
-        <p style={{ color: theme.textSub, fontSize: '1.2rem' }}>Field notes from the intersection of code and strategy.</p>
+    <div className="container">
+      <header style={{ textAlign: 'center', marginBottom: '80px' }}>
+        <h1 style={{ fontSize: theme.headerSize, fontWeight: 800, letterSpacing: '-2px', marginBottom: '10px' }}>
+          ITChap<span style={{ color: theme.accent }}>.blog</span>
+        </h1>
+        <p style={{ color: theme.textSub, fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
+          High-level strategy and technical deep-dives for the executive engineer.
+        </p>
       </header>
 
-      <div style={{ display: 'grid', gap: '25px' }}>
+      <div style={{ display: 'grid', gap: '30px' }}>
         {posts.map(post => (
-          <Link to={`/post/${post.slug}`} key={post._id}>
-            <div style={{ padding: '30px', backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '15px' }}
-                 onMouseOver={e => e.currentTarget.style.borderColor = theme.accent}
-                 onMouseOut={e => e.currentTarget.style.borderColor = theme.border}>
-              <h2 style={{ margin: '0 0 10px 0', color: theme.textMain }}>{post.title}</h2>
-              <p style={{ color: theme.textSub, margin: '0 0 20px 0' }}>{post.excerpt}</p>
-              <div style={{ display: 'flex', gap: '10px' }}>
+          <Link to={`/post/${post.slug}`} key={post._id} style={{ display: 'block' }}>
+            <div style={{ 
+              padding: '40px', 
+              backgroundColor: theme.cardBg, 
+              border: `1px solid ${theme.border}`, 
+              borderRadius: '24px',
+              transition: 'transform 0.2s ease, border-color 0.2s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.borderColor = theme.accent;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.borderColor = theme.border;
+            }}>
+              <h2 style={{ fontSize: '1.8rem', margin: '0 0 12px 0', color: '#fff' }}>{post.title}</h2>
+              <p style={{ color: theme.textSub, fontSize: '1.1rem', margin: '0 0 25px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {post.excerpt}
+              </p>
+              <div style={{ display: 'flex', gap: '8px' }}>
                 {post.tags.map(tag => (
-                  <span key={tag} style={{ fontSize: '12px', color: theme.accent, border: `1px solid ${theme.accent}`, padding: '4px 10px', borderRadius: '20px' }}>{tag}</span>
+                  <span key={tag} style={{ background: 'rgba(2, 236, 100, 0.1)', color: theme.accent, padding: '6px 14px', borderRadius: '100px', fontSize: '0.8rem', fontWeight: 600 }}>
+                    {tag}
+                  </span>
                 ))}
               </div>
             </div>
@@ -71,29 +117,33 @@ const BlogList = () => {
   );
 };
 
-// 2. THE ARTICLE VIEW
+// 2. REFINED ARTICLE
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/blog/posts/${slug}`)
-      .then(res => res.json())
-      .then(data => setPost(data));
+    fetch(`/api/blog/posts/${slug}`).then(res => res.json()).then(setPost);
   }, [slug]);
 
-  if (!post) return <div style={{ textAlign: 'center', marginTop: '100px' }}>Decrypting...</div>;
+  if (!post) return <div className="container" style={{ textAlign: 'center' }}>Loading transmission...</div>;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
-      <Link to="/" style={{ color: theme.textSub }}>← Back to feed</Link>
-      <h1 style={{ fontSize: '3rem', marginTop: '30px', marginBottom: '10px' }}>{post.title}</h1>
-      <div style={{ color: theme.textSub, marginBottom: '40px', borderBottom: `1px solid ${theme.border}`, paddingBottom: '20px' }}>
-        {new Date(post.createdAt).toLocaleDateString()}
-      </div>
-      <div className="markdown-body">
-        <ReactMarkdown>{post.content}</ReactMarkdown>
-      </div>
+    <div className="container" style={{ maxWidth: '750px' }}>
+      <Link to="/" style={{ color: theme.accent, fontWeight: 600, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        ← Return to Terminal
+      </Link>
+      <article style={{ marginTop: '40px' }}>
+        <h1 style={{ fontSize: '3.2rem', lineHeight: 1.1, marginBottom: '20px' }}>{post.title}</h1>
+        <div style={{ color: theme.textSub, marginBottom: '50px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <span>{new Date(post.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+          <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: theme.border }}></span>
+          <span>By ITChap</span>
+        </div>
+        <div className="markdown-body">
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+        </div>
+      </article>
     </div>
   );
 };
