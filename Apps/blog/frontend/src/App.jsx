@@ -341,7 +341,28 @@ const Admin = () => {
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px', marginBottom: '30px' }}>
           <h2 style={{ color: theme.accent, margin: 0, fontSize: '2rem' }}>Publish New Article</h2>
-          <button onClick={handleLogout} style={{ background: 'transparent', color: theme.textSub, border: `1px solid ${theme.border}`, padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>Logout</button>
+          <button 
+            onClick={handleLogout} 
+            style={{ 
+              background: 'transparent', 
+              color: theme.textSub, 
+              border: `1px solid ${theme.border}`, 
+              padding: '8px 16px', 
+              borderRadius: '6px', 
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out'
+            }}
+            onMouseOver={e => {
+              e.target.style.color = theme.accent;
+              e.target.style.borderColor = theme.accent;
+            }}
+            onMouseOut={e => {
+              e.target.style.color = theme.textSub;
+              e.target.style.borderColor = theme.border;
+            }}
+          >
+            Logout
+          </button>
         </div>
         
         <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
