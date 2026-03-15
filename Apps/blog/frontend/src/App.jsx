@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
 // --- THEME CONFIG ---
@@ -87,6 +87,49 @@ const GlobalStyle = () => (
   `}</style>
 );
 
+// --- DYNAMIC NAVIGATION MENU ---
+const Navigation = () => {
+  const location = useLocation();
+  const token = localStorage.getItem('itchap_blog_token');
+  
+  // Check if we are currently on the publish or edit page
+  const isPostMode = location.pathname.startsWith('/admin');
+
+  const handleLogout = () => {
+    localStorage.removeItem('itchap_blog_token');
+    window.location.href = '/blog'; // Force refresh to clear state globally
+  };
+
+  return (
+    <nav style={{ padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(1,30,43,0.95)', position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(10px)' }}>
+      
+      <a href="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+        <img src="https://i.postimg.cc/hvPBkY0C/ninja.png" style={{ height: '35px', borderRadius: '50%' }} alt="logo" />
+        itchap
+      </a>
+
+      <div style={{ display: 'flex', gap: '25px', alignItems: 'center', fontSize: '14px', fontWeight: 'bold' }}>
+        <a href="/" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+          onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Home</a>
+        
+        <Link to="/" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+          onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Blog</Link>
+
+        {/* Dynamic Post/Cancel Link */}
+        <Link to={isPostMode ? "/" : "/admin"} style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
+          onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>
+          {isPostMode ? 'Cancel' : 'Post'}
+        </Link>
+
+        {/* Dynamic Logout Button */}
+        {token && (
+          <button onClick={handleLogout} className="action-button" style={{ marginLeft: '10px' }}>Logout</button>
+        )}
+      </div>
+    </nav>
+  );
+};
+
 // --- COMPONENTS ---
 
 // 1. THE FEED
@@ -94,7 +137,7 @@ const BlogList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem('itchap_blog_token'); // Check if Admin is logged in
+  const token = localStorage.getItem('itchap_blog_token'); 
 
   useEffect(() => {
     fetch('/api/blog/posts')
@@ -133,7 +176,6 @@ const BlogList = () => {
               </div>
               
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                {/* CONDITIONAL EDIT LINK (Only shows if logged in) */}
                 {token && (
                   <button onClick={(e) => { e.stopPropagation(); navigate(`/admin/edit/${post.slug}`); }} 
                     style={{ background: 'none', border: 'none', color: theme.textSub, cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem', transition: 'color 0.2s' }}
@@ -175,7 +217,6 @@ const BlogPost = () => {
           ← Back to Articles
         </Link>
         
-        {/* CONDITIONAL EDIT BUTTON (Using the clean .action-button class) */}
         {token && (
           <Link to={`/admin/edit/${post.slug}`} className="action-button">Edit Article</Link>
         )}
@@ -199,19 +240,18 @@ const BlogPost = () => {
   );
 };
 
-// 3. THE SECURE ADMIN DASHBOARD (Handles Create AND Update)
+// 3. THE SECURE ADMIN DASHBOARD
 const Admin = () => {
-  const { editSlug } = useParams(); // If URL has /edit/something, we are updating
+  const { editSlug } = useParams(); 
   const [token, setToken] = useState(localStorage.getItem('itchap_blog_token'));
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
   
   const [form, setForm] = useState({ title: '', slug: '', excerpt: '', content: '', tags: '' });
-  const [editId, setEditId] = useState(null); // Database ID needed for updating
+  const [editId, setEditId] = useState(null); 
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
-  // If editing, fetch the existing data and fill the form
   useEffect(() => {
     if (editSlug && token) {
       fetch(`/api/blog/posts/${editSlug}`)
@@ -234,8 +274,8 @@ const Admin = () => {
       });
       const data = await res.json();
       if (res.ok && data.auth) {
-        setToken(data.token);
         localStorage.setItem('itchap_blog_token', data.token);
+        window.location.reload(); // Force refresh to update Navigation menu globally
       } else {
         setLoginError('Access Denied. Invalid credentials.');
       }
@@ -244,16 +284,8 @@ const Admin = () => {
     }
   };
 
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem('itchap_blog_token');
-    navigate('/');
-  };
-
   const publish = async (e) => {
     e.preventDefault();
-    
-    // Dynamic URL and Method (POST for new, PUT for update)
     const url = editId ? `/api/blog/posts/${editId}` : '/api/blog/posts';
     const method = editId ? 'PUT' : 'POST';
 
@@ -274,7 +306,6 @@ const Admin = () => {
     }
   };
 
-  // IF NOT LOGGED IN
   if (!token) {
     return (
       <div style={{ maxWidth: '400px', width: '100%', margin: '100px auto', padding: '0 20px', boxSizing: 'border-box' }}>
@@ -291,16 +322,13 @@ const Admin = () => {
     );
   }
 
-  // IF LOGGED IN
   return (
     <div style={{ maxWidth: '1000px', width: '100%', margin: '60px auto', padding: '0 20px', boxSizing: 'border-box' }}>
       <div style={{ background: theme.cardBg, padding: '50px', borderRadius: '16px', border: `1px solid ${theme.border}`, textAlign: 'left' }}>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px', marginBottom: '30px' }}>
+        {/* Removed internal logout button; now lives in the global Navigation */}
+        <div style={{ borderBottom: `1px solid ${theme.border}`, paddingBottom: '15px', marginBottom: '30px' }}>
           <h2 style={{ color: theme.accent, margin: 0, fontSize: '2rem' }}>{editId ? 'Edit Article' : 'Publish New Article'}</h2>
-          
-          {/* LOGOUT BUTTON (Using the clean .action-button class) */}
-          <button onClick={handleLogout} className="action-button">Logout</button>
         </div>
         
         <form onSubmit={publish} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
@@ -347,31 +375,14 @@ function App() {
   return (
     <Router basename="/blog">
       <GlobalStyle />
-      <nav style={{ padding: '15px 40px', borderBottom: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(1,30,43,0.95)', position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(10px)' }}>
-        
-        <a href="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: theme.accent, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-          <img src="https://i.postimg.cc/hvPBkY0C/ninja.png" style={{ height: '35px', borderRadius: '50%' }} alt="logo" />
-          itchap
-        </a>
-
-        <div style={{ display: 'flex', gap: '25px', alignItems: 'center', fontSize: '14px', fontWeight: 'bold' }}>
-          <a href="/" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
-            onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Home</a>
-          
-          <Link to="/" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
-            onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Blog</Link>
-
-          <Link to="/admin" style={{ color: theme.textMain, textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s ease-in-out' }}
-            onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = theme.textMain}>Admin</Link>
-        </div>
-
-      </nav>
+      {/* Dynamic Navigation Component */}
+      <Navigation />
 
       <Routes>
         <Route path="/" element={<BlogList />} />
         <Route path="/post/:slug" element={<BlogPost />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/edit/:editSlug" element={<Admin />} /> {/* CRITICAL: The route that handles editing */}
+        <Route path="/admin/edit/:editSlug" element={<Admin />} />
       </Routes>
     </Router>
   );
