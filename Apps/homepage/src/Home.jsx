@@ -95,7 +95,23 @@ function Home() {
               </a>
             </div>
 
-            {/* 5. PLACEHOLDER CARD */}
+            {/* 5. DEAL SHEETS CARD (NEW) */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+              <h3 style={{ marginTop: 0, color: theme.accent, fontSize: '22px' }}>SA Deal Sheets</h3>
+              <p style={{ color: theme.textSub, fontSize: '15px', lineHeight: '1.6', flexGrow: 1 }}>
+                A structured framework to alleviate "seller deficit disorder." Map stakeholders, define the Value Framework, and approach every discovery call with a strong, informed Point of View.
+              </p>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <span style={{ fontSize: '12px', backgroundColor: '#023430', color: theme.accent, padding: '4px 10px', borderRadius: '4px', border: '1px solid #00684a' }}>React</span>
+                <span style={{ fontSize: '12px', backgroundColor: '#023430', color: theme.accent, padding: '4px 10px', borderRadius: '4px', border: '1px solid #00684a' }}>MongoDB</span>
+                <span style={{ fontSize: '12px', backgroundColor: '#023430', color: theme.accent, padding: '4px 10px', borderRadius: '4px', border: '1px solid #00684a' }}>MEDDPICC</span>
+              </div>
+              <a href="/dealsheets/" style={{ display: 'block', textAlign: 'center', marginTop: '24px', padding: '12px', backgroundColor: 'transparent', color: theme.textMain, border: `1px solid ${theme.accent}`, borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={e => { e.target.style.backgroundColor = theme.accent; e.target.style.color = '#000'; }} onMouseOut={e => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = theme.textMain; }}>
+                Launch App &rarr;
+              </a>
+            </div>
+
+            {/* 6. PLACEHOLDER CARD */}
             <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', border: `1px dashed ${theme.border}`, borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '280px' }}>
               <span style={{ fontSize: '36px', marginBottom: '15px' }}>🚀</span>
               <h3 style={{ margin: 0, color: theme.textSub }}>More coming soon...</h3>
