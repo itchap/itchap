@@ -12,6 +12,8 @@ const theme = {
   danger: '#ff4d4d'
 };
 
+const API_URL = 'https://itchap.com/api/dealsheets';
+
 const GlobalStyle = () => (
   <style>{`
     html, body, #root { 
