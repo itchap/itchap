@@ -106,7 +106,7 @@ function Home() {
                 <span style={{ fontSize: '12px', backgroundColor: '#023430', color: theme.accent, padding: '4px 10px', borderRadius: '4px', border: '1px solid #00684a' }}>MongoDB</span>
                 <span style={{ fontSize: '12px', backgroundColor: '#023430', color: theme.accent, padding: '4px 10px', borderRadius: '4px', border: '1px solid #00684a' }}>MEDDPICC</span>
               </div>
-              <a href="/dealsheets/" style={{ display: 'block', textAlign: 'center', marginTop: '24px', padding: '12px', backgroundColor: 'transparent', color: theme.textMain, border: `1px solid ${theme.accent}`, borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={e => { e.target.style.backgroundColor = theme.accent; e.target.style.color = '#000'; }} onMouseOut={e => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = theme.textMain; }}>
+              <a href="/app/dealsheets/" style={{ display: 'block', textAlign: 'center', marginTop: '24px', padding: '12px', backgroundColor: 'transparent', color: theme.textMain, border: `1px solid ${theme.accent}`, borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={e => { e.target.style.backgroundColor = theme.accent; e.target.style.color = '#000'; }} onMouseOut={e => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = theme.textMain; }}>
                 Launch App &rarr;
               </a>
             </div>
