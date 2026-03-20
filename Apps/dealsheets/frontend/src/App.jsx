@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// EXACT GLOBAL RESET FROM SKILLS APP
+// EXACT GLOBAL RESET FROM SKILLS APP (UPDATED WITH MODERN UI)
 const GlobalReset = () => (
   <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     html, body {
       margin: 0 !important;
       padding: 0 !important;
@@ -12,13 +14,48 @@ const GlobalReset = () => (
       width: 100% !important;
       height: 100% !important;
       overflow-x: hidden !important;
-      border: none !important;
-      outline: none !important;
+      font-family: 'Inter', sans-serif !important;
     }
+    
     #root {
       width: 100%;
       height: 100%;
-      border: none !important;
+    }
+
+    /* Modern Dark Theme Form Fields */
+    .sa-input {
+      width: 100%;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      background-color: rgba(255, 255, 255, 0.05); /* Soft transparent background */
+      color: #ffffff; /* White text */
+      border: 1px solid #2a3f47; /* Subtle border matching the theme */
+      border-radius: 6px; /* Slightly softer corners */
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    /* Glow effect when the user clicks into a field */
+    .sa-input:focus {
+      border-color: #00ed64;
+      background-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.15);
+    }
+
+    /* Soften the placeholder text */
+    .sa-input::placeholder {
+      color: #6b828a;
+    }
+
+    /* Custom scrollbar for textareas */
+    .sa-input::-webkit-scrollbar {
+      width: 8px;
+    }
+    .sa-input::-webkit-scrollbar-thumb {
+      background-color: #2a3f47;
+      border-radius: 4px;
     }
   `}</style>
 );
@@ -36,20 +73,22 @@ const inputStyle = {
   width: '100%',
   padding: '8px',
   boxSizing: 'border-box',
-  backgroundColor: '#fff',
+  backgroundColor: '#fff',x
   color: '#000',
   border: '1px solid #555',
   borderRadius: '4px',
   fontSize: '12px'
 };
 
-// Reusable Label Style
+// Reusable Label Style (Updated)
 const labelStyle = {
   display: 'block',
   fontSize: '12px',
-  marginBottom: '5px',
-  color: '#00ed64',
-  fontWeight: 'bold'
+  marginBottom: '6px',
+  color: '#88a3ae', // Soft muted teal/gray instead of full neon green
+  fontWeight: '600',
+  letterSpacing: '0.5px',
+  textTransform: 'uppercase' // Gives it a very clean, structured data feel
 };
 
 export default function DealSheetsApp() {
@@ -193,7 +232,7 @@ export default function DealSheetsApp() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div><label style={labelStyle}>Account Name</label><input style={inputStyle} name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
+                  <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
                   <div><label style={labelStyle}>ARR Amount</label><input style={inputStyle} name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
                   <div><label style={labelStyle}>Industry</label><input style={inputStyle} name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
                   <div>
