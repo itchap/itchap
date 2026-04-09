@@ -160,11 +160,24 @@ function App() {
   };
 
   const handleReset = async () => {
-    if(!window.confirm("WARNING: Are you sure you want to reset?")) return;
+    if(!window.confirm(`WARNING: This will reset the current session (${sessionId}) and return all skills to the unplotted state. This action cannot be undone. Are you sure you want to proceed?`)) return;
     try {
       const res = await axios.post(`${API_URL}/reset/${sessionId}`);
       setSkills(res.data.skills);
     } catch (error) {}
+  };
+  
+  const handleNewSession = async () => {
+      if(!window.confirm("WARNING: This will generate a new session ID and clear your current board. Ensure you have copied your current Session ID if you wish to return to it. Proceed?")) return;
+      try {
+          const res = await axios.post(`${API_URL}/init`);
+          setSessionId(res.data.sessionId);
+          setSkills(res.data.skills);
+          localStorage.setItem('matrixSessionId', res.data.sessionId);
+          setShowSessionId(false); // Hide the old ID if it was showing
+      } catch (error) {
+          console.error("Failed to create new session", error);
+      }
   };
 
   const executeExport = async () => {
@@ -385,6 +398,10 @@ function App() {
               
               <button onClick={handleReset} style={{ width: '100%', padding: '10px', backgroundColor: '#ff4d4d', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer', marginTop: '10px' }}>
                 Reset Session
+              </button>
+              
+              <button onClick={handleNewSession} style={{ width: '100%', padding: '10px', backgroundColor: '#a6ffeb', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                New Session
               </button>
             </div>
           </div>
