@@ -73,7 +73,7 @@ const inputStyle = {
   width: '100%',
   padding: '8px',
   boxSizing: 'border-box',
-  backgroundColor: '#fff',x
+  backgroundColor: '#fff',
   color: '#000',
   border: '1px solid #555',
   borderRadius: '4px',
