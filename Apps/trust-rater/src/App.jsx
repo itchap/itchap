@@ -320,7 +320,7 @@ function App() {
                 )}
 
                 <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                  Reset Session
+                  New Session
                 </button>
               </div>
             </div>
