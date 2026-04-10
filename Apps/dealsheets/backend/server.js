@@ -28,7 +28,7 @@ app.post('/api/dealsheets/save', async (req, res) => {
     if (data.arr !== undefined && data.arr !== null && data.arr.toString().trim() !== '') {
       const arrNumber = Number(data.arr);
       if (isNaN(arrNumber)) {
-        return res.status(400).json({ error: 'ARR must be a clean number (e.g., 100000). Please remove any letters, commas, or currency symbols.' });
+        return res.status(400).json({ error: 'ARR must be a clean number.' });
       }
       data.arr = arrNumber; 
     } else {
@@ -37,7 +37,9 @@ app.post('/api/dealsheets/save', async (req, res) => {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      // Upgraded to the requested gemini-2.5-flash model
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      
       const prompt = `
         You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
         Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps (e.g., weak success metrics, missing compelling event, lack of business outcomes). Maximum 40 words total.
@@ -69,14 +71,12 @@ app.post('/api/dealsheets/save', async (req, res) => {
   }
 });
 
-// LOAD SESSION (HIGHLY FORGIVING SEARCH)
+// LOAD SESSION
 app.get('/api/dealsheets/:sessionId', async (req, res) => {
   try {
     const searchId = req.params.sessionId.trim();
-    
-    // This searches the DB for the ID, ignoring case and ignoring any accidental trailing spaces
     const sheet = await DealSheet.findOne({ 
-      sessionId: { $regex: new RegExp(searchId, 'i') } 
+      sessionId: { $regex: new RegExp(`^${searchId}$`, 'i') } 
     });
     
     if (!sheet) return res.status(404).json({ msg: 'Session not found.' });
@@ -92,7 +92,8 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Upgraded to the requested gemini-2.5-flash model
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
       You are an elite enterprise Solutions Architect. Based on the following Deal Sheet data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 
@@ -113,8 +114,7 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     `;
 
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    res.json({ pov: response.text() });
+    res.json({ pov: result.response.text() });
   } catch (error) {
     console.error("AI Error:", error);
     res.status(500).json({ error: 'Failed to generate POV' });
