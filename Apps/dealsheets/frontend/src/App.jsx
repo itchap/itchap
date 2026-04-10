@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// GLOBAL RESET & UNIFIED CSS
+// GLOBAL RESET & UNIFIED CSS (Added Print Styles)
 const GlobalReset = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -27,8 +27,8 @@ const GlobalReset = () => (
       width: 100%;
       padding: 10px 12px;
       box-sizing: border-box;
-      background-color: #f9fbfb !important; /* Paler, cleaner white background */
-      color: #000000 !important; /* Black text for readability */
+      background-color: #f9fbfb !important; 
+      color: #000000 !important; 
       border: 1px solid #2a3f47 !important;
       border-radius: 6px;
       font-size: 13px;
@@ -37,19 +37,16 @@ const GlobalReset = () => (
       outline: none;
     }
 
-    /* Glow effect and pure white background when the user clicks into a field */
     .sa-input:focus {
       background-color: #ffffff !important;
       border-color: #00ed64 !important;
       box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.3) !important;
     }
 
-    /* Placeholder text styling */
     .sa-input::placeholder {
       color: #7c9096 !important; 
     }
 
-    /* Custom scrollbar for textareas */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -57,10 +54,22 @@ const GlobalReset = () => (
       background-color: #00684a;
       border-radius: 4px;
     }
+
+    /* CLEAN PDF PRINT STYLING */
+    @media print {
+      body { background-color: #ffffff !important; color: #000000 !important; }
+      .no-print { display: none !important; }
+      .print-area { width: 100% !important; max-width: 100% !important; }
+      .sa-input { 
+        background-color: transparent !important; 
+        border: 1px solid #ccc !important; 
+        color: #000 !important; 
+      }
+      h2, h3, label { color: #000 !important; }
+    }
   `}</style>
 );
 
-// Reusable Panel Style
 const panelStyle = {
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   padding: '15px',
@@ -68,7 +77,6 @@ const panelStyle = {
   border: '1px solid #333'
 };
 
-// Reusable Label Style
 const labelStyle = {
   display: 'block',
   fontSize: '12px',
@@ -81,6 +89,8 @@ const labelStyle = {
 
 export default function DealSheetsApp() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiPov, setAiPov] = useState(null);
   
   const [deal, setDeal] = useState({
     sessionId: `DS-${Math.floor(Math.random() * 10000)}`,
@@ -124,12 +134,65 @@ export default function DealSheetsApp() {
     setDeal(prev => ({ ...prev, stakeholders: prev.stakeholders.filter(s => s.id !== id) }));
   };
 
+  // --- API INTEGRATION FUNCTIONS ---
+
+  const saveSession = async () => {
+    try {
+      const res = await fetch(`${API_URL}/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: deal.sessionId, data: deal })
+      });
+      if (res.ok) alert(`✅ Session ${deal.sessionId} saved securely!`);
+      else alert('❌ Failed to save session.');
+    } catch (err) {
+      alert('❌ Error connecting to server.');
+    }
+  };
+
+  const loadSession = async () => {
+    if (!deal.sessionId) return alert('Enter a Session ID to load.');
+    try {
+      const res = await fetch(`${API_URL}/${deal.sessionId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setDeal(data);
+        alert('✅ Session loaded successfully!');
+      } else {
+        alert('❌ Session ID not found.');
+      }
+    } catch (err) {
+      alert('❌ Error connecting to server.');
+    }
+  };
+
+  const generatePOV = async () => {
+    setIsGenerating(true);
+    try {
+      const res = await fetch(`${API_URL}/generate-pov`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deal })
+      });
+      const data = await res.json();
+      if (data.pov) setAiPov(data.pov);
+      else alert('Failed to generate POV.');
+    } catch (err) {
+      alert('❌ Error connecting to AI service.');
+    }
+    setIsGenerating(false);
+  };
+
+  const exportPDF = () => {
+    window.print(); // Relies on the @media print CSS to format it nicely
+  };
+
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
       
       {/* NAVIGATION BAR */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
+      <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
@@ -141,23 +204,33 @@ export default function DealSheetsApp() {
       </h2>
 
       {/* MAIN LAYOUT CONTAINER */}
-      <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }} className="print-area">
         
         {/* LEFT COLUMN */}
-        <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="no-print" style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div style={panelStyle}>
             <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Session Controls</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               
               <div style={{ display: 'flex', gap: '5px' }}>
-                <input type="text" className="sa-input" value={deal.sessionId} readOnly style={{ textAlign: 'center', fontWeight: 'bold' }} />
-                <button style={{ padding: '8px', backgroundColor: '#00684a', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Load</button>
+                <input 
+                  type="text" 
+                  name="sessionId"
+                  className="sa-input" 
+                  value={deal.sessionId} 
+                  onChange={handleInputChange} 
+                  style={{ textAlign: 'center', fontWeight: 'bold' }} 
+                  placeholder="DS-XXXX"
+                />
+                <button onClick={loadSession} style={{ padding: '8px', backgroundColor: '#00684a', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Load</button>
               </div>
 
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💾 Save Deal Sheet</button>
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>📄 Export to PDF</button>
-              <button style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>🧠 Generate AI POV</button>
+              <button onClick={saveSession} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💾 Save Deal Sheet</button>
+              <button onClick={exportPDF} style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>📄 Export to PDF</button>
+              <button onClick={generatePOV} disabled={isGenerating} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: isGenerating ? '#777' : '#c471ed', border: `1px solid ${isGenerating ? '#777' : '#c471ed'}`, borderRadius: '4px', cursor: isGenerating ? 'wait' : 'pointer', fontWeight: 'bold', marginTop: '10px' }}>
+                {isGenerating ? '🧠 Generating...' : '🧠 Generate AI POV'}
+              </button>
             </div>
           </div>
 
@@ -172,7 +245,7 @@ export default function DealSheetsApp() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* TAB NAVIGATION */}
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div className="no-print" style={{ display: 'flex', gap: '10px' }}>
             {['overview', 'stakeholders', 'value'].map(tab => (
               <button 
                 key={tab}
@@ -187,8 +260,8 @@ export default function DealSheetsApp() {
           <div style={{ ...panelStyle, padding: '25px' }}>
             
             {/* TAB 1: OVERVIEW */}
-            {activeTab === 'overview' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+            {(activeTab === 'overview' || window.matchMedia('print').matches) && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginBottom: '30px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
                   <div><label style={labelStyle}>ARR Amount</label><input className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
@@ -216,11 +289,11 @@ export default function DealSheetsApp() {
             )}
 
             {/* TAB 2: STAKEHOLDERS */}
-            {activeTab === 'stakeholders' && (
-              <div>
+            {(activeTab === 'stakeholders' || window.matchMedia('print').matches) && (
+              <div style={{ marginBottom: '30px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>
                   <h3 style={{ color: '#00ed64', margin: 0 }}>Key Customer Stakeholders</h3>
-                  <button onClick={addStakeholder} style={{ padding: '8px 12px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>+ Add Stakeholder</button>
+                  <button className="no-print" onClick={addStakeholder} style={{ padding: '8px 12px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>+ Add Stakeholder</button>
                 </div>
                 
                 {deal.stakeholders.length === 0 ? (
@@ -257,7 +330,7 @@ export default function DealSheetsApp() {
                             <option value="Threatened">Threatened</option>
                           </select>
                         </div>
-                        <button onClick={() => removeStakeholder(s.id)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '0 5px 8px 5px', fontSize: '18px', fontWeight: 'bold' }} title="Remove">&times;</button>
+                        <button className="no-print" onClick={() => removeStakeholder(s.id)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '0 5px 8px 5px', fontSize: '18px', fontWeight: 'bold' }} title="Remove">&times;</button>
                       </div>
                     ))}
                   </div>
@@ -266,7 +339,7 @@ export default function DealSheetsApp() {
             )}
 
             {/* TAB 3: VALUE FRAMEWORK */}
-            {activeTab === 'value' && (
+            {(activeTab === 'value' || window.matchMedia('print').matches) && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -291,6 +364,23 @@ export default function DealSheetsApp() {
           </div>
         </div>
       </div>
+
+      {/* AI POV MODAL */}
+      {aiPov && (
+        <div className="no-print" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <div style={{ backgroundColor: '#011e2b', border: '2px solid #c471ed', padding: '30px', borderRadius: '8px', maxWidth: '700px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(196, 113, 237, 0.2)' }}>
+             <h3 style={{ color: '#c471ed', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+               🧠 Generated Point of View (POV)
+             </h3>
+             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px', fontFamily: 'Inter, sans-serif' }}>{aiPov}</div>
+             <div style={{ display: 'flex', gap: '10px' }}>
+               <button onClick={() => { navigator.clipboard.writeText(aiPov); alert('Copied to clipboard!'); }} style={{ flex: 1, padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Copy to Clipboard</button>
+               <button onClick={() => setAiPov(null)} style={{ flex: 1, padding: '10px', backgroundColor: '#c471ed', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+             </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
