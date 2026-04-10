@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// EXACT GLOBAL RESET FROM SKILLS APP (UPDATED WITH MODERN UI)
+// GLOBAL RESET & UNIFIED CSS
 const GlobalReset = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -22,15 +22,15 @@ const GlobalReset = () => (
       height: 100%;
     }
 
-    /* Modern Dark Theme Form Fields */
+    /* UNIFIED MINT GREEN FORM FIELDS */
     .sa-input {
       width: 100%;
       padding: 10px 12px;
       box-sizing: border-box;
-      background-color: rgba(255, 255, 255, 0.05); /* Soft transparent background */
-      color: #ffffff; /* White text */
-      border: 1px solid #2a3f47; /* Subtle border matching the theme */
-      border-radius: 6px; /* Slightly softer corners */
+      background-color: #a6ffeb !important; /* Mint Green Background */
+      color: #000000 !important; /* Black text for readability */
+      border: 1px solid #2a3f47 !important;
+      border-radius: 6px;
       font-size: 13px;
       font-family: 'Inter', sans-serif;
       transition: all 0.2s ease;
@@ -39,28 +39,27 @@ const GlobalReset = () => (
 
     /* Glow effect when the user clicks into a field */
     .sa-input:focus {
-      border-color: #00ed64;
-      background-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.15);
+      border-color: #00ed64 !important;
+      box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.3) !important;
     }
 
-    /* Soften the placeholder text */
+    /* Darker placeholder text so it reads well on the mint background */
     .sa-input::placeholder {
-      color: #6b828a;
+      color: #4a6b62 !important; 
     }
 
     /* Custom scrollbar for textareas */
-    .sa-input::-webkit-scrollbar {
+    ::-webkit-scrollbar {
       width: 8px;
     }
-    .sa-input::-webkit-scrollbar-thumb {
-      background-color: #2a3f47;
+    ::-webkit-scrollbar-thumb {
+      background-color: #00684a;
       border-radius: 4px;
     }
   `}</style>
 );
 
-// Reusable Panel Style based on Skills App
+// Reusable Panel Style
 const panelStyle = {
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   padding: '15px',
@@ -68,27 +67,15 @@ const panelStyle = {
   border: '1px solid #333'
 };
 
-// Reusable Input Style based on Skills App
-const inputStyle = {
-  width: '100%',
-  padding: '8px',
-  boxSizing: 'border-box',
-  backgroundColor: '#fff',
-  color: '#000',
-  border: '1px solid #555',
-  borderRadius: '4px',
-  fontSize: '12px'
-};
-
-// Reusable Label Style (Updated)
+// Reusable Label Style
 const labelStyle = {
   display: 'block',
   fontSize: '12px',
   marginBottom: '6px',
-  color: '#88a3ae', // Soft muted teal/gray instead of full neon green
+  color: '#88a3ae', 
   fontWeight: '600',
   letterSpacing: '0.5px',
-  textTransform: 'uppercase' // Gives it a very clean, structured data feel
+  textTransform: 'uppercase' 
 };
 
 export default function DealSheetsApp() {
@@ -140,25 +127,14 @@ export default function DealSheetsApp() {
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
       
-      {/* SUBTLE NAVIGATION BAR (From Skills App) */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        padding: '10px 20px', 
-        fontSize: '13px',
-        opacity: 0.8
-      }}>
-        <a 
-          href="/" 
-          style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} 
-          onMouseOver={e => e.target.style.color = '#01ed64'} 
-          onMouseOut={e => e.target.style.color = '#fff'}
-        >
+      {/* NAVIGATION BAR */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
+        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
       </div>
 
-      {/* HEADER (From Skills App) */}
+      {/* HEADER */}
       <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
         🤝 SA <span style={{ color: '#01ed64' }}>Deal Sheets</span> Framework
       </h2>
@@ -166,7 +142,7 @@ export default function DealSheetsApp() {
       {/* MAIN LAYOUT CONTAINER */}
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }}>
         
-        {/* LEFT COLUMN (250px width just like Skills App) */}
+        {/* LEFT COLUMN */}
         <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div style={panelStyle}>
@@ -174,21 +150,13 @@ export default function DealSheetsApp() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               
               <div style={{ display: 'flex', gap: '5px' }}>
-                <input type="text" value={deal.sessionId} readOnly style={{ ...inputStyle, flex: 1, backgroundColor: '#011e2b', color: '#00ed64', border: '1px solid #00ed64', fontWeight: 'bold', textAlign: 'center' }} />
+                <input type="text" className="sa-input" value={deal.sessionId} readOnly style={{ textAlign: 'center', fontWeight: 'bold' }} />
                 <button style={{ padding: '8px', backgroundColor: '#00684a', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Load</button>
               </div>
 
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                💾 Save Deal Sheet
-              </button>
-              
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
-                📄 Export to PDF
-              </button>
-
-              <button style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>
-                🧠 Generate AI POV
-              </button>
+              <button style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💾 Save Deal Sheet</button>
+              <button style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>📄 Export to PDF</button>
+              <button style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>🧠 Generate AI POV</button>
             </div>
           </div>
 
@@ -202,23 +170,13 @@ export default function DealSheetsApp() {
         {/* RIGHT MAIN AREA */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* TAB NAVIGATION (Styled like the category buttons in Skills app) */}
+          {/* TAB NAVIGATION */}
           <div style={{ display: 'flex', gap: '10px' }}>
             {['overview', 'stakeholders', 'value'].map(tab => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)} 
-                style={{ 
-                  flex: 1, 
-                  padding: '10px', 
-                  backgroundColor: activeTab === tab ? '#00ed64' : '#023430', 
-                  color: activeTab === tab ? '#000' : '#00ed64', 
-                  border: activeTab === tab ? 'none' : '1px solid #00684a', 
-                  borderRadius: '4px', 
-                  cursor: 'pointer', 
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize'
-                }}
+                style={{ flex: 1, padding: '10px', backgroundColor: activeTab === tab ? '#00ed64' : '#023430', color: activeTab === tab ? '#000' : '#00ed64', border: activeTab === tab ? 'none' : '1px solid #00684a', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', textTransform: 'capitalize' }}
               >
                 {tab.replace('value', 'Value Framework')}
               </button>
@@ -230,14 +188,13 @@ export default function DealSheetsApp() {
             {/* TAB 1: OVERVIEW */}
             {activeTab === 'overview' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-                
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
-                  <div><label style={labelStyle}>ARR Amount</label><input style={inputStyle} name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
-                  <div><label style={labelStyle}>Industry</label><input style={inputStyle} name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
+                  <div><label style={labelStyle}>ARR Amount</label><input className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
+                  <div><label style={labelStyle}>Industry</label><input className="sa-input" name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
                   <div>
                     <label style={labelStyle}>Sales Motion</label>
-                    <select style={{...inputStyle, height: '33px'}} name="salesMotion" value={deal.salesMotion} onChange={handleInputChange}>
+                    <select className="sa-input" style={{ cursor: 'pointer', height: '39px', padding: '0 12px' }} name="salesMotion" value={deal.salesMotion} onChange={handleInputChange}>
                       <option value="Launch">Launch</option>
                       <option value="Migrate">Migrate</option>
                       <option value="Select">Select</option>
@@ -249,9 +206,9 @@ export default function DealSheetsApp() {
                 <div style={{ borderTop: '1px dashed #555', paddingTop: '20px' }}>
                   <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#00ed64' }}>The "Why"</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <div><label style={labelStyle}>Why Do Anything?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyDoAnything" value={deal.whyDoAnything} onChange={handleInputChange} placeholder="What's the customer's business justification?" /></div>
-                    <div><label style={labelStyle}>Why Now?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyNow" value={deal.whyNow} onChange={handleInputChange} placeholder="What's the compelling event?" /></div>
-                    <div><label style={labelStyle}>Why Us?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyMongoDB" value={deal.whyMongoDB} onChange={handleInputChange} placeholder="Why are we the right solution?" /></div>
+                    <div><label style={labelStyle}>Why Do Anything?</label><textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="whyDoAnything" value={deal.whyDoAnything} onChange={handleInputChange} placeholder="What's the customer's business justification?" /></div>
+                    <div><label style={labelStyle}>Why Now?</label><textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="whyNow" value={deal.whyNow} onChange={handleInputChange} placeholder="What's the compelling event?" /></div>
+                    <div><label style={labelStyle}>Why Us?</label><textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="whyMongoDB" value={deal.whyMongoDB} onChange={handleInputChange} placeholder="Why are we the right solution?" /></div>
                   </div>
                 </div>
               </div>
@@ -271,11 +228,11 @@ export default function DealSheetsApp() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {deal.stakeholders.map(s => (
                       <div key={s.id} style={{ display: 'flex', gap: '10px', backgroundColor: 'rgba(255, 255, 255, 0.02)', padding: '15px', borderRadius: '8px', border: '1px solid #444', alignItems: 'flex-end' }}>
-                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Name</label><input style={inputStyle} value={s.name} onChange={(e) => updateStakeholder(s.id, 'name', e.target.value)} /></div>
-                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Role</label><input style={inputStyle} value={s.role} onChange={(e) => updateStakeholder(s.id, 'role', e.target.value)} /></div>
+                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Name</label><input className="sa-input" value={s.name} onChange={(e) => updateStakeholder(s.id, 'name', e.target.value)} /></div>
+                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Role</label><input className="sa-input" value={s.role} onChange={(e) => updateStakeholder(s.id, 'role', e.target.value)} /></div>
                         <div style={{ flex: 1 }}>
                           <label style={labelStyle}>Influence</label>
-                          <select style={{...inputStyle, height: '33px'}} value={s.influence} onChange={(e) => updateStakeholder(s.id, 'influence', e.target.value)}>
+                          <select className="sa-input" style={{ cursor: 'pointer', height: '39px', padding: '0 12px' }} value={s.influence} onChange={(e) => updateStakeholder(s.id, 'influence', e.target.value)}>
                             <option value="5">5 - Veto</option>
                             <option value="4">4 - Recommender</option>
                             <option value="3">3 - Evaluator</option>
@@ -285,7 +242,7 @@ export default function DealSheetsApp() {
                         </div>
                         <div style={{ flex: 1 }}>
                           <label style={labelStyle}>Support</label>
-                          <select style={{...inputStyle, height: '33px'}} value={s.support} onChange={(e) => updateStakeholder(s.id, 'support', e.target.value)}>
+                          <select className="sa-input" style={{ cursor: 'pointer', height: '39px', padding: '0 12px' }} value={s.support} onChange={(e) => updateStakeholder(s.id, 'support', e.target.value)}>
                             <option value="++">++ Strong</option>
                             <option value="+">+ Supporter</option>
                             <option value="?">? Neutral</option>
@@ -294,7 +251,7 @@ export default function DealSheetsApp() {
                         </div>
                         <div style={{ flex: 1 }}>
                           <label style={labelStyle}>Threat</label>
-                          <select style={{...inputStyle, height: '33px'}} value={s.threat} onChange={(e) => updateStakeholder(s.id, 'threat', e.target.value)}>
+                          <select className="sa-input" style={{ cursor: 'pointer', height: '39px', padding: '0 12px' }} value={s.threat} onChange={(e) => updateStakeholder(s.id, 'threat', e.target.value)}>
                             <option value="Not Threatened">Safe</option>
                             <option value="Threatened">Threatened</option>
                           </select>
@@ -310,26 +267,22 @@ export default function DealSheetsApp() {
             {/* TAB 3: VALUE FRAMEWORK */}
             {activeTab === 'value' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-                
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-                  {/* Left Column: Current State */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <h3 style={{ color: '#fff', borderBottom: '1px solid #555', paddingBottom: '10px', margin: 0 }}>Current State</h3>
-                    <div><label style={labelStyle}>Before Scenario</label><textarea style={{...inputStyle, minHeight: '120px'}} name="beforeScenario" value={deal.beforeScenario} onChange={handleInputChange} placeholder="Current state and associated pain..." /></div>
-                    <div><label style={labelStyle}>Negative Consequences</label><textarea style={{...inputStyle, minHeight: '120px'}} name="negativeConsequences" value={deal.negativeConsequences} onChange={handleInputChange} placeholder="Impact on Revenue, Cost, Risk, CSAT..." /></div>
+                    <div><label style={labelStyle}>Before Scenario</label><textarea className="sa-input" style={{ minHeight: '120px', resize: 'vertical' }} name="beforeScenario" value={deal.beforeScenario} onChange={handleInputChange} placeholder="Current state and associated pain..." /></div>
+                    <div><label style={labelStyle}>Negative Consequences</label><textarea className="sa-input" style={{ minHeight: '120px', resize: 'vertical' }} name="negativeConsequences" value={deal.negativeConsequences} onChange={handleInputChange} placeholder="Impact on Revenue, Cost, Risk, CSAT..." /></div>
                   </div>
-
-                  {/* Right Column: Future State */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <h3 style={{ color: '#fff', borderBottom: '1px solid #555', paddingBottom: '10px', margin: 0 }}>Future State</h3>
-                    <div><label style={labelStyle}>After Scenario</label><textarea style={{...inputStyle, minHeight: '120px'}} name="afterScenario" value={deal.afterScenario} onChange={handleInputChange} placeholder="Ideal state with all pain points resolved..." /></div>
-                    <div><label style={labelStyle}>Positive Business Outcomes</label><textarea style={{...inputStyle, minHeight: '120px'}} name="positiveBusinessOutcomes" value={deal.positiveBusinessOutcomes} onChange={handleInputChange} placeholder="Value achieved..." /></div>
+                    <div><label style={labelStyle}>After Scenario</label><textarea className="sa-input" style={{ minHeight: '120px', resize: 'vertical' }} name="afterScenario" value={deal.afterScenario} onChange={handleInputChange} placeholder="Ideal state with all pain points resolved..." /></div>
+                    <div><label style={labelStyle}>Positive Business Outcomes</label><textarea className="sa-input" style={{ minHeight: '120px', resize: 'vertical' }} name="positiveBusinessOutcomes" value={deal.positiveBusinessOutcomes} onChange={handleInputChange} placeholder="Value achieved..." /></div>
                   </div>
                 </div>
 
                 <div style={{ borderTop: '1px dashed #555', paddingTop: '20px' }}>
                   <label style={labelStyle}>Required Capabilities</label>
-                  <textarea style={{...inputStyle, minHeight: '80px'}} name="requiredCapabilities" value={deal.requiredCapabilities} onChange={handleInputChange} placeholder="Key solution capabilities required to achieve the PBOs..." />
+                  <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="requiredCapabilities" value={deal.requiredCapabilities} onChange={handleInputChange} placeholder="Key solution capabilities required to achieve the PBOs..." />
                 </div>
               </div>
             )}
