@@ -126,7 +126,15 @@ app.post('/api/trust/analyze', async (req, res) => {
   const { c, r, i, s, score } = req.body;
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
-    const prompt = `You are an elite Pre-Sales / Solutions Architecture leadership coach. I am a Solutions Architect. Analyze my recent customer interaction based on the Trust Equation (Trust = (Credibility + Reliability + Intimacy) / Self-Orientation).
+    
+    // UPGRADED PROMPT WITH INVERSE SCORING CONTEXT
+    const prompt = `You are an elite Pre-Sales / Solutions Architecture leadership coach. I am a Solutions Architect. Analyze my recent customer interaction based on Charles Green's Trust Equation.
+    
+    Formula: Trust = (Credibility + Reliability + Intimacy) / Self-Orientation
+    
+    CRITICAL SCORING RULES:
+    - Credibility, Reliability, and Intimacy are out of 10 (Higher is BETTER).
+    - Self-Orientation is the denominator, out of 10. A LOW score (e.g., 1 or 2) is EXCELLENT because it means I am highly focused on the customer's needs. A HIGH score (e.g., 8 or 10) is TERRIBLE because it means I am selfish and focused on my own agenda.
     
     My self-assessed scores are:
     - Credibility: ${c}/10
@@ -135,13 +143,12 @@ app.post('/api/trust/analyze', async (req, res) => {
     - Self-Orientation: ${s}/10
     - Total Trust Score: ${score}
 
-    Provide a punchy, 3-paragraph analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid.`;
+    Provide a punchy, 3-paragraph analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid, and remember to praise a low Self-Orientation score.`;
 
     const result = await model.generateContent(prompt);
     res.json({ analysis: result.response.text() });
   } catch (error) {
     console.error("AI Error:", error);
-    // EXPOSING THE ERROR TO THE FRONTEND
     res.status(500).json({ error: `Google API Error: ${error.message || "Failed to generate AI analysis"}` });
   }
 });
