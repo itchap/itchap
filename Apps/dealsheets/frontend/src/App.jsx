@@ -22,12 +22,12 @@ const GlobalReset = () => (
       height: 100%;
     }
 
-    /* UNIFIED OFF-WHITE FORM FIELDS */
+    /* UNIFIED PALE WHITE FORM FIELDS */
     .sa-input {
       width: 100%;
       padding: 10px 12px;
       box-sizing: border-box;
-      background-color: #f4f7f6 !important; /* Soft off-white background */
+      background-color: #f9fbfb !important; /* Paler, cleaner white background */
       color: #000000 !important; /* Black text for readability */
       border: 1px solid #2a3f47 !important;
       border-radius: 6px;
@@ -46,7 +46,7 @@ const GlobalReset = () => (
 
     /* Placeholder text styling */
     .sa-input::placeholder {
-      color: #6b828a !important; 
+      color: #7c9096 !important; 
     }
 
     /* Custom scrollbar for textareas */
