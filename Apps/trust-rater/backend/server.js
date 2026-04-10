@@ -127,15 +127,18 @@ app.post('/api/trust/analyze', async (req, res) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
     
-    // UPGRADED PROMPT WITH INVERSE SCORING CONTEXT
+    // BULLETPROOF RUBRIC PROMPT
     const prompt = `You are an elite Pre-Sales / Solutions Architecture leadership coach. I am a Solutions Architect. Analyze my recent customer interaction based on Charles Green's Trust Equation.
     
     Formula: Trust = (Credibility + Reliability + Intimacy) / Self-Orientation
     
-    CRITICAL SCORING RULES:
-    - Credibility, Reliability, and Intimacy are out of 10 (Higher is BETTER).
-    - Self-Orientation is the denominator, out of 10. A LOW score (e.g., 1 or 2) is EXCELLENT because it means I am highly focused on the customer's needs. A HIGH score (e.g., 8 or 10) is TERRIBLE because it means I am selfish and focused on my own agenda.
-    
+    CRITICAL GRADING RUBRIC:
+    - Credibility (C), Reliability (R), Intimacy (I): Out of 10. Higher is better. 10 is perfect.
+    - Self-Orientation (S): Out of 10. LOWER IS BETTER. This measures selfishness and company-centricity.
+      * IF 'S' IS 1 to 3: Praise me heavily for being highly customer-centric and keeping my ego in check.
+      * IF 'S' IS 4 to 6: Warn me that my own agenda or company's agenda is starting to show and eroding trust.
+      * IF 'S' IS 7 to 10: Harshly critique me. A score this high means I was toxic, selfish, "commission-breathed," and completely destroyed the customer's trust.
+
     My self-assessed scores are:
     - Credibility: ${c}/10
     - Reliability: ${r}/10
@@ -143,7 +146,7 @@ app.post('/api/trust/analyze', async (req, res) => {
     - Self-Orientation: ${s}/10
     - Total Trust Score: ${score}
 
-    Provide a punchy, 3-paragraph analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid, and remember to praise a low Self-Orientation score.`;
+    Provide a punchy, 3-paragraph analysis of my performance, followed by 1 highly actionable piece of advice to improve my specific weak point. Be radically candid.`;
 
     const result = await model.generateContent(prompt);
     res.json({ analysis: result.response.text() });

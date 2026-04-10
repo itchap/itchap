@@ -9,7 +9,7 @@ function App() {
   const [interactionName, setInteractionName] = useState('');
   const [runningAverage, setRunningAverage] = useState(null);
   const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
-  const [history, setHistory] = useState([]); // Empty array now, no mock data!
+  const [history, setHistory] = useState([]); 
   const [showIdBox, setShowIdBox] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState(null);
@@ -28,25 +28,34 @@ function App() {
   // The Trust Equation: T = (C + R + I) / S
   const trustScore = ((credibility + reliability + intimacy) / selfOrientation).toFixed(1);
 
+  // HELPER: Renders Markdown asterisks (**) as bright, bold text
+  const formatMarkdown = (text) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} style={{ color: '#ffffff', fontWeight: '700' }}>{part.slice(2, -2)}</strong>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
   const handleCopyId = () => {
     navigator.clipboard.writeText(sessionId);
     alert("Session ID copied to clipboard!");
   };
 
-  // 1. Generate Session ID (With Warning & Auto-Reset)
+  // 1. Generate Session ID 
   const handleSaveForLater = () => {
-    // If they already have a Session ID, warn them first!
     if (sessionId) {
       const confirmReset = window.confirm(
         "You already have an active Session ID. Generating a new one will clear your current screen and start fresh. Are you sure?"
       );
-      if (!confirmReset) return; // Stop if they click "Cancel"
+      if (!confirmReset) return; 
     }
 
-    // Generate the new ID
     const newId = `SA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
     
-    // Explicitly reset the entire UI to factory defaults
     setInteractionName(''); 
     setCredibility(5); 
     setReliability(5); 
@@ -56,12 +65,11 @@ function App() {
     setHistory([]); 
     setRunningAverage(null);
 
-    // Set the new ID and smoothly open the UI box
     setSessionId(newId);
     setShowIdBox(true); 
   };
 
-  // Reset the entire session (Clear everything)
+  // Reset the entire session
   const handleResetSession = () => {
     const confirmClear = window.confirm("This will clear your current Session ID and all data on screen. Are you sure?");
     if (!confirmClear) return;
@@ -84,17 +92,14 @@ function App() {
       const res = await fetch(`/api/trust/session/${sessionId}`);
       const data = await res.json();
       
-      // Update history
       if (data.history) setHistory(data.history.slice(0, 5));
-      
-      // Update average (even if it is null/reset)
       setRunningAverage(data.runningAverage); 
     } catch (err) {
       alert("Error loading session data. Is the backend running?");
     }
   };
 
-  // 3. Save Assessment (Now Auto-Updates Average!)
+  // 3. Save Assessment
   const handleSaveAssessment = async () => {
     if (!sessionId || !interactionName) return alert("Session ID and Interaction Name are required!");
     try {
@@ -115,9 +120,8 @@ function App() {
       const data = await response.json();
       
       if (data.success) {
-        // Automatically update the UI with the new calculated average!
         setRunningAverage(data.averageScore);
-        handleResume(); // Refreshes the recent list
+        handleResume(); 
         setInteractionName(''); 
         setCurrentAssessmentId(null);
       }
@@ -142,10 +146,7 @@ function App() {
         body: JSON.stringify({ sessionId })
       });
       
-      // Force a fresh sync with the database immediately!
       await handleResume();
-      
-      // Clear the active form inputs
       setCurrentAssessmentId(null);
       setInteractionName('');
       
@@ -155,7 +156,7 @@ function App() {
     }
   };
 
-  // 5. Gemini AI Trust Analysis (With UI Loading State & Better Error Handling)
+  // 5. Gemini AI Trust Analysis
   const handleGetAIAnalysis = async () => {
     if (isAnalyzing) return; 
     setIsAnalyzing(true); 
@@ -172,14 +173,13 @@ function App() {
         throw new Error(data.error || "Something went wrong on the server.");
       }
       
-      // Removed the alert() and replaced it with this:
       setAnalysis(data.analysis || data.result || JSON.stringify(data)); 
-} catch (err) {
+    } catch (err) {
       alert(`Error generating AI analysis:\n${err.message}`);
     } finally {
       setIsAnalyzing(false); 
     }
-  }; // <--- ADD THIS CLOSING BRACKET AND SEMICOLON!
+  };
 
   const loadAssessment = (item) => {
     setInteractionName(item.interactionName);
@@ -192,7 +192,6 @@ function App() {
 
   return (
     <div style={{ backgroundColor: theme.bg, minHeight: '100vh', paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif' }}>
-      {/* --- CSS FOR THE BOUNCING POINTER --- */}
       <style>
         {`
           @keyframes bounceTooltip {
@@ -233,14 +232,13 @@ function App() {
         {/* 3-COLUMN LAYOUT */}
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(400px, 2fr) minmax(300px, 1fr)', gap: '20px' }}>
           
-          {/* LEFT COLUMN: SESSION, AI, & HISTORY */}
+          {/* LEFT COLUMN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
               <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 
-                {/* Top Row: Input & Resume */}
                 <div style={{ display: 'flex', gap: '5px' }}>
                   <input 
                     type="text" 
@@ -254,10 +252,7 @@ function App() {
                   </button>
                 </div>
 
-                {/* --- DYNAMIC TOGGLE BUTTON WITH BOUNCING POINTER --- */}
                 <div style={{ position: 'relative', marginTop: '15px' }}>
-                  
-                  {/* The Tooltip (Only shows if there is NO sessionId) */}
                   {!sessionId && (
                     <div style={{
                       position: 'absolute',
@@ -276,7 +271,6 @@ function App() {
                     }}>
                       👋 Start here: Generate a New ID!
                       
-                      {/* The little down arrow */}
                       <div style={{
                         position: 'absolute',
                         bottom: '-5px',
@@ -299,7 +293,6 @@ function App() {
                   </button>
                 </div>
 
-                {/* --- DASHED COPY BOX --- */}
                 {showIdBox && sessionId && (
                   <div style={{ padding: '10px', backgroundColor: 'rgba(0, 237, 100, 0.05)', border: `1px dashed ${theme.accent}`, borderRadius: '4px' }}>
                     <p style={{ fontSize: '12px', color: theme.accent, margin: '0 0 5px 0', fontWeight: 'bold' }}>Your Unique ID:</p>
@@ -328,18 +321,16 @@ function App() {
             {/* DYNAMIC AI ANALYSIS BUTTON */}
             <button 
               onClick={handleGetAIAnalysis} 
-              disabled={isAnalyzing} // Disable clicks while thinking
+              disabled={isAnalyzing}
               style={{ 
                 width: '100%', 
                 padding: '15px', 
-                // Color changes to gray (#555) when thinking
                 backgroundColor: isAnalyzing ? '#555' : '#023430', 
                 color: theme.accent, 
                 border: `1px solid ${theme.accent}`, 
                 borderRadius: '4px', 
                 fontWeight: 'bold', 
                 fontSize: '16px', 
-                // Cursor changes to "wait" (spinning circle/hourglass)
                 cursor: isAnalyzing ? 'wait' : 'pointer', 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -347,7 +338,6 @@ function App() {
                 gap: '8px' 
               }}
             >
-              {/* Text changes based on state */}
               {isAnalyzing ? (
                 <><span>🧠</span> AI is thinking...</>
               ) : (
@@ -395,7 +385,7 @@ function App() {
 
           </div>
 
-          {/* MIDDLE COLUMN: THE INPUTS */}
+          {/* MIDDLE COLUMN */}
           <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px' }}>
             <input 
               type="text" 
@@ -414,7 +404,7 @@ function App() {
             <Slider label="Self-Orientation (S)" subtext="You focus on your opinions, views, needs or outcomes" value={selfOrientation} setValue={setSelfOrientation} theme={theme} reverseColor />
           </div>
 
-          {/* RIGHT COLUMN: SCORE & AVERAGE */}
+          {/* RIGHT COLUMN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px 20px', textAlign: 'center' }}>
               <h2 style={{ margin: '0 0 10px 0', color: theme.textSub }}>Current Score</h2>
@@ -438,22 +428,17 @@ function App() {
               <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
             </div>
 
-            {/* --- NEW TRUST BAROMETER GAUGE --- */}
+            {/* TRUST BAROMETER */}
             <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px 20px 25px 20px' }}>
               <h3 style={{ marginTop: 0, marginBottom: '25px', fontSize: '16px', textAlign: 'center' }}>Trust Barometer</h3>
               
               <div style={{ position: 'relative', height: '16px', borderRadius: '8px', background: `linear-gradient(to right, ${theme.danger}, #ffbf00, ${theme.accent})`, marginBottom: '10px' }}>
-                
-                {/* 1. The Watermark (Target "Good" Trust = 10.0) */}
-                {/* 10 out of 30 is exactly 33.33% along the bar */}
                 <div style={{ position: 'absolute', left: '33.33%', top: '-22px', transform: 'translateX(-50%)', fontSize: '11px', color: theme.textSub, fontWeight: 'bold' }}>Good</div>
                 <div style={{ position: 'absolute', left: '33.33%', top: '-6px', bottom: '-6px', width: '2px', backgroundColor: 'rgba(255,255,255,0.4)', zIndex: 1 }}></div>
 
-                {/* 2. The Needle (Current Running Average) */}
                 {runningAverage && (
                   <div style={{ 
                     position: 'absolute', 
-                    // Calculate percentage (Average / 30 * 100), maxing out at 100%
                     left: `${Math.min(100, Math.max(0, (parseFloat(runningAverage) / 30) * 100))}%`, 
                     top: '-6px', 
                     bottom: '-6px', 
@@ -468,7 +453,6 @@ function App() {
                 )}
               </div>
               
-              {/* Scale Labels */}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: theme.textSub, fontWeight: 'bold', marginTop: '8px' }}>
                 <span>0.0</span>
                 <span>15.0</span>
@@ -480,7 +464,8 @@ function App() {
 
         </div>
       </div>
-      {/* --- CUSTOM AI INSIGHTS MODAL --- */}
+      
+      {/* --- UPGRADED AI INSIGHTS MODAL --- */}
       {analysis && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
           <div style={{ backgroundColor: theme.bg, border: `2px solid ${theme.accent}`, padding: '30px', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
@@ -488,7 +473,17 @@ function App() {
                <span style={{ fontSize: '24px' }}>🧠</span>
                SA Trust Insights
              </h3>
-             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
+             {/* THE FIX: Formatting the text and applying the new typography */}
+             <div style={{ 
+                fontSize: '14px', 
+                color: '#e2e8f0', 
+                lineHeight: '1.7', 
+                whiteSpace: 'pre-wrap', 
+                fontFamily: 'Inter, sans-serif',
+                marginBottom: '20px' 
+              }}>
+                {formatMarkdown(analysis)}
+             </div>
              <button onClick={() => setAnalysis(null)} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
                Close Insights
              </button>
@@ -519,6 +514,6 @@ function Slider({ label, subtext, value, setValue, theme, reverseColor }) {
       />
     </div>
   );
-} // <--- THIS BRACKET CLOSES THE SLIDER FUNCTION!
+}
 
 export default App;
