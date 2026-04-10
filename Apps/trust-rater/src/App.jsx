@@ -1,282 +1,524 @@
 import React, { useState } from 'react';
 
-const API_URL = 'https://itchap.com/api/dealsheets';
+function App() {
+  const [sessionId, setSessionId] = useState('');
+  const [credibility, setCredibility] = useState(5);
+  const [reliability, setReliability] = useState(5);
+  const [intimacy, setIntimacy] = useState(5);
+  const [selfOrientation, setSelfOrientation] = useState(5);
+  const [interactionName, setInteractionName] = useState('');
+  const [runningAverage, setRunningAverage] = useState(null);
+  const [currentAssessmentId, setCurrentAssessmentId] = useState(null);
+  const [history, setHistory] = useState([]); // Empty array now, no mock data!
+  const [showIdBox, setShowIdBox] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
 
-// GLOBAL RESET
-const GlobalReset = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  const theme = {
+    bg: '#011e2b',
+    cardBg: 'rgba(255, 255, 255, 0.05)',
+    border: '#333',
+    accent: '#00ed64',
+    textMain: '#fff',
+    textSub: '#bbb',
+    danger: '#ff4d4d',
+    buttonHover: '#00c753'
+  };
 
-    html, body {
-      margin: 0 !important;
-      padding: 0 !important;
-      background-color: #011e2b !important;
-      width: 100% !important;
-      height: 100% !important;
-      overflow-x: hidden !important;
-      font-family: 'Inter', sans-serif !important;
+  // The Trust Equation: T = (C + R + I) / S
+  const trustScore = ((credibility + reliability + intimacy) / selfOrientation).toFixed(1);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(sessionId);
+    alert("Session ID copied to clipboard!");
+  };
+
+  // 1. Generate Session ID (With Warning & Auto-Reset)
+  const handleSaveForLater = () => {
+    // If they already have a Session ID, warn them first!
+    if (sessionId) {
+      const confirmReset = window.confirm(
+        "You already have an active Session ID. Generating a new one will clear your current screen and start fresh. Are you sure?"
+      );
+      if (!confirmReset) return; // Stop if they click "Cancel"
     }
+
+    // Generate the new ID
+    const newId = `SA-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
     
-    #root {
-      width: 100%;
-      height: 100%;
-    }
+    // Explicitly reset the entire UI to factory defaults
+    setInteractionName(''); 
+    setCredibility(5); 
+    setReliability(5); 
+    setIntimacy(5); 
+    setSelfOrientation(5); 
+    setCurrentAssessmentId(null); 
+    setHistory([]); 
+    setRunningAverage(null);
 
-    /* Custom scrollbar for the textareas to match the dark theme */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #00684a;
-      border-radius: 4px;
-    }
-  `}</style>
-);
-
-// Reusable Panel Style
-const panelStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  padding: '15px',
-  borderRadius: '8px',
-  border: '1px solid #333'
-};
-
-// THE NEW MINT INPUT STYLE (Applied to everything)
-const inputStyle = {
-  width: '100%',
-  padding: '10px 12px',
-  boxSizing: 'border-box',
-  backgroundColor: '#a6ffeb', // The exact mint color you requested
-  color: '#000000', // Dark text so it's readable
-  border: '1px solid #2a3f47',
-  borderRadius: '6px',
-  fontSize: '13px',
-  fontFamily: 'Inter, sans-serif',
-  outline: 'none'
-};
-
-// Reusable Label Style
-const labelStyle = {
-  display: 'block',
-  fontSize: '12px',
-  marginBottom: '6px',
-  color: '#88a3ae', 
-  fontWeight: '600',
-  letterSpacing: '0.5px',
-  textTransform: 'uppercase' 
-};
-
-export default function DealSheetsApp() {
-  const [activeTab, setActiveTab] = useState('overview');
-  
-  const [deal, setDeal] = useState({
-    sessionId: `DS-${Math.floor(Math.random() * 10000)}`,
-    accountName: '',
-    opportunityLink: '',
-    industry: '',
-    useCase: '',
-    arr: '',
-    salesMotion: 'Launch',
-    whyDoAnything: '',
-    whyNow: '',
-    whyMongoDB: '',
-    stakeholders: [],
-    beforeScenario: '',
-    negativeConsequences: '',
-    afterScenario: '',
-    positiveBusinessOutcomes: '',
-    requiredCapabilities: ''
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDeal(prev => ({ ...prev, [name]: value }));
+    // Set the new ID and smoothly open the UI box
+    setSessionId(newId);
+    setShowIdBox(true); 
   };
 
-  const addStakeholder = () => {
-    setDeal(prev => ({
-      ...prev,
-      stakeholders: [...prev.stakeholders, { id: Date.now(), name: '', role: '', influence: '3', support: '+', threat: 'Not Threatened' }]
-    }));
+  // Reset the entire session (Clear everything)
+  const handleResetSession = () => {
+    const confirmClear = window.confirm("This will clear your current Session ID and all data on screen. Are you sure?");
+    if (!confirmClear) return;
+    
+    setSessionId('');
+    setInteractionName('');
+    setCredibility(5);
+    setReliability(5);
+    setIntimacy(5);
+    setSelfOrientation(5);
+    setCurrentAssessmentId(null);
+    setHistory([]);
+    setRunningAverage(null);
   };
 
-  const updateStakeholder = (id, field, value) => {
-    setDeal(prev => ({
-      ...prev,
-      stakeholders: prev.stakeholders.map(s => s.id === id ? { ...s, [field]: value } : s)
-    }));
+  // 2. Fetch History & Average
+  const handleResume = async () => {
+    if (!sessionId) return alert("Please enter a Session ID");
+    try {
+      const res = await fetch(`/api/trust/session/${sessionId}`);
+      const data = await res.json();
+      
+      // Update history
+      if (data.history) setHistory(data.history.slice(0, 5));
+      
+      // Update average (even if it is null/reset)
+      setRunningAverage(data.runningAverage); 
+    } catch (err) {
+      alert("Error loading session data. Is the backend running?");
+    }
   };
 
-  const removeStakeholder = (id) => {
-    setDeal(prev => ({ ...prev, stakeholders: prev.stakeholders.filter(s => s.id !== id) }));
+  // 3. Save Assessment (Now Auto-Updates Average!)
+  const handleSaveAssessment = async () => {
+    if (!sessionId || !interactionName) return alert("Session ID and Interaction Name are required!");
+    try {
+      const response = await fetch('/api/trust/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: currentAssessmentId,
+          sessionId,
+          interactionName,
+          c: credibility,
+          r: reliability,
+          i: intimacy,
+          s: selfOrientation,
+          score: parseFloat(trustScore)
+        })
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        // Automatically update the UI with the new calculated average!
+        setRunningAverage(data.averageScore);
+        handleResume(); // Refreshes the recent list
+        setInteractionName(''); 
+        setCurrentAssessmentId(null);
+      }
+    } catch (err) {
+      alert("Error saving assessment. ");
+    }
+  };
+
+  // 4. Soft Reset Average
+  const handleResetAverage = async () => {
+    if (!sessionId) return alert("No active session to reset.");
+    
+    const confirmWipe = window.confirm(
+      "Are you sure? This will reset your running average to zero, but keep your past assessments visible in your history pane."
+    );
+    if (!confirmWipe) return;
+
+    try {
+      await fetch('/api/trust/reset-average', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      });
+      
+      // Force a fresh sync with the database immediately!
+      await handleResume();
+      
+      // Clear the active form inputs
+      setCurrentAssessmentId(null);
+      setInteractionName('');
+      
+      alert("Average reset! Your past assessments are now archived from the math, but still visible.");
+    } catch (err) {
+      alert("Error resetting the average.");
+    }
+  };
+
+  // 5. Gemini AI Trust Analysis (With UI Loading State & Better Error Handling)
+  const handleGetAIAnalysis = async () => {
+    if (isAnalyzing) return; 
+    setIsAnalyzing(true); 
+
+    try {
+      const res = await fetch('/api/trust/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ c: credibility, r: reliability, i: intimacy, s: selfOrientation, score: trustScore })
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong on the server.");
+      }
+      
+      // Removed the alert() and replaced it with this:
+      setAnalysis(data.analysis || data.result || JSON.stringify(data)); 
+} catch (err) {
+      alert(`Error generating AI analysis:\n${err.message}`);
+    } finally {
+      setIsAnalyzing(false); 
+    }
+  }; // <--- ADD THIS CLOSING BRACKET AND SEMICOLON!
+
+  const loadAssessment = (item) => {
+    setInteractionName(item.interactionName);
+    setCredibility(item.c);
+    setReliability(item.r);
+    setIntimacy(item.i);
+    setSelfOrientation(item.s);
+    setCurrentAssessmentId(item._id);
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
-      <GlobalReset />
-      
-      {/* NAVIGATION BAR */}
+    <div style={{ backgroundColor: theme.bg, minHeight: '100vh', paddingBottom: '40px', color: theme.textMain, fontFamily: 'sans-serif' }}>
+      {/* --- CSS FOR THE BOUNCING POINTER --- */}
+      <style>
+        {`
+          @keyframes bounceTooltip {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -6px); }
+          }
+        `}
+      </style>
+
+      {/* SUBTLE NAVIGATION BAR */}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
-        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
+        <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
+        </a>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/trust-rater" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = theme.accent} onMouseOut={e => e.target.style.color = '#fff'}>
+          View Source on GitHub ↗
         </a>
       </div>
 
-      {/* HEADER */}
-      <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
-        🤝 SA <span style={{ color: '#01ed64' }}>Deal Sheets</span> Framework
-      </h2>
-
-      {/* MAIN LAYOUT CONTAINER */}
-      <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         
-        {/* LEFT COLUMN */}
-        <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={panelStyle}>
-            <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Session Controls</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              
-              <div style={{ display: 'flex', gap: '5px' }}>
-                <input type="text" value={deal.sessionId} readOnly style={{ ...inputStyle, backgroundColor: '#011e2b', color: '#00ed64', border: '1px solid #00ed64', textAlign: 'center', fontWeight: 'bold', flex: 1 }} />
-                <button style={{ padding: '8px', backgroundColor: '#00684a', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Load</button>
-              </div>
-
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💾 Save Deal Sheet</button>
-              <button style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>📄 Export to PDF</button>
-              <button style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>🧠 Generate AI POV</button>
+        {/* HEADER & EQUATION */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 style={{ margin: '0 0 10px 0' }}>🤝 SA <span style={{ color: theme.accent }}>Trust Rater</span></h1>
+          <p style={{ color: theme.textSub, marginBottom: '20px' }}>Evaluate your customer interactions and AE partnerships.</p>
+          
+          {/* VISUAL TRUST EQUATION */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', backgroundColor: theme.cardBg, padding: '15px 30px', borderRadius: '8px', border: `1px solid ${theme.border}` }}>
+            <span style={{ fontSize: '24px', fontWeight: 'bold' }}><span style={{ color: '#02ec64' }}>Trust</span> = </span>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontWeight: 'bold', fontSize: '18px' }}>
+              <div style={{ paddingBottom: '5px' }}>Credibility + Reliability + Intimacy</div>
+              <div style={{ borderTop: `2px solid ${theme.accent}`, width: '100%' }}></div>
+              <div style={{ paddingTop: '5px' }}>Self-Orientation</div>
             </div>
           </div>
-
-          <div style={panelStyle}>
-            <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Deal Health</h3>
-            <p style={{ fontSize: '13px', color: '#e0e0e0', marginTop: 0 }}>Stakeholders Mapped: <strong style={{color: '#00ed64'}}>{deal.stakeholders.length}</strong></p>
-            <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: 0 }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
-          </div>
         </div>
 
-        {/* RIGHT MAIN AREA */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* 3-COLUMN LAYOUT */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(400px, 2fr) minmax(300px, 1fr)', gap: '20px' }}>
           
-          {/* TAB NAVIGATION */}
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {['overview', 'stakeholders', 'value'].map(tab => (
-              <button 
-                key={tab}
-                onClick={() => setActiveTab(tab)} 
-                style={{ flex: 1, padding: '10px', backgroundColor: activeTab === tab ? '#00ed64' : '#023430', color: activeTab === tab ? '#000' : '#00ed64', border: activeTab === tab ? 'none' : '1px solid #00684a', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', textTransform: 'capitalize' }}
-              >
-                {tab.replace('value', 'Value Framework')}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ ...panelStyle, padding: '25px' }}>
+          {/* LEFT COLUMN: SESSION, AI, & HISTORY */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            {/* TAB 1: OVERVIEW */}
-            {activeTab === 'overview' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div><label style={labelStyle}>Account Name</label><input style={inputStyle} name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
-                  <div><label style={labelStyle}>ARR Amount</label><input style={inputStyle} name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
-                  <div><label style={labelStyle}>Industry</label><input style={inputStyle} name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
-                  <div>
-                    <label style={labelStyle}>Sales Motion</label>
-                    <select style={{...inputStyle, height: '39px', cursor: 'pointer'}} name="salesMotion" value={deal.salesMotion} onChange={handleInputChange}>
-                      <option value="Launch">Launch</option>
-                      <option value="Migrate">Migrate</option>
-                      <option value="Select">Select</option>
-                      <option value="Replace">Replace</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div style={{ borderTop: '1px dashed #555', paddingTop: '20px' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#00ed64' }}>The "Why"</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <div><label style={labelStyle}>Why Do Anything?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyDoAnything" value={deal.whyDoAnything} onChange={handleInputChange} placeholder="What's the customer's business justification?" /></div>
-                    <div><label style={labelStyle}>Why Now?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyNow" value={deal.whyNow} onChange={handleInputChange} placeholder="What's the compelling event?" /></div>
-                    <div><label style={labelStyle}>Why Us?</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="whyMongoDB" value={deal.whyMongoDB} onChange={handleInputChange} placeholder="Why are we the right solution?" /></div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: STAKEHOLDERS */}
-            {activeTab === 'stakeholders' && (
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>
-                  <h3 style={{ color: '#00ed64', margin: 0 }}>Key Customer Stakeholders</h3>
-                  <button onClick={addStakeholder} style={{ padding: '8px 12px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>+ Add Stakeholder</button>
-                </div>
+           <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '15px' }}>Session Controls</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 
-                {deal.stakeholders.length === 0 ? (
-                  <p style={{ color: '#bbb', fontSize: '13px', fontStyle: 'italic' }}>No stakeholders mapped yet. Identify your Champions and Economic Buyers.</p>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    {deal.stakeholders.map(s => (
-                      <div key={s.id} style={{ display: 'flex', gap: '10px', backgroundColor: 'rgba(255, 255, 255, 0.02)', padding: '15px', borderRadius: '8px', border: '1px solid #444', alignItems: 'flex-end' }}>
-                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Name</label><input style={inputStyle} value={s.name} onChange={(e) => updateStakeholder(s.id, 'name', e.target.value)} /></div>
-                        <div style={{ flex: 1.5 }}><label style={labelStyle}>Role</label><input style={inputStyle} value={s.role} onChange={(e) => updateStakeholder(s.id, 'role', e.target.value)} /></div>
-                        <div style={{ flex: 1 }}>
-                          <label style={labelStyle}>Influence</label>
-                          <select style={{...inputStyle, height: '39px', cursor: 'pointer'}} value={s.influence} onChange={(e) => updateStakeholder(s.id, 'influence', e.target.value)}>
-                            <option value="5">5 - Veto</option>
-                            <option value="4">4 - Recommender</option>
-                            <option value="3">3 - Evaluator</option>
-                            <option value="2">2 - Implementer</option>
-                            <option value="1">1 - Minimal</option>
-                          </select>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <label style={labelStyle}>Support</label>
-                          <select style={{...inputStyle, height: '39px', cursor: 'pointer'}} value={s.support} onChange={(e) => updateStakeholder(s.id, 'support', e.target.value)}>
-                            <option value="++">++ Strong</option>
-                            <option value="+">+ Supporter</option>
-                            <option value="?">? Neutral</option>
-                            <option value="-">- Adversary</option>
-                          </select>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <label style={labelStyle}>Threat</label>
-                          <select style={{...inputStyle, height: '39px', cursor: 'pointer'}} value={s.threat} onChange={(e) => updateStakeholder(s.id, 'threat', e.target.value)}>
-                            <option value="Not Threatened">Safe</option>
-                            <option value="Threatened">Threatened</option>
-                          </select>
-                        </div>
-                        <button onClick={() => removeStakeholder(s.id)} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', padding: '0 5px 8px 5px', fontSize: '18px', fontWeight: 'bold' }} title="Remove">&times;</button>
-                      </div>
-                    ))}
+                {/* Top Row: Input & Resume */}
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <input 
+                    type="text" 
+                    placeholder="Enter Session ID..." 
+                    value={sessionId} 
+                    onChange={(e) => setSessionId(e.target.value)} 
+                    style={{ flex: 1, padding: '8px', borderRadius: '4px', border: 'none', backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff' }} 
+                  />
+                  <button onClick={handleResume} style={{ padding: '8px 12px', backgroundColor: '#023430', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+                    Resume
+                  </button>
+                </div>
+
+                {/* --- DYNAMIC TOGGLE BUTTON WITH BOUNCING POINTER --- */}
+                <div style={{ position: 'relative', marginTop: '15px' }}>
+                  
+                  {/* The Tooltip (Only shows if there is NO sessionId) */}
+                  {!sessionId && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '-38px',
+                      left: '50%',
+                      animation: 'bounceTooltip 1.5s infinite ease-in-out',
+                      backgroundColor: theme.accent,
+                      color: '#000',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
+                      zIndex: 10
+                    }}>
+                      👋 Start here: Generate a New ID!
+                      
+                      {/* The little down arrow */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: '-5px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: 0,
+                        height: 0,
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: `6px solid ${theme.accent}`
+                      }}></div>
+                    </div>
+                  )}
+
+                  <button 
+                    onClick={sessionId ? () => setShowIdBox(!showIdBox) : handleSaveForLater} 
+                    style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.accent, border: `1px solid ${theme.accent}`, borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {sessionId ? (showIdBox ? 'Hide Session ID' : 'Show Session ID') : 'Generate New ID'}
+                  </button>
+                </div>
+
+                {/* --- DASHED COPY BOX --- */}
+                {showIdBox && sessionId && (
+                  <div style={{ padding: '10px', backgroundColor: 'rgba(0, 237, 100, 0.05)', border: `1px dashed ${theme.accent}`, borderRadius: '4px' }}>
+                    <p style={{ fontSize: '12px', color: theme.accent, margin: '0 0 5px 0', fontWeight: 'bold' }}>Your Unique ID:</p>
+                    <p style={{ fontSize: '11px', color: theme.textSub, margin: '0 0 10px 0', lineHeight: '1.4' }}>Save this somewhere safe to restore your board.</p>
+                    <div style={{ display: 'flex', gap: '5px' }}>
+                      <input 
+                        type="text" 
+                        readOnly 
+                        value={sessionId} 
+                        onClick={(e) => e.target.select()} 
+                        style={{ flex: 1, padding: '6px', fontSize: '11px', borderRadius: '4px', border: 'none', backgroundColor: '#fff', color: '#000' }} 
+                      />
+                      <button onClick={handleCopyId} style={{ padding: '6px 10px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '11px' }}>
+                        Copy
+                      </button>
+                    </div>
                   </div>
                 )}
-              </div>
-            )}
 
-            {/* TAB 3: VALUE FRAMEWORK */}
-            {activeTab === 'value' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <h3 style={{ color: '#fff', borderBottom: '1px solid #555', paddingBottom: '10px', margin: 0 }}>Current State</h3>
-                    <div><label style={labelStyle}>Before Scenario</label><textarea style={{...inputStyle, minHeight: '120px', resize: 'vertical'}} name="beforeScenario" value={deal.beforeScenario} onChange={handleInputChange} placeholder="Current state and associated pain..." /></div>
-                    <div><label style={labelStyle}>Negative Consequences</label><textarea style={{...inputStyle, minHeight: '120px', resize: 'vertical'}} name="negativeConsequences" value={deal.negativeConsequences} onChange={handleInputChange} placeholder="Impact on Revenue, Cost, Risk, CSAT..." /></div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <h3 style={{ color: '#fff', borderBottom: '1px solid #555', paddingBottom: '10px', margin: 0 }}>Future State</h3>
-                    <div><label style={labelStyle}>After Scenario</label><textarea style={{...inputStyle, minHeight: '120px', resize: 'vertical'}} name="afterScenario" value={deal.afterScenario} onChange={handleInputChange} placeholder="Ideal state with all pain points resolved..." /></div>
-                    <div><label style={labelStyle}>Positive Business Outcomes</label><textarea style={{...inputStyle, minHeight: '120px', resize: 'vertical'}} name="positiveBusinessOutcomes" value={deal.positiveBusinessOutcomes} onChange={handleInputChange} placeholder="Value achieved..." /></div>
-                  </div>
-                </div>
-
-                <div style={{ borderTop: '1px dashed #555', paddingTop: '20px' }}>
-                  <label style={labelStyle}>Required Capabilities</label>
-                  <textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} name="requiredCapabilities" value={deal.requiredCapabilities} onChange={handleInputChange} placeholder="Key solution capabilities required to achieve the PBOs..." />
-                </div>
+                <button onClick={handleResetSession} style={{ width: '100%', padding: '10px', backgroundColor: theme.danger, color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                  New Session
+                </button>
               </div>
-            )}
+            </div>
+
+            {/* DYNAMIC AI ANALYSIS BUTTON */}
+            <button 
+              onClick={handleGetAIAnalysis} 
+              disabled={isAnalyzing} // Disable clicks while thinking
+              style={{ 
+                width: '100%', 
+                padding: '15px', 
+                // Color changes to gray (#555) when thinking
+                backgroundColor: isAnalyzing ? '#555' : '#023430', 
+                color: theme.accent, 
+                border: `1px solid ${theme.accent}`, 
+                borderRadius: '4px', 
+                fontWeight: 'bold', 
+                fontSize: '16px', 
+                // Cursor changes to "wait" (spinning circle/hourglass)
+                cursor: isAnalyzing ? 'wait' : 'pointer', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '8px' 
+              }}
+            >
+              {/* Text changes based on state */}
+              {isAnalyzing ? (
+                <><span>🧠</span> AI is thinking...</>
+              ) : (
+                <><span>🧠</span> Get AI Trust Analysis</>
+              )}
+            </button>
+
+            {/* History Pane */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '15px', fontSize: '16px' }}>Recent Assessments</h3>
+              
+              {history.length === 0 ? (
+                <div style={{ color: theme.textSub, fontSize: '13px', fontStyle: 'italic', textAlign: 'center' }}>No history for this session yet.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {history.map((item) => (
+                    <div 
+                      key={item._id} 
+                      onClick={() => loadAssessment(item)}
+                      style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        padding: '12px', 
+                        backgroundColor: currentAssessmentId === item._id ? '#023430' : 'rgba(0,0,0,0.3)', 
+                        borderRadius: '4px', 
+                        cursor: 'pointer', 
+                        border: currentAssessmentId === item._id ? `1px solid ${theme.accent}` : `1px solid transparent`,
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseOver={e => { if(currentAssessmentId !== item._id) e.currentTarget.style.border = `1px solid ${theme.textSub}` }}
+                      onMouseOut={e => { if(currentAssessmentId !== item._id) e.currentTarget.style.border = `1px solid transparent` }}
+                    >
+                      <span style={{ fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px', fontWeight: currentAssessmentId === item._id ? 'bold' : 'normal' }}>
+                        {item.interactionName}
+                      </span>
+                      <span style={{ fontWeight: 'bold', fontSize: '14px', color: item.score < 5 ? theme.danger : theme.accent }}>
+                        {item.score}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
           </div>
+
+          {/* MIDDLE COLUMN: THE INPUTS */}
+          <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px' }}>
+            <input 
+              type="text" 
+              placeholder="Interaction Name (e.g., Acme Corp Discovery)" 
+              value={interactionName}
+              onChange={(e) => setInteractionName(e.target.value)}
+              style={{ width: '100%', padding: '12px', marginBottom: '30px', borderRadius: '4px', border: `1px solid ${theme.border}`, backgroundColor: 'rgba(0,0,0,0.3)', color: '#fff', boxSizing: 'border-box', fontSize: '16px' }}
+            />
+
+            <Slider label="Credibility (C)" subtext="You really know your subject matter and showcase it" value={credibility} setValue={setCredibility} theme={theme} />
+            <Slider label="Reliability (R)" subtext="You always deliver with quality and do what you say you will do." value={reliability} setValue={setReliability} theme={theme} />
+            <Slider label="Intimacy (I)" subtext="You build rapport, make people feel safe and nurture relationships" value={intimacy} setValue={setIntimacy} theme={theme} />
+            
+            <hr style={{ borderColor: theme.border, margin: '30px 0' }} />
+            
+            <Slider label="Self-Orientation (S)" subtext="You focus on your opinions, views, needs or outcomes" value={selfOrientation} setValue={setSelfOrientation} theme={theme} reverseColor />
+          </div>
+
+          {/* RIGHT COLUMN: SCORE & AVERAGE */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '30px 20px', textAlign: 'center' }}>
+              <h2 style={{ margin: '0 0 10px 0', color: theme.textSub }}>Current Score</h2>
+              <div style={{ fontSize: '84px', fontWeight: 'bold', color: selfOrientation > 7 ? theme.danger : theme.accent, lineHeight: '1' }}>
+                {trustScore}
+              </div>
+              <p style={{ color: theme.textSub, fontSize: '14px', marginTop: '15px' }}>
+                Max Score: 30.0 | Min Score: 0.3
+              </p>
+            </div>
+
+            <button onClick={handleSaveAssessment} style={{ width: '100%', padding: '15px', backgroundColor: theme.accent, color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}>
+              {currentAssessmentId ? 'Update Assessment' : 'Save Assessment'}
+            </button>
+
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '10px' }}>Running Average</h3>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: theme.accent, marginBottom: '15px' }}>
+                {runningAverage ? runningAverage : '--'}
+              </div>
+              <button onClick={handleResetAverage} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: theme.textSub, border: `1px solid ${theme.textSub}`, borderRadius: '4px', cursor: 'pointer' }}>Reset Average</button>
+            </div>
+
+            {/* --- NEW TRUST BAROMETER GAUGE --- */}
+            <div style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '8px', padding: '20px 20px 25px 20px' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '25px', fontSize: '16px', textAlign: 'center' }}>Trust Barometer</h3>
+              
+              <div style={{ position: 'relative', height: '16px', borderRadius: '8px', background: `linear-gradient(to right, ${theme.danger}, #ffbf00, ${theme.accent})`, marginBottom: '10px' }}>
+                
+                {/* 1. The Watermark (Target "Good" Trust = 10.0) */}
+                {/* 10 out of 30 is exactly 33.33% along the bar */}
+                <div style={{ position: 'absolute', left: '33.33%', top: '-22px', transform: 'translateX(-50%)', fontSize: '11px', color: theme.textSub, fontWeight: 'bold' }}>Good</div>
+                <div style={{ position: 'absolute', left: '33.33%', top: '-6px', bottom: '-6px', width: '2px', backgroundColor: 'rgba(255,255,255,0.4)', zIndex: 1 }}></div>
+
+                {/* 2. The Needle (Current Running Average) */}
+                {runningAverage && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    // Calculate percentage (Average / 30 * 100), maxing out at 100%
+                    left: `${Math.min(100, Math.max(0, (parseFloat(runningAverage) / 30) * 100))}%`, 
+                    top: '-6px', 
+                    bottom: '-6px', 
+                    width: '4px', 
+                    backgroundColor: '#fff', 
+                    borderRadius: '2px', 
+                    transform: 'translateX(-50%)', 
+                    boxShadow: '0 0 8px rgba(0,0,0,0.8)', 
+                    zIndex: 2, 
+                    transition: 'left 0.5s ease-out' 
+                  }}></div>
+                )}
+              </div>
+              
+              {/* Scale Labels */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: theme.textSub, fontWeight: 'bold', marginTop: '8px' }}>
+                <span>0.0</span>
+                <span>15.0</span>
+                <span>30.0</span>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
+      {/* --- CUSTOM AI INSIGHTS MODAL --- */}
+      {analysis && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <div style={{ backgroundColor: theme.bg, border: `2px solid ${theme.accent}`, padding: '30px', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '80vh', overflowY: 'auto', color: '#e0e0e0', boxShadow: '0 10px 30px rgba(0, 237, 100, 0.2)' }}>
+             <h3 style={{ color: theme.accent, marginTop: 0, borderBottom: `1px solid ${theme.border}`, paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+               <span style={{ fontSize: '24px' }}>🧠</span>
+               SA Trust Insights
+             </h3>
+             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
+             <button onClick={() => setAnalysis(null)} style={{ width: '100%', padding: '10px', backgroundColor: theme.accent, color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+               Close Insights
+             </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
+
+// Reusable Slider Component
+function Slider({ label, subtext, value, setValue, theme, reverseColor }) {
+  return (
+    <div style={{ marginBottom: '25px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+        <strong style={{ fontSize: '18px' }}>{label}</strong>
+        <span style={{ fontWeight: 'bold', fontSize: '18px', color: reverseColor && value > 6 ? theme.danger : theme.accent }}>{value}/10</span>
+      </div>
+      <div style={{ fontSize: '14px', color: theme.textSub, marginBottom: '12px' }}>{subtext}</div>
+      <input 
+        type="range" 
+        min="1" 
+        max="10" 
+        value={value} 
+        onChange={(e) => setValue(Number(e.target.value))}
+        style={{ width: '100%', cursor: 'pointer' }}
+      />
+    </div>
+  );
+} // <--- THIS BRACKET CLOSES THE SLIDER FUNCTION!
+
+export default App;
