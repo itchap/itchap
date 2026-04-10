@@ -54,7 +54,6 @@ const GlobalReset = () => (
     }
 
     @media print {
-      /* THE FIX: Allow height to expand and overflow so multiple pages can print */
       html, body, #root, .app-wrapper { 
         background-color: #ffffff !important; 
         color: #000000 !important; 
@@ -163,7 +162,6 @@ export default function DealSheetsApp() {
   const saveSession = async () => {
     const cleanId = deal.sessionId.trim().toUpperCase();
     setIsSaving(true);
-    
     setDeal(prev => ({ ...prev, sessionId: cleanId }));
 
     try {
@@ -189,7 +187,6 @@ export default function DealSheetsApp() {
   const loadSession = async () => {
     const searchId = deal.sessionId.trim();
     if (!searchId) return alert('Enter a Session ID to load.');
-    
     setDeal(prev => ({ ...prev, sessionId: searchId.toUpperCase() }));
 
     try {
@@ -223,23 +220,13 @@ export default function DealSheetsApp() {
     setIsGenerating(false);
   };
 
-  // UPDATED EXPORT PDF FUNCTION
   const exportPDF = () => {
-    // 1. Save the original tab title
     const originalTitle = document.title;
-    
-    // 2. Build the filename-friendly string (e.g., acme-inc-ds-9997)
     const company = deal.accountName ? deal.accountName.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'company';
     const id = deal.sessionId ? deal.sessionId.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'id';
     const fileName = `${company}-${id}`;
-    
-    // 3. Temporarily change the document title
     document.title = fileName;
-    
-    // 4. Trigger the print dialog (the browser will use our new title as the filename)
     window.print();
-    
-    // 5. Instantly change it back so the user doesn't notice
     document.title = originalTitle;
   };
 
@@ -250,7 +237,6 @@ export default function DealSheetsApp() {
     return tab;
   };
 
-  // DYNAMIC HEADER TITLE GENERATOR
   const getDynamicTitle = () => {
     if (deal.accountName || deal.useCase) {
       const account = deal.accountName || '';
@@ -264,13 +250,16 @@ export default function DealSheetsApp() {
     <div className="app-wrapper" style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
       
+      {/* SUBTLE NAVIGATION BAR */}
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
+        <a href="https://github.com/itchap/itchap/tree/main/Apps/dealsheets" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
+          View Source on GitHub ↗
+        </a>
       </div>
 
-      {/* DYNAMIC HEADER */}
       <h2 className="print-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0', textAlign: 'center' }}>
         🤝 {getDynamicTitle()} <span className="no-print" style={{ color: '#01ed64' }}>Framework</span>
       </h2>
@@ -482,7 +471,6 @@ export default function DealSheetsApp() {
              <h3 style={{ color: '#c471ed', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                🧠 Generated Point of View (POV)
              </h3>
-             {/* THE FIX: Formatting the text and applying the new typography */}
              <div style={{ 
                 whiteSpace: 'pre-wrap', 
                 lineHeight: '1.7', 
