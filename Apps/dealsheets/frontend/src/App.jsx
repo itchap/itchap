@@ -482,7 +482,17 @@ export default function DealSheetsApp() {
              <h3 style={{ color: '#c471ed', marginTop: 0, borderBottom: '1px solid #333', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                🧠 Generated Point of View (POV)
              </h3>
-             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px', fontFamily: 'Inter, sans-serif' }}>{aiPov}</div>
+             {/* THE FIX: Formatting the text and applying the new typography */}
+             <div style={{ 
+                whiteSpace: 'pre-wrap', 
+                lineHeight: '1.7', 
+                fontSize: '14.5px', 
+                color: '#e2e8f0',
+                marginBottom: '20px', 
+                fontFamily: 'Inter, sans-serif' 
+              }}>
+                {formatMarkdown(aiPov)}
+             </div>
              <div style={{ display: 'flex', gap: '10px' }}>
                <button onClick={() => { navigator.clipboard.writeText(aiPov); alert('Copied to clipboard!'); }} style={{ flex: 1, padding: '10px', backgroundColor: 'transparent', color: '#c471ed', border: '1px solid #c471ed', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Copy to Clipboard</button>
                <button onClick={() => setAiPov(null)} style={{ flex: 1, padding: '10px', backgroundColor: '#c471ed', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
