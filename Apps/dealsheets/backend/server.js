@@ -35,7 +35,7 @@ app.post('/api/dealsheets/save', async (req, res) => {
     // 2. Generate Force Management Health Insights
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const prompt = `
         You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
         Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps (e.g., weak success metrics, missing compelling event, lack of business outcomes). Maximum 40 words total.
