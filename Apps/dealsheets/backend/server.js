@@ -36,7 +36,8 @@ app.post('/api/dealsheets/save', async (req, res) => {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      // Upgraded to the ultra-fast, high-volume Lite model!
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
       
       const stakeholdersList = data.stakeholders && data.stakeholders.length > 0 
         ? data.stakeholders.map(s => `${s.name} (${s.role}) [Influence: ${s.influence}, Support: ${s.support}]`).join(' | ')
@@ -116,7 +117,8 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    // Upgraded to the ultra-fast, high-volume Lite model!
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     const prompt = `
       You are an elite enterprise Solutions Architect. Based on the following Deal Sheet and MEDDPICC data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 
