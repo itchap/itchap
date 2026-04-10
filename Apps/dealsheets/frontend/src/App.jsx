@@ -22,12 +22,12 @@ const GlobalReset = () => (
       height: 100%;
     }
 
-    /* UNIFIED MINT GREEN FORM FIELDS */
+    /* UNIFIED OFF-WHITE FORM FIELDS */
     .sa-input {
       width: 100%;
       padding: 10px 12px;
       box-sizing: border-box;
-      background-color: #a6ffeb !important; /* Mint Green Background */
+      background-color: #f4f7f6 !important; /* Soft off-white background */
       color: #000000 !important; /* Black text for readability */
       border: 1px solid #2a3f47 !important;
       border-radius: 6px;
@@ -37,15 +37,16 @@ const GlobalReset = () => (
       outline: none;
     }
 
-    /* Glow effect when the user clicks into a field */
+    /* Glow effect and pure white background when the user clicks into a field */
     .sa-input:focus {
+      background-color: #ffffff !important;
       border-color: #00ed64 !important;
       box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.3) !important;
     }
 
-    /* Darker placeholder text so it reads well on the mint background */
+    /* Placeholder text styling */
     .sa-input::placeholder {
-      color: #4a6b62 !important; 
+      color: #6b828a !important; 
     }
 
     /* Custom scrollbar for textareas */
