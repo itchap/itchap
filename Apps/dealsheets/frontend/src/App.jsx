@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// GLOBAL RESET & UNIFIED CSS
+// GLOBAL RESET & UNIFIED CSS (Upgraded Print Styles)
 const GlobalReset = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -55,17 +55,49 @@ const GlobalReset = () => (
       border-radius: 4px;
     }
 
-    /* CLEAN PDF PRINT STYLING */
+    /* --- BULLETPROOF PDF PRINT STYLING --- */
     @media print {
-      body { background-color: #ffffff !important; color: #000000 !important; }
+      /* Force pure white backgrounds and black text everywhere */
+      html, body, #root, .app-wrapper { 
+        background-color: #ffffff !important; 
+        color: #000000 !important; 
+      }
+      
+      /* Hide navigation, sidebar, and buttons */
       .no-print { display: none !important; }
-      .print-area { width: 100% !important; max-width: 100% !important; }
+      
+      /* Expand the main content to fill the page */
+      .print-area { width: 100% !important; max-width: 100% !important; display: block !important; }
+      
+      /* Remove dark panel backgrounds */
+      .sa-panel { 
+        background-color: transparent !important; 
+        border: none !important; 
+        padding: 0 !important;
+      }
+      
+      /* Force all 3 tabs to display, block page breaks inside them */
+      .print-tab { 
+        display: block !important; 
+        page-break-inside: avoid;
+        margin-bottom: 40px !important;
+      }
+      
+      /* Clean up inputs for paper */
       .sa-input { 
         background-color: transparent !important; 
-        border: 1px solid #ccc !important; 
-        color: #000 !important; 
+        border: 1px solid #cccccc !important; 
+        color: #000000 !important; 
+        box-shadow: none !important;
       }
-      h2, h3, label { color: #000 !important; }
+      
+      /* Ensure text elements stay black */
+      h2, h3, label, p, strong, span, div { 
+        color: #000000 !important; 
+      }
+
+      /* Keep the header clean */
+      .print-header { margin-bottom: 30px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important; }
     }
   `}</style>
 );
@@ -104,13 +136,13 @@ export default function DealSheetsApp() {
     whyNow: '',
     whyMongoDB: '',
     stakeholders: [],
-    appArchDescription: '',     // NEW: App/Arch Description
+    appArchDescription: '',
     beforeScenario: '',
     negativeConsequences: '',
     afterScenario: '',
     positiveBusinessOutcomes: '',
     requiredCapabilities: '',
-    successMetrics: ''          // NEW: Success Metrics
+    successMetrics: ''
   });
 
   const handleInputChange = (e) => {
@@ -136,7 +168,6 @@ export default function DealSheetsApp() {
     setDeal(prev => ({ ...prev, stakeholders: prev.stakeholders.filter(s => s.id !== id) }));
   };
 
-  // --- API INTEGRATION FUNCTIONS ---
   const saveSession = async () => {
     try {
       const res = await fetch(`${API_URL}/save`, {
@@ -190,7 +221,7 @@ export default function DealSheetsApp() {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
+    <div className="app-wrapper" style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
       
       {/* NAVIGATION BAR */}
@@ -201,8 +232,8 @@ export default function DealSheetsApp() {
       </div>
 
       {/* HEADER */}
-      <h2 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
-        🤝 SA <span style={{ color: '#01ed64' }}>Deal Sheets</span> Framework
+      <h2 className="print-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
+        🤝 SA Deal Sheets <span className="no-print" style={{ color: '#01ed64' }}>Framework</span>
       </h2>
 
       {/* MAIN LAYOUT CONTAINER */}
@@ -211,7 +242,7 @@ export default function DealSheetsApp() {
         {/* LEFT COLUMN */}
         <div className="no-print" style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={panelStyle}>
+          <div style={panelStyle} className="sa-panel">
             <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Session Controls</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               
@@ -236,7 +267,7 @@ export default function DealSheetsApp() {
             </div>
           </div>
 
-          <div style={panelStyle}>
+          <div style={panelStyle} className="sa-panel">
             <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Deal Health</h3>
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginTop: 0 }}>Stakeholders Mapped: <strong style={{color: '#00ed64'}}>{deal.stakeholders.length}</strong></p>
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: 0 }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
@@ -259,14 +290,14 @@ export default function DealSheetsApp() {
             ))}
           </div>
 
-          <div style={{ ...panelStyle, padding: '25px' }}>
+          <div style={panelStyle} className="sa-panel" style={{...panelStyle, padding: '25px'}}>
             
             {/* TAB 1: OVERVIEW */}
-            {(activeTab === 'overview' || window.matchMedia('print').matches) && (
+            <div className="print-tab" style={{ display: activeTab === 'overview' ? 'block' : 'none' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginBottom: '30px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
-                  <div><label style={labelStyle}>ARR Amount ($)</label><input type="text" className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="100000" /></div>                  
+                  <div><label style={labelStyle}>ARR Amount ($)</label><input type="text" className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="100000" /></div>
                   <div><label style={labelStyle}>Salesforce Opp</label><input className="sa-input" name="opportunityLink" value={deal.opportunityLink} onChange={handleInputChange} placeholder="https://mongodb.my.salesforce.com/..." /></div>
                   <div><label style={labelStyle}>Industry</label><input className="sa-input" name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
                   <div><label style={labelStyle}>Workload / Use Case</label><input className="sa-input" name="useCase" value={deal.useCase} onChange={handleInputChange} placeholder="e.g. Single View, Legacy Mod" /></div>
@@ -290,10 +321,10 @@ export default function DealSheetsApp() {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* TAB 2: STAKEHOLDERS */}
-            {(activeTab === 'stakeholders' || window.matchMedia('print').matches) && (
+            <div className="print-tab" style={{ display: activeTab === 'stakeholders' ? 'block' : 'none' }}>
               <div style={{ marginBottom: '30px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>
                   <h3 style={{ color: '#00ed64', margin: 0 }}>Key Customer Stakeholders</h3>
@@ -340,14 +371,13 @@ export default function DealSheetsApp() {
                   </div>
                 )}
               </div>
-            )}
+            </div>
 
             {/* TAB 3: VALUE FRAMEWORK */}
-            {(activeTab === 'value' || window.matchMedia('print').matches) && (
+            <div className="print-tab" style={{ display: activeTab === 'value' ? 'block' : 'none' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-                
-                {/* NEW: App / Arch Description */}
                 <div style={{ marginBottom: '10px' }}>
+                  <h3 style={{ color: '#00ed64', margin: '0 0 15px 0' }}>Value Framework</h3>
                   <label style={labelStyle}>App / Architecture Description</label>
                   <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="appArchDescription" value={deal.appArchDescription} onChange={handleInputChange} placeholder="Describe the application, architecture, and current tech stack..." />
                 </div>
@@ -370,14 +400,12 @@ export default function DealSheetsApp() {
                   <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="requiredCapabilities" value={deal.requiredCapabilities} onChange={handleInputChange} placeholder="Key solution capabilities required to achieve the PBOs..." />
                 </div>
 
-                {/* NEW: Success Metrics */}
                 <div>
                   <label style={labelStyle}>Success Metrics</label>
                   <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="successMetrics" value={deal.successMetrics} onChange={handleInputChange} placeholder="How will we measure that the requirements are met? (e.g. Latency < 10ms, TCO reduced by 30%)" />
                 </div>
-
               </div>
-            )}
+            </div>
 
           </div>
         </div>
