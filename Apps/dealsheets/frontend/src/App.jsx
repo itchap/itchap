@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// GLOBAL RESET & UNIFIED CSS (Upgraded Print Styles)
+// GLOBAL RESET & UNIFIED CSS
 const GlobalReset = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -22,7 +22,6 @@ const GlobalReset = () => (
       height: 100%;
     }
 
-    /* UNIFIED PALE WHITE FORM FIELDS */
     .sa-input {
       width: 100%;
       padding: 10px 12px;
@@ -55,48 +54,14 @@ const GlobalReset = () => (
       border-radius: 4px;
     }
 
-    /* --- BULLETPROOF PDF PRINT STYLING --- */
     @media print {
-      /* Force pure white backgrounds and black text everywhere */
-      html, body, #root, .app-wrapper { 
-        background-color: #ffffff !important; 
-        color: #000000 !important; 
-      }
-      
-      /* Hide navigation, sidebar, and buttons */
+      html, body, #root, .app-wrapper { background-color: #ffffff !important; color: #000000 !important; }
       .no-print { display: none !important; }
-      
-      /* Expand the main content to fill the page */
       .print-area { width: 100% !important; max-width: 100% !important; display: block !important; }
-      
-      /* Remove dark panel backgrounds */
-      .sa-panel { 
-        background-color: transparent !important; 
-        border: none !important; 
-        padding: 0 !important;
-      }
-      
-      /* Force all 3 tabs to display, block page breaks inside them */
-      .print-tab { 
-        display: block !important; 
-        page-break-inside: avoid;
-        margin-bottom: 40px !important;
-      }
-      
-      /* Clean up inputs for paper */
-      .sa-input { 
-        background-color: transparent !important; 
-        border: 1px solid #cccccc !important; 
-        color: #000000 !important; 
-        box-shadow: none !important;
-      }
-      
-      /* Ensure text elements stay black */
-      h2, h3, label, p, strong, span, div { 
-        color: #000000 !important; 
-      }
-
-      /* Keep the header clean */
+      .sa-panel { background-color: transparent !important; border: none !important; padding: 0 !important; }
+      .print-tab { display: block !important; page-break-inside: avoid; margin-bottom: 40px !important; }
+      .sa-input { background-color: transparent !important; border: 1px solid #cccccc !important; color: #000000 !important; box-shadow: none !important; }
+      h2, h3, label, p, strong, span, div { color: #000000 !important; }
       .print-header { margin-bottom: 30px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important; }
     }
   `}</style>
@@ -122,6 +87,7 @@ const labelStyle = {
 export default function DealSheetsApp() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false); // NEW STATE
   const [aiPov, setAiPov] = useState(null);
   
   const [deal, setDeal] = useState({
@@ -142,7 +108,8 @@ export default function DealSheetsApp() {
     afterScenario: '',
     positiveBusinessOutcomes: '',
     requiredCapabilities: '',
-    successMetrics: ''
+    successMetrics: '',
+    healthInsights: '' // NEW FIELD
   });
 
   const handleInputChange = (e) => {
@@ -168,7 +135,9 @@ export default function DealSheetsApp() {
     setDeal(prev => ({ ...prev, stakeholders: prev.stakeholders.filter(s => s.id !== id) }));
   };
 
+  // --- UPDATED SAVE FUNCTION ---
   const saveSession = async () => {
+    setIsSaving(true);
     try {
       const res = await fetch(`${API_URL}/save`, {
         method: 'POST',
@@ -176,11 +145,17 @@ export default function DealSheetsApp() {
         body: JSON.stringify({ sessionId: deal.sessionId, data: deal })
       });
       const resData = await res.json();
-      if (res.ok) alert(`✅ Session ${deal.sessionId} saved securely!`);
-      else alert(`❌ Failed to save: ${resData.error}`);
+      
+      if (res.ok) {
+        setDeal(resData.data); // Update frontend state with AI insights from DB
+        alert(`✅ Session ${deal.sessionId} saved securely!`);
+      } else {
+        alert(`❌ Failed to save: ${resData.error}`);
+      }
     } catch (err) {
       alert('❌ Error connecting to server.');
     }
+    setIsSaving(false);
   };
 
   const loadSession = async () => {
@@ -224,19 +199,16 @@ export default function DealSheetsApp() {
     <div className="app-wrapper" style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
       
-      {/* NAVIGATION BAR */}
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 20px', fontSize: '13px', opacity: 0.8 }}>
         <a href="/" style={{ color: '#fff', textDecoration: 'none', transition: 'color 0.2s ease-in-out' }} onMouseOver={e => e.target.style.color = '#01ed64'} onMouseOut={e => e.target.style.color = '#fff'}>
           ← Home
         </a>
       </div>
 
-      {/* HEADER */}
       <h2 className="print-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
         🤝 SA Deal Sheets <span className="no-print" style={{ color: '#01ed64' }}>Framework</span>
       </h2>
 
-      {/* MAIN LAYOUT CONTAINER */}
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }} className="print-area">
         
         {/* LEFT COLUMN */}
@@ -259,7 +231,11 @@ export default function DealSheetsApp() {
                 <button onClick={loadSession} style={{ padding: '8px', backgroundColor: '#00684a', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Load</button>
               </div>
 
-              <button onClick={saveSession} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>💾 Save Deal Sheet</button>
+              {/* SAVING BUTTON WITH LOADING STATE */}
+              <button onClick={saveSession} disabled={isSaving} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: isSaving ? 'wait' : 'pointer' }}>
+                {isSaving ? '⏳ Saving & Analyzing...' : '💾 Save Deal Sheet'}
+              </button>
+              
               <button onClick={exportPDF} style={{ width: '100%', padding: '10px', backgroundColor: '#023430', color: '#00ed64', border: '1px solid #00ed64', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>📄 Export to PDF</button>
               <button onClick={generatePOV} disabled={isGenerating} style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', color: isGenerating ? '#777' : '#c471ed', border: `1px solid ${isGenerating ? '#777' : '#c471ed'}`, borderRadius: '4px', cursor: isGenerating ? 'wait' : 'pointer', fontWeight: 'bold', marginTop: '10px' }}>
                 {isGenerating ? '🧠 Generating...' : '🧠 Generate AI POV'}
@@ -270,14 +246,23 @@ export default function DealSheetsApp() {
           <div style={panelStyle} className="sa-panel">
             <h3 style={{ marginTop: 0, marginBottom: '15px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>Deal Health</h3>
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginTop: 0 }}>Stakeholders Mapped: <strong style={{color: '#00ed64'}}>{deal.stakeholders.length}</strong></p>
-            <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: 0 }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
+            <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: '15px' }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
+            
+            {/* NEW AI INSIGHTS BOX */}
+            <div style={{ backgroundColor: 'rgba(0, 237, 100, 0.05)', borderLeft: '3px solid #00ed64', padding: '10px', borderRadius: '0 4px 4px 0' }}>
+              <strong style={{ fontSize: '11px', color: '#00ed64', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                🤖 Force Management AI
+              </strong>
+              <div style={{ fontSize: '12px', color: '#d1d5db', marginTop: '8px', lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>
+                {deal.healthInsights ? deal.healthInsights : <span style={{ fontStyle: 'italic', opacity: 0.6 }}>Save deal to generate insights...</span>}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* RIGHT MAIN AREA */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* TAB NAVIGATION */}
           <div className="no-print" style={{ display: 'flex', gap: '10px' }}>
             {['overview', 'stakeholders', 'value'].map(tab => (
               <button 
@@ -290,7 +275,7 @@ export default function DealSheetsApp() {
             ))}
           </div>
 
-          <div style={panelStyle} className="sa-panel" style={{...panelStyle, padding: '25px'}}>
+          <div style={{...panelStyle, padding: '25px'}} className="sa-panel">
             
             {/* TAB 1: OVERVIEW */}
             <div className="print-tab" style={{ display: activeTab === 'overview' ? 'block' : 'none' }}>

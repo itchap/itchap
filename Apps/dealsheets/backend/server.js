@@ -16,31 +16,54 @@ mongoose.connect(process.env.MONGO_URI)
 
 const DealSheet = require('./models/DealSheet');
 
-// SAVE OR UPDATE SESSION
+// SAVE OR UPDATE SESSION (WITH EMBEDDED AI COACHING)
 app.post('/api/dealsheets/save', async (req, res) => {
   try {
     let { sessionId, data } = req.body;
     
-    // SERVER LOGIC: Enforce ARR as a Number
+    // 1. Enforce ARR as a Number
     if (data.arr !== undefined && data.arr !== null && data.arr.toString().trim() !== '') {
       const arrNumber = Number(data.arr);
-      
-      // If Number() returns NaN (Not a Number), reject the save
       if (isNaN(arrNumber)) {
         return res.status(400).json({ error: 'ARR must be a clean number (e.g., 100000). Please remove any letters, commas, or currency symbols.' });
       }
-      
-      data.arr = arrNumber; // Cast to number for MongoDB
+      data.arr = arrNumber; 
     } else {
-      data.arr = 0; // Default to 0 if completely blank
+      data.arr = 0; 
     }
 
+    // 2. Generate Force Management Health Insights
+    try {
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const prompt = `
+        You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
+        Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps (e.g., weak success metrics, missing compelling event, lack of business outcomes). Maximum 40 words total.
+        
+        Why Do Anything: ${data.whyDoAnything}
+        Why Now: ${data.whyNow}
+        Why Us: ${data.whyMongoDB}
+        Before: ${data.beforeScenario}
+        After: ${data.afterScenario}
+        PBOs: ${data.positiveBusinessOutcomes}
+        Metrics: ${data.successMetrics}
+      `;
+      const result = await model.generateContent(prompt);
+      data.healthInsights = result.response.text().trim();
+    } catch (aiError) {
+      console.error("AI Insights Error:", aiError);
+      data.healthInsights = "⚠️ AI temporarily unavailable to assess deal health.";
+    }
+
+    // 3. Save to MongoDB
     const result = await DealSheet.findOneAndUpdate(
       { sessionId },
       { data, lastModified: Date.now() },
       { upsert: true, new: true } 
     );
-    res.json({ success: true, msg: 'Deal Sheet saved successfully!' });
+    
+    // Return the updated data (which now includes the AI insights) back to the frontend
+    res.json({ success: true, msg: 'Deal Sheet saved successfully!', data: result.data });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -57,7 +80,7 @@ app.get('/api/dealsheets/:sessionId', async (req, res) => {
   }
 });
 
-// GENERATE AI POV
+// GENERATE EXECUTIVE POV
 app.post('/api/dealsheets/generate-pov', async (req, res) => {
   try {
     const { deal } = req.body;
