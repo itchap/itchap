@@ -266,8 +266,8 @@ export default function DealSheetsApp() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginBottom: '30px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
-                  <div><label style={labelStyle}>ARR Amount ($)</label><input type="number" className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="100000" /></div>
-                  <div><label style={labelStyle}>Salesforce Link</label><input className="sa-input" name="opportunityLink" value={deal.opportunityLink} onChange={handleInputChange} placeholder="https://mongodb.my.salesforce.com/..." /></div>
+                  <div><label style={labelStyle}>ARR Amount ($)</label><input type="text" className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="100000" /></div>                  
+                  <div><label style={labelStyle}>Salesforce Opp</label><input className="sa-input" name="opportunityLink" value={deal.opportunityLink} onChange={handleInputChange} placeholder="https://mongodb.my.salesforce.com/..." /></div>
                   <div><label style={labelStyle}>Industry</label><input className="sa-input" name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
                   <div><label style={labelStyle}>Workload / Use Case</label><input className="sa-input" name="useCase" value={deal.useCase} onChange={handleInputChange} placeholder="e.g. Single View, Legacy Mod" /></div>
                   <div>

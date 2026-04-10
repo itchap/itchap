@@ -22,14 +22,17 @@ app.post('/api/dealsheets/save', async (req, res) => {
     let { sessionId, data } = req.body;
     
     // SERVER LOGIC: Enforce ARR as a Number
-    if (data.arr !== undefined && data.arr !== '') {
+    if (data.arr !== undefined && data.arr !== null && data.arr.toString().trim() !== '') {
       const arrNumber = Number(data.arr);
+      
+      // If Number() returns NaN (Not a Number), reject the save
       if (isNaN(arrNumber)) {
-        return res.status(400).json({ error: 'ARR must be a valid number.' });
+        return res.status(400).json({ error: 'ARR must be a clean number (e.g., 100000). Please remove any letters, commas, or currency symbols.' });
       }
+      
       data.arr = arrNumber; // Cast to number for MongoDB
     } else {
-      data.arr = 0; // Default to 0 if left blank
+      data.arr = 0; // Default to 0 if completely blank
     }
 
     const result = await DealSheet.findOneAndUpdate(
