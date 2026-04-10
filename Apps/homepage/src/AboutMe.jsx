@@ -27,7 +27,7 @@ function AboutMe() {
           
           {/* PROFILE PICTURE */}
           <img 
-            src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715112481913?e=1775088000&v=beta&t=ajnV4O9I7h0JX9lcp4u-Bj4izpIIlfKzWhjH61oavGs" 
+            src="https://media.licdn.com/dms/image/v2/D4D03AQHDYvMk_ophcg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1715112481913?e=1777507200&v=beta&t=QFtvjHn0AXZ0xUiAEHqGl_z93oa-jrHc4MMwQlw_dMU" 
             alt="Peter" 
             style={{ 
               width: '140px', 
