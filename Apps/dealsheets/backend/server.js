@@ -19,11 +19,23 @@ const DealSheet = require('./models/DealSheet');
 // SAVE OR UPDATE SESSION
 app.post('/api/dealsheets/save', async (req, res) => {
   try {
-    const { sessionId, data } = req.body;
+    let { sessionId, data } = req.body;
+    
+    // SERVER LOGIC: Enforce ARR as a Number
+    if (data.arr !== undefined && data.arr !== '') {
+      const arrNumber = Number(data.arr);
+      if (isNaN(arrNumber)) {
+        return res.status(400).json({ error: 'ARR must be a valid number.' });
+      }
+      data.arr = arrNumber; // Cast to number for MongoDB
+    } else {
+      data.arr = 0; // Default to 0 if left blank
+    }
+
     const result = await DealSheet.findOneAndUpdate(
       { sessionId },
       { data, lastModified: Date.now() },
-      { upsert: true, new: true }
+      { upsert: true, new: true } 
     );
     res.json({ success: true, msg: 'Deal Sheet saved successfully!' });
   } catch (err) {

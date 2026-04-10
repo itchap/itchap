@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_URL = 'https://itchap.com/api/dealsheets';
 
-// GLOBAL RESET & UNIFIED CSS (Added Print Styles)
+// GLOBAL RESET & UNIFIED CSS
 const GlobalReset = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -104,11 +104,13 @@ export default function DealSheetsApp() {
     whyNow: '',
     whyMongoDB: '',
     stakeholders: [],
+    appArchDescription: '',     // NEW: App/Arch Description
     beforeScenario: '',
     negativeConsequences: '',
     afterScenario: '',
     positiveBusinessOutcomes: '',
-    requiredCapabilities: ''
+    requiredCapabilities: '',
+    successMetrics: ''          // NEW: Success Metrics
   });
 
   const handleInputChange = (e) => {
@@ -135,7 +137,6 @@ export default function DealSheetsApp() {
   };
 
   // --- API INTEGRATION FUNCTIONS ---
-
   const saveSession = async () => {
     try {
       const res = await fetch(`${API_URL}/save`, {
@@ -143,8 +144,9 @@ export default function DealSheetsApp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId: deal.sessionId, data: deal })
       });
+      const resData = await res.json();
       if (res.ok) alert(`✅ Session ${deal.sessionId} saved securely!`);
-      else alert('❌ Failed to save session.');
+      else alert(`❌ Failed to save: ${resData.error}`);
     } catch (err) {
       alert('❌ Error connecting to server.');
     }
@@ -184,7 +186,7 @@ export default function DealSheetsApp() {
   };
 
   const exportPDF = () => {
-    window.print(); // Relies on the @media print CSS to format it nicely
+    window.print(); 
   };
 
   return (
@@ -264,8 +266,10 @@ export default function DealSheetsApp() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginBottom: '30px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div><label style={labelStyle}>Account Name</label><input className="sa-input" name="accountName" value={deal.accountName} onChange={handleInputChange} placeholder="e.g. Acme Corp" /></div>
-                  <div><label style={labelStyle}>ARR Amount</label><input className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="$" /></div>
+                  <div><label style={labelStyle}>ARR Amount ($)</label><input type="number" className="sa-input" name="arr" value={deal.arr} onChange={handleInputChange} placeholder="100000" /></div>
+                  <div><label style={labelStyle}>Salesforce Link</label><input className="sa-input" name="opportunityLink" value={deal.opportunityLink} onChange={handleInputChange} placeholder="https://mongodb.my.salesforce.com/..." /></div>
                   <div><label style={labelStyle}>Industry</label><input className="sa-input" name="industry" value={deal.industry} onChange={handleInputChange} placeholder="e.g. FinTech" /></div>
+                  <div><label style={labelStyle}>Workload / Use Case</label><input className="sa-input" name="useCase" value={deal.useCase} onChange={handleInputChange} placeholder="e.g. Single View, Legacy Mod" /></div>
                   <div>
                     <label style={labelStyle}>Sales Motion</label>
                     <select className="sa-input" style={{ cursor: 'pointer', height: '39px', padding: '0 12px' }} name="salesMotion" value={deal.salesMotion} onChange={handleInputChange}>
@@ -341,6 +345,13 @@ export default function DealSheetsApp() {
             {/* TAB 3: VALUE FRAMEWORK */}
             {(activeTab === 'value' || window.matchMedia('print').matches) && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+                
+                {/* NEW: App / Arch Description */}
+                <div style={{ marginBottom: '10px' }}>
+                  <label style={labelStyle}>App / Architecture Description</label>
+                  <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="appArchDescription" value={deal.appArchDescription} onChange={handleInputChange} placeholder="Describe the application, architecture, and current tech stack..." />
+                </div>
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <h3 style={{ color: '#fff', borderBottom: '1px solid #555', paddingBottom: '10px', margin: 0 }}>Current State</h3>
@@ -358,6 +369,13 @@ export default function DealSheetsApp() {
                   <label style={labelStyle}>Required Capabilities</label>
                   <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="requiredCapabilities" value={deal.requiredCapabilities} onChange={handleInputChange} placeholder="Key solution capabilities required to achieve the PBOs..." />
                 </div>
+
+                {/* NEW: Success Metrics */}
+                <div>
+                  <label style={labelStyle}>Success Metrics</label>
+                  <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="successMetrics" value={deal.successMetrics} onChange={handleInputChange} placeholder="How will we measure that the requirements are met? (e.g. Latency < 10ms, TCO reduced by 30%)" />
+                </div>
+
               </div>
             )}
 
