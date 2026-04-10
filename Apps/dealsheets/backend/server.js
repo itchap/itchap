@@ -37,7 +37,6 @@ app.post('/api/dealsheets/save', async (req, res) => {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      // Upgraded to the requested gemini-2.5-flash model
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
       const prompt = `
@@ -56,7 +55,8 @@ app.post('/api/dealsheets/save', async (req, res) => {
       data.healthInsights = result.response.text().trim();
     } catch (aiError) {
       console.error("AI Insights Error:", aiError);
-      data.healthInsights = "⚠️ AI temporarily unavailable to assess deal health.";
+      // EXPOSING THE ERROR TO THE FRONTEND
+      data.healthInsights = `⚠️ Google API Error: ${aiError.message || 'Service Unavailable'}. Check rate limits.`;
     }
 
     const result = await DealSheet.findOneAndUpdate(
@@ -92,7 +92,6 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // Upgraded to the requested gemini-2.5-flash model
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
@@ -117,7 +116,8 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     res.json({ pov: result.response.text() });
   } catch (error) {
     console.error("AI Error:", error);
-    res.status(500).json({ error: 'Failed to generate POV' });
+    // Exposing the error to the frontend modal
+    res.status(500).json({ error: error.message || 'Failed to generate POV' });
   }
 });
 
