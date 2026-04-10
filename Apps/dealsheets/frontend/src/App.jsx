@@ -83,6 +83,18 @@ const labelStyle = {
   textTransform: 'uppercase' 
 };
 
+// HELPER: Renders Markdown asterisks (**) as actual bold text
+const formatMarkdown = (text) => {
+  if (!text) return null;
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} style={{ color: '#ffffff', fontWeight: '700' }}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{part}</span>;
+  });
+};
+
 export default function DealSheetsApp() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -167,11 +179,9 @@ export default function DealSheetsApp() {
     setDeal(prev => ({ ...prev, sessionId: searchId.toUpperCase() }));
 
     try {
-      // cache: 'no-store' ensures the browser doesn't load a cached 404 error
       const res = await fetch(`${API_URL}/${searchId}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        // Merge state so older empty fields don't wipe out the app structure
         setDeal(prev => ({ ...prev, ...data }));
         alert('✅ Session loaded successfully!');
       } else {
@@ -255,12 +265,13 @@ export default function DealSheetsApp() {
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginTop: 0 }}>Stakeholders Mapped: <strong style={{color: '#00ed64'}}>{deal.stakeholders.length}</strong></p>
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: '15px' }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
             
-            <div style={{ backgroundColor: 'rgba(0, 237, 100, 0.05)', borderLeft: '3px solid #00ed64', padding: '10px', borderRadius: '0 4px 4px 0' }}>
-              <strong style={{ fontSize: '11px', color: '#00ed64', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            {/* UPGRADED AI INSIGHTS UI */}
+            <div style={{ backgroundColor: 'rgba(0, 237, 100, 0.08)', borderLeft: '4px solid #00ed64', padding: '15px', borderRadius: '0 6px 6px 0', marginTop: '20px' }}>
+              <strong style={{ fontSize: '12px', color: '#00ed64', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 🤖 Force Management AI
               </strong>
-              <div style={{ fontSize: '12px', color: '#d1d5db', marginTop: '8px', lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>
-                {deal.healthInsights ? deal.healthInsights : <span style={{ fontStyle: 'italic', opacity: 0.6 }}>Save deal to generate insights...</span>}
+              <div style={{ fontSize: '13.5px', color: '#f1f5f9', marginTop: '10px', lineHeight: '1.6', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                {deal.healthInsights ? formatMarkdown(deal.healthInsights) : <span style={{ fontStyle: 'italic', opacity: 0.6 }}>Save deal to generate insights...</span>}
               </div>
             </div>
           </div>
