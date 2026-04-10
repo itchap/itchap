@@ -21,32 +21,64 @@ app.post('/api/dealsheets/save', async (req, res) => {
   try {
     let { sessionId, data } = req.body;
     
-    // SERVER LOGIC: Enforce ARR as a Number
-    if (data.arr !== undefined && data.arr !== '') {
+    // Clean the ID going into the DB
+    const cleanId = sessionId.trim().toUpperCase();
+    data.sessionId = cleanId;
+
+    if (data.arr !== undefined && data.arr !== null && data.arr.toString().trim() !== '') {
       const arrNumber = Number(data.arr);
       if (isNaN(arrNumber)) {
-        return res.status(400).json({ error: 'ARR must be a valid number.' });
+        return res.status(400).json({ error: 'ARR must be a clean number (e.g., 100000). Please remove any letters, commas, or currency symbols.' });
       }
-      data.arr = arrNumber; // Cast to number for MongoDB
+      data.arr = arrNumber; 
     } else {
-      data.arr = 0; // Default to 0 if left blank
+      data.arr = 0; 
+    }
+
+    try {
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const prompt = `
+        You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
+        Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps (e.g., weak success metrics, missing compelling event, lack of business outcomes). Maximum 40 words total.
+        
+        Why Do Anything: ${data.whyDoAnything}
+        Why Now: ${data.whyNow}
+        Why Us: ${data.whyMongoDB}
+        Before: ${data.beforeScenario}
+        After: ${data.afterScenario}
+        PBOs: ${data.positiveBusinessOutcomes}
+        Metrics: ${data.successMetrics}
+      `;
+      const result = await model.generateContent(prompt);
+      data.healthInsights = result.response.text().trim();
+    } catch (aiError) {
+      console.error("AI Insights Error:", aiError);
+      data.healthInsights = "⚠️ AI temporarily unavailable to assess deal health.";
     }
 
     const result = await DealSheet.findOneAndUpdate(
-      { sessionId },
+      { sessionId: cleanId },
       { data, lastModified: Date.now() },
       { upsert: true, new: true } 
     );
-    res.json({ success: true, msg: 'Deal Sheet saved successfully!' });
+    
+    res.json({ success: true, msg: 'Deal Sheet saved successfully!', data: result.data });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// LOAD SESSION
+// LOAD SESSION (HIGHLY FORGIVING SEARCH)
 app.get('/api/dealsheets/:sessionId', async (req, res) => {
   try {
-    const sheet = await DealSheet.findOne({ sessionId: req.params.sessionId });
+    const searchId = req.params.sessionId.trim();
+    
+    // This searches the DB for the ID, ignoring case and ignoring any accidental trailing spaces
+    const sheet = await DealSheet.findOne({ 
+      sessionId: { $regex: new RegExp(searchId, 'i') } 
+    });
+    
     if (!sheet) return res.status(404).json({ msg: 'Session not found.' });
     res.json(sheet.data);
   } catch (err) {
@@ -54,13 +86,13 @@ app.get('/api/dealsheets/:sessionId', async (req, res) => {
   }
 });
 
-// GENERATE AI POV
+// GENERATE EXECUTIVE POV
 app.post('/api/dealsheets/generate-pov', async (req, res) => {
   try {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
       You are an elite enterprise Solutions Architect. Based on the following Deal Sheet data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 
