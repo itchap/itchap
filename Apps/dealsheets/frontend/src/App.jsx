@@ -54,11 +54,17 @@ const GlobalReset = () => (
     }
 
     @media print {
-      html, body, #root, .app-wrapper { background-color: #ffffff !important; color: #000000 !important; }
+      /* THE FIX: Allow height to expand and overflow so multiple pages can print */
+      html, body, #root, .app-wrapper { 
+        background-color: #ffffff !important; 
+        color: #000000 !important; 
+        height: auto !important; 
+        overflow: visible !important; 
+      }
       .no-print { display: none !important; }
       .print-area { width: 100% !important; max-width: 100% !important; display: block !important; }
       .sa-panel { background-color: transparent !important; border: none !important; padding: 0 !important; }
-      .print-tab { display: block !important; page-break-inside: avoid; margin-bottom: 40px !important; }
+      .print-tab { display: block !important; margin-bottom: 40px !important; page-break-inside: avoid; }
       .sa-input { background-color: transparent !important; border: 1px solid #cccccc !important; color: #000000 !important; box-shadow: none !important; }
       h2, h3, label, p, strong, span, div { color: #000000 !important; }
       .print-header { margin-bottom: 30px !important; border-bottom: 2px solid #000 !important; padding-bottom: 10px !important; }
@@ -121,7 +127,6 @@ export default function DealSheetsApp() {
     requiredCapabilities: '',
     successMetrics: '',
     healthInsights: '',
-    // NEW MEDDPICC FIELDS
     meddpiccMetrics: '',
     meddpiccEconomicBuyer: '',
     meddpiccDecisionCriteria: '',
@@ -218,16 +223,41 @@ export default function DealSheetsApp() {
     setIsGenerating(false);
   };
 
+  // UPDATED EXPORT PDF FUNCTION
   const exportPDF = () => {
-    window.print(); 
+    // 1. Save the original tab title
+    const originalTitle = document.title;
+    
+    // 2. Build the filename-friendly string (e.g., acme-inc-ds-9997)
+    const company = deal.accountName ? deal.accountName.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'company';
+    const id = deal.sessionId ? deal.sessionId.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'id';
+    const fileName = `${company}-${id}`;
+    
+    // 3. Temporarily change the document title
+    document.title = fileName;
+    
+    // 4. Trigger the print dialog (the browser will use our new title as the filename)
+    window.print();
+    
+    // 5. Instantly change it back so the user doesn't notice
+    document.title = originalTitle;
   };
 
-  // Helper to render proper tab names
   const tabs = ['overview', 'stakeholders', 'value', 'meddpicc'];
   const getTabLabel = (tab) => {
     if (tab === 'value') return 'Value Framework';
     if (tab === 'meddpicc') return 'MEDDPICC';
     return tab;
+  };
+
+  // DYNAMIC HEADER TITLE GENERATOR
+  const getDynamicTitle = () => {
+    if (deal.accountName || deal.useCase) {
+      const account = deal.accountName || '';
+      const useCase = deal.useCase ? `${deal.useCase} ` : '';
+      return `${account} ${useCase}Deal Sheet`.trim();
+    }
+    return 'SA Deal Sheets';
   };
 
   return (
@@ -240,8 +270,9 @@ export default function DealSheetsApp() {
         </a>
       </div>
 
-      <h2 className="print-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0' }}>
-        🤝 SA Deal Sheets <span className="no-print" style={{ color: '#01ed64' }}>Framework</span>
+      {/* DYNAMIC HEADER */}
+      <h2 className="print-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', margin: '0 0 20px 0', textAlign: 'center' }}>
+        🤝 {getDynamicTitle()} <span className="no-print" style={{ color: '#01ed64' }}>Framework</span>
       </h2>
 
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', alignItems: 'flex-start', maxWidth: '1200px', margin: '0 auto' }} className="print-area">
