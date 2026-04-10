@@ -125,7 +125,7 @@ app.post('/api/trust/reset-average', async (req, res) => {
 app.post('/api/trust/analyze', async (req, res) => {
   const { c, r, i, s, score } = req.body;
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
     const prompt = `You are an elite Pre-Sales / Solutions Architecture leadership coach. I am a Solutions Architect. Analyze my recent customer interaction based on the Trust Equation (Trust = (Credibility + Reliability + Intimacy) / Self-Orientation).
     
     My self-assessed scores are:
