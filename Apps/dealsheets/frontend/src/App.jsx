@@ -120,7 +120,16 @@ export default function DealSheetsApp() {
     positiveBusinessOutcomes: '',
     requiredCapabilities: '',
     successMetrics: '',
-    healthInsights: '' 
+    healthInsights: '',
+    // NEW MEDDPICC FIELDS
+    meddpiccMetrics: '',
+    meddpiccEconomicBuyer: '',
+    meddpiccDecisionCriteria: '',
+    meddpiccDecisionProcess: '',
+    meddpiccPaperProcess: '',
+    meddpiccIdentifiedPain: '',
+    meddpiccChampion: '',
+    meddpiccCompetition: ''
   });
 
   const handleInputChange = (e) => {
@@ -213,6 +222,14 @@ export default function DealSheetsApp() {
     window.print(); 
   };
 
+  // Helper to render proper tab names
+  const tabs = ['overview', 'stakeholders', 'value', 'meddpicc'];
+  const getTabLabel = (tab) => {
+    if (tab === 'value') return 'Value Framework';
+    if (tab === 'meddpicc') return 'MEDDPICC';
+    return tab;
+  };
+
   return (
     <div className="app-wrapper" style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#011e2b', minHeight: '100vh', width: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', color: '#fff' }}>
       <GlobalReset />
@@ -265,7 +282,6 @@ export default function DealSheetsApp() {
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginTop: 0 }}>Stakeholders Mapped: <strong style={{color: '#00ed64'}}>{deal.stakeholders.length}</strong></p>
             <p style={{ fontSize: '13px', color: '#e0e0e0', marginBottom: '15px' }}>Value Framework: {deal.afterScenario ? <strong style={{color: '#00ed64'}}>Defined</strong> : <strong style={{color: '#ff4d4d'}}>Incomplete</strong>}</p>
             
-            {/* UPGRADED AI INSIGHTS UI */}
             <div style={{ backgroundColor: 'rgba(0, 237, 100, 0.08)', borderLeft: '4px solid #00ed64', padding: '15px', borderRadius: '0 6px 6px 0', marginTop: '20px' }}>
               <strong style={{ fontSize: '12px', color: '#00ed64', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 🤖 Force Management AI
@@ -281,13 +297,13 @@ export default function DealSheetsApp() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div className="no-print" style={{ display: 'flex', gap: '10px' }}>
-            {['overview', 'stakeholders', 'value'].map(tab => (
+            {tabs.map(tab => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)} 
                 style={{ flex: 1, padding: '10px', backgroundColor: activeTab === tab ? '#00ed64' : '#023430', color: activeTab === tab ? '#000' : '#00ed64', border: activeTab === tab ? 'none' : '1px solid #00684a', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', textTransform: 'capitalize' }}
               >
-                {tab.replace('value', 'Value Framework')}
+                {getTabLabel(tab)}
               </button>
             ))}
           </div>
@@ -406,6 +422,21 @@ export default function DealSheetsApp() {
                   <label style={labelStyle}>Success Metrics</label>
                   <textarea className="sa-input" style={{ minHeight: '80px', resize: 'vertical' }} name="successMetrics" value={deal.successMetrics} onChange={handleInputChange} placeholder="How will we measure that the requirements are met? (e.g. Latency < 10ms, TCO reduced by 30%)" />
                 </div>
+              </div>
+            </div>
+
+            {/* TAB 4: MEDDPICC */}
+            <div className="print-tab" style={{ display: activeTab === 'meddpicc' ? 'block' : 'none' }}>
+              <h3 style={{ color: '#00ed64', margin: '0 0 20px 0', borderBottom: '1px solid #555', paddingBottom: '10px' }}>MEDDPICC Qualification</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '25px' }}>
+                <div><label style={labelStyle}>M - Metrics</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccMetrics" value={deal.meddpiccMetrics} onChange={handleInputChange} placeholder="Quantifiable justification; economic impact..." /></div>
+                <div><label style={labelStyle}>E - Economic Buyer</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccEconomicBuyer" value={deal.meddpiccEconomicBuyer} onChange={handleInputChange} placeholder="Who can approve and move budget? Have we met them?..." /></div>
+                <div><label style={labelStyle}>D - Decision Criteria</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccDecisionCriteria" value={deal.meddpiccDecisionCriteria} onChange={handleInputChange} placeholder="What are the technical and business requirements?..." /></div>
+                <div><label style={labelStyle}>D - Decision Process</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccDecisionProcess" value={deal.meddpiccDecisionProcess} onChange={handleInputChange} placeholder="Who are the stakeholders, influencers, and approvers?..." /></div>
+                <div><label style={labelStyle}>P - Paper Process</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccPaperProcess" value={deal.meddpiccPaperProcess} onChange={handleInputChange} placeholder="What documentation is needed to book the order? Timelines?..." /></div>
+                <div><label style={labelStyle}>I - Identified Pain</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccIdentifiedPain" value={deal.meddpiccIdentifiedPain} onChange={handleInputChange} placeholder="What is driving the prospect to change? How acute is it?..." /></div>
+                <div><label style={labelStyle}>C - Champion</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccChampion" value={deal.meddpiccChampion} onChange={handleInputChange} placeholder="Who has power, influence, and something to gain?..." /></div>
+                <div><label style={labelStyle}>C - Competition</label><textarea className="sa-input" style={{ minHeight: '90px', resize: 'vertical' }} name="meddpiccCompetition" value={deal.meddpiccCompetition} onChange={handleInputChange} placeholder="Who are you competing against? (Often 'business as usual')..." /></div>
               </div>
             </div>
 

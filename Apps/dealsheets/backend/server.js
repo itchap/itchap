@@ -21,7 +21,6 @@ app.post('/api/dealsheets/save', async (req, res) => {
   try {
     let { sessionId, data } = req.body;
     
-    // Clean the ID going into the DB
     const cleanId = sessionId.trim().toUpperCase();
     data.sessionId = cleanId;
 
@@ -39,12 +38,10 @@ app.post('/api/dealsheets/save', async (req, res) => {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
-      // Format the stakeholders array into a readable string for the AI
       const stakeholdersList = data.stakeholders && data.stakeholders.length > 0 
         ? data.stakeholders.map(s => `${s.name} (${s.role}) [Influence: ${s.influence}, Support: ${s.support}]`).join(' | ')
         : 'No stakeholders mapped yet.';
 
-      // THE UPGRADED "ALL-CONTEXT" PROMPT
       const prompt = `
         You are a strict, elite Force Management and MEDDPICC sales methodology expert. Review this deal's complete profile.
         Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps. Maximum 50 words total.
@@ -67,6 +64,16 @@ app.post('/api/dealsheets/save', async (req, res) => {
         - Positive Business Outcomes: ${data.positiveBusinessOutcomes || 'Blank'}
         - Required Capabilities: ${data.requiredCapabilities || 'Blank'}
         - Success Metrics: ${data.successMetrics || 'Blank'}
+
+        MEDDPICC Framework:
+        - M (Metrics): ${data.meddpiccMetrics || 'Blank'}
+        - E (Economic Buyer): ${data.meddpiccEconomicBuyer || 'Blank'}
+        - D (Decision Criteria): ${data.meddpiccDecisionCriteria || 'Blank'}
+        - D (Decision Process): ${data.meddpiccDecisionProcess || 'Blank'}
+        - P (Paper Process): ${data.meddpiccPaperProcess || 'Blank'}
+        - I (Identified Pain): ${data.meddpiccIdentifiedPain || 'Blank'}
+        - C (Champion): ${data.meddpiccChampion || 'Blank'}
+        - C (Competition): ${data.meddpiccCompetition || 'Blank'}
       `;
       
       const result = await model.generateContent(prompt);
@@ -109,10 +116,10 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
-      You are an elite enterprise Solutions Architect. Based on the following Deal Sheet data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 
+      You are an elite enterprise Solutions Architect. Based on the following Deal Sheet and MEDDPICC data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 
       Focus heavily on their business pain, the compelling event ("Why Now"), and how our solution drives specific Positive Business Outcomes. Be professional, persuasive, and authoritative.
 
       Data:
@@ -126,14 +133,17 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
       Negative Consequences: ${deal.negativeConsequences || 'N/A'}
       After Scenario: ${deal.afterScenario || 'N/A'}
       Positive Business Outcomes: ${deal.positiveBusinessOutcomes || 'N/A'}
-      Required Capabilities: ${deal.requiredCapabilities || 'N/A'}
+      
+      MEDDPICC Elements to highlight if applicable:
+      Metrics: ${deal.meddpiccMetrics || 'N/A'}
+      Identified Pain: ${deal.meddpiccIdentifiedPain || 'N/A'}
+      Competition to beat: ${deal.meddpiccCompetition || 'N/A'}
     `;
 
     const result = await model.generateContent(prompt);
     res.json({ pov: result.response.text() });
   } catch (error) {
     console.error("AI Error:", error);
-    // Exposing the error to the frontend modal
     res.status(500).json({ error: error.message || 'Failed to generate POV' });
   }
 });
