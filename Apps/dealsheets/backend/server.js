@@ -37,7 +37,7 @@ app.post('/api/dealsheets/save', async (req, res) => {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
       
       const prompt = `
         You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
@@ -92,7 +92,7 @@ app.post('/api/dealsheets/generate-pov', async (req, res) => {
     const { deal } = req.body;
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     const prompt = `
       You are an elite enterprise Solutions Architect. Based on the following Deal Sheet data, generate a compelling, executive-level Point of View (POV) narrative (3-4 paragraphs) to present to the customer. 

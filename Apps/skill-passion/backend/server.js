@@ -157,7 +157,7 @@ app.post('/api/skills/analyze', async (req, res) => {
     if (plottedSkills.length === 0) return res.status(400).json({ error: "Please plot some skills first!" });
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     let prompt = `You are an expert career coach for MongoDB Solutions Architects (SAs). Your client mapped their skills on a Skill/Passion Matrix.\n\nQuadrants:\n1. Top-Right (High Skill, High Passion): Zone of Genius.\n2. Top-Left (Low Skill, High Passion): Growth Areas.\n3. Bottom-Right (High Skill, Low Passion): Burnout Risk.\n4. Bottom-Left (Low Skill, Low Passion): Delegate/Drop.\n\nData (Coordinates map from -385 to +385):\n`;
     plottedSkills.forEach(s => {
