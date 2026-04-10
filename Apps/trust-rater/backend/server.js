@@ -24,7 +24,7 @@ const trustDb = mongoose.connection.useDb('trustrater');
 // SCHEMAS
 // ==========================================
 const trustScoreSchema = new mongoose.Schema({
-  sessionId: { type: String, required: true, index: true }, // <-- Added index here!
+  sessionId: { type: String, required: true, index: true },
   interactionName: String,
   c: Number,
   r: Number,
@@ -40,8 +40,8 @@ const runningAverageSchema = new mongoose.Schema({
   sessionId: { 
     type: String, 
     required: true, 
-    unique: true, // <-- Guarantees uniqueness AND creates a fast index
-    index: true   // <-- Explicitly tells MongoDB to index this field
+    unique: true, 
+    index: true   
   },
   averageScore: Number,
   updatedAt: { type: Date, default: Date.now }
@@ -52,10 +52,9 @@ const RunningAverage = trustDb.model('RunningAverage', runningAverageSchema, 'ru
 // API ROUTES
 // ==========================================
 
-// Get Session Data (Fetches top 5 recent history, regardless of active status)
+// Get Session Data
 app.get('/api/trust/session/:id', async (req, res) => {
   try {
-    // We removed 'isActive: true' here so your history list NEVER disappears!
     const history = await TrustScore.find({ sessionId: req.params.id })
       .sort({ createdAt: -1 })
       .limit(5);
@@ -71,14 +70,12 @@ app.get('/api/trust/session/:id', async (req, res) => {
 app.post('/api/trust/save', async (req, res) => {
   const { id, sessionId, interactionName, c, r, i, s, score } = req.body;
   
-  // 1. Start the Transaction Session
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     let newOrUpdatedId = id;
     
-    // 2. Save or Update the TrustScore
     if (id) {
       await TrustScore.findByIdAndUpdate(id, { interactionName, c, r, i, s, score }, { session });
     } else {
@@ -87,7 +84,6 @@ app.post('/api/trust/save', async (req, res) => {
       newOrUpdatedId = newScore._id;
     }
 
-    // 3. Recalculate the Average (Only using ACTIVE scores)
     const activeScores = await TrustScore.find({ sessionId, isActive: true }).session(session);
     let averageScore = null;
     if (activeScores.length > 0) {
@@ -95,20 +91,17 @@ app.post('/api/trust/save', async (req, res) => {
       averageScore = (total / activeScores.length).toFixed(1);
     }
 
-    // 4. Update the RunningAverage Collection
     await RunningAverage.findOneAndUpdate(
       { sessionId },
       { sessionId, averageScore, updatedAt: Date.now() },
-      { upsert: true, returnDocument: 'after', session } // <-- Fixed warning here!
+      { upsert: true, returnDocument: 'after', session }
     );
 
-    // 5. Commit the Transaction (Locks it in!)
     await session.commitTransaction();
     session.endSession();
 
     res.json({ success: true, newId: newOrUpdatedId, averageScore });
   } catch (error) {
-    // If ANYTHING fails, abort everything so the DB stays clean
     await session.abortTransaction();
     session.endSession();
     console.error("Transaction Error:", error);
@@ -116,16 +109,12 @@ app.post('/api/trust/save', async (req, res) => {
   }
 });
 
-// Soft-Reset the Average (Keep the data, wipe the slate)
+// Soft-Reset the Average
 app.post('/api/trust/reset-average', async (req, res) => {
   const { sessionId } = req.body;
   try {
-    // Soft Delete: Hide them from the math, but keep them in the DB
     await TrustScore.updateMany({ sessionId }, { isActive: false });
-    
-    // Clear the visual running average
     await RunningAverage.findOneAndUpdate({ sessionId }, { averageScore: null });
-    
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: "Failed to reset average" });
@@ -152,7 +141,8 @@ app.post('/api/trust/analyze', async (req, res) => {
     res.json({ analysis: result.response.text() });
   } catch (error) {
     console.error("AI Error:", error);
-    res.status(500).json({ error: "Failed to generate AI analysis" });
+    // EXPOSING THE ERROR TO THE FRONTEND
+    res.status(500).json({ error: `Google API Error: ${error.message || "Failed to generate AI analysis"}` });
   }
 });
 
