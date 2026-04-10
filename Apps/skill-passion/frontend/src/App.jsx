@@ -10,6 +10,8 @@ const API_URL = '/api/skills';
 // GLOBAL RESET
 const GlobalReset = () => (
   <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
     html, body {
       margin: 0 !important;
       padding: 0 !important;
@@ -65,7 +67,7 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   
   const [expandedCats, setExpandedCats] = useState({});
-  const [hasExpandedCat, setHasExpandedCat] = useState(false); // Tracks if they've expanded a category
+  const [hasExpandedCat, setHasExpandedCat] = useState(false); 
   
   // Custom PDF Export Modal State
   const [showExportModal, setShowExportModal] = useState(false);
@@ -103,7 +105,7 @@ function App() {
       setSkills([...skills, res.data]);
       setNewSkillName('');
       setExpandedCats(prev => ({ ...prev, Custom: true }));
-      setHasExpandedCat(true); // Dismisses tooltip if they add a custom skill
+      setHasExpandedCat(true); 
     } catch (error) { console.error("Failed to add skill", error); }
   };
 
@@ -174,7 +176,7 @@ function App() {
           setSessionId(res.data.sessionId);
           setSkills(res.data.skills);
           localStorage.setItem('matrixSessionId', res.data.sessionId);
-          setShowSessionId(false); // Hide the old ID if it was showing
+          setShowSessionId(false); 
       } catch (error) {
           console.error("Failed to create new session", error);
       }
@@ -230,7 +232,19 @@ function App() {
 
   const toggleCat = (cat) => {
     setExpandedCats(prev => ({ ...prev, [cat]: !prev[cat] }));
-    setHasExpandedCat(true); // Dismiss tooltip forever once they interact
+    setHasExpandedCat(true); 
+  };
+
+  // HELPER: Renders Markdown asterisks (**) as actual bold text
+  const formatMarkdown = (text) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} style={{ color: '#ffffff', fontWeight: '700' }}>{part.slice(2, -2)}</strong>;
+      }
+      return <span key={i}>{part}</span>;
+    });
   };
 
   const plottedSkills = skills.filter(s => s.status === 'plotted');
@@ -294,14 +308,13 @@ function App() {
               <button type="submit" style={{ padding: '8px', cursor: 'pointer', backgroundColor: '#00ed64', color: 'black', fontWeight: 'bold', border: 'none', borderRadius: '4px' }}>Add Skill</button>
             </form>
 
-            {/* RELATIVE WRAPPER FOR TOOLTIP (Placed outside the scroll container to prevent clipping) */}
             <div style={{ position: 'relative' }}>
               <p style={{ fontSize: '11px', color: '#bbb', marginBottom: '10px' }}>Drag tags into the matrix. Toss them out to return them.</p>
               
               {!hasExpandedCat && (
                 <div style={{
                   position: 'absolute',
-                  top: '20px', // Pushes it down so it hovers right over the first button
+                  top: '20px', 
                   left: '50%',
                   transform: 'translateX(-50%)',
                   animation: 'bounceTooltip 1.5s infinite ease-in-out',
@@ -314,11 +327,10 @@ function App() {
                   whiteSpace: 'nowrap',
                   boxShadow: '0 4px 12px rgba(0,237,100,0.3)',
                   zIndex: 50,
-                  pointerEvents: 'none' // Allows clicks to pass through to the button beneath it
+                  pointerEvents: 'none' 
                 }}>
                   👋 Click a category to expand!
                   
-                  {/* The little down arrow */}
                   <div style={{
                     position: 'absolute',
                     bottom: '-5px',
@@ -334,7 +346,6 @@ function App() {
               )}
             </div>
             
-            {/* THIS IS THE SCROLL CONTAINER THAT CLIPPED THE OLD TOOLTIP */}
             <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }}>
               {categoryOrder.map((cat) => {
                 if (!categorizedSkills[cat] || categorizedSkills[cat].length === 0) return null;
@@ -490,7 +501,19 @@ function App() {
                <img src="https://www.rw-designer.com/icon-image/10455-256x256x32.png" alt="logo" style={{ height: '20px' }}/>
                SA Career Insights
              </h3>
-             <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '14px', marginBottom: '20px' }}>{analysis}</div>
+             
+             {/* THE FIX: Formatting the text and applying the new typography */}
+             <div style={{ 
+                whiteSpace: 'pre-wrap', 
+                lineHeight: '1.7', 
+                fontSize: '14.5px', 
+                color: '#e2e8f0',
+                marginBottom: '20px', 
+                fontFamily: 'Inter, sans-serif' 
+              }}>
+                {formatMarkdown(analysis)}
+             </div>
+
              <button onClick={() => setAnalysis(null)} style={{ width: '100%', padding: '10px', backgroundColor: '#00ed64', color: '#000', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close Insights</button>
           </div>
         </div>
