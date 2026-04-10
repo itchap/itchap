@@ -37,25 +37,42 @@ app.post('/api/dealsheets/save', async (req, res) => {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
+      // Format the stakeholders array into a readable string for the AI
+      const stakeholdersList = data.stakeholders && data.stakeholders.length > 0 
+        ? data.stakeholders.map(s => `${s.name} (${s.role}) [Influence: ${s.influence}, Support: ${s.support}]`).join(' | ')
+        : 'No stakeholders mapped yet.';
+
+      // THE UPGRADED "ALL-CONTEXT" PROMPT
       const prompt = `
-        You are a strict, elite Force Management sales methodology expert. Review this deal's 3 Whys and Value Framework.
-        Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps (e.g., weak success metrics, missing compelling event, lack of business outcomes). Maximum 40 words total.
+        You are a strict, elite Force Management and MEDDPICC sales methodology expert. Review this deal's complete profile.
+        Provide exactly 2 concise, hard-hitting bullet points assessing the deal's maturity. Point out critical gaps. Maximum 50 words total.
         
-        Why Do Anything: ${data.whyDoAnything}
-        Why Now: ${data.whyNow}
-        Why Us: ${data.whyMongoDB}
-        Before: ${data.beforeScenario}
-        After: ${data.afterScenario}
-        PBOs: ${data.positiveBusinessOutcomes}
-        Metrics: ${data.successMetrics}
+        Account & Context: ${data.accountName || 'Unknown'} | Industry: ${data.industry || 'Unknown'} | Motion: ${data.salesMotion || 'Unknown'} | ARR: $${data.arr}
+        App/Arch Context: ${data.appArchDescription || 'None'}
+        
+        The 3 Whys:
+        - Why Do Anything: ${data.whyDoAnything || 'Blank'}
+        - Why Now: ${data.whyNow || 'Blank'}
+        - Why Us: ${data.whyMongoDB || 'Blank'}
+        
+        Stakeholders:
+        ${stakeholdersList}
+        
+        Value Framework:
+        - Before Scenario: ${data.beforeScenario || 'Blank'}
+        - Negative Consequences: ${data.negativeConsequences || 'Blank'}
+        - After Scenario: ${data.afterScenario || 'Blank'}
+        - Positive Business Outcomes: ${data.positiveBusinessOutcomes || 'Blank'}
+        - Required Capabilities: ${data.requiredCapabilities || 'Blank'}
+        - Success Metrics: ${data.successMetrics || 'Blank'}
       `;
+      
       const result = await model.generateContent(prompt);
       data.healthInsights = result.response.text().trim();
     } catch (aiError) {
       console.error("AI Insights Error:", aiError);
-      // EXPOSING THE ERROR TO THE FRONTEND
       data.healthInsights = `⚠️ Google API Error: ${aiError.message || 'Service Unavailable'}. Check rate limits.`;
     }
 
